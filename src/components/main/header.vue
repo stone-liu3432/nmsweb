@@ -1,24 +1,20 @@
 <template>
-    <div class="layout">
-        <Header>
-            <Menu mode="horizontal" theme="dark" :active-name="activeName" ref="navMenu" @on-select="changeMenu">
-                <div class="layout-logo"></div>
-                <div class="layout-nav">
-                    <div v-for="(item, index) in menu" :key="index" v-if="menu">
-                        <MenuItem :name="item.name" v-if="!item.children">{{ item.name }}</MenuItem>
-                        <Submenu :name="item.name" v-if="item.children">
-                            <template slot="title">
-                                {{ item.name }}
-                            </template>
-                            <MenuItem v-for="(_item, _index) in item.children" :key="_item.name" :name="_item.name">
-                                {{ _item.name }}
-                            </MenuItem>
-                        </Submenu>
-                    </div>
-                </div>
-            </Menu>
-        </Header>
-    </div>
+    <el-header>
+        <div class="layout-logo"></div>
+        <el-menu :default-active="activeIndex" mode="horizontal" :router="true">
+            <template v-for="(item, index) in menu" v-if="menu">
+                <el-menu-item :index="item.name" v-if="!item.children">{{ item.name }}</el-menu-item>
+                <el-submenu :index="item.name" v-if="item.children">
+                    <template slot="title">
+                        {{ item.name }}
+                    </template>
+                    <el-menu-item :index="_item.name" v-for="(_item, _index) in item.children" :key="_index">
+                        {{ _item.name }}
+                    </el-menu-item>
+                </el-submenu>
+            </template>
+        </el-menu>
+    </el-header>
 </template>
 
 <script>
@@ -26,55 +22,52 @@ import { mapState } from "vuex"
 export default {
     name: 'navHeader',
     computed: {
-        ...mapState(['menu'])
+        ...mapState(['menu', 'theme'])
     },
     data(){
         return {
-            activeName: 'home'
+            activeIndex: 'home'
         }
     },
     created(){
         
     },
     methods: {
-        changeMenu(name){
-            this.$router.push(name);
-        }
+        
     },
     mounted(){
+        //  刷新页面时的菜单状态恢复
         this.$nextTick(() =>{
-            this.activeName = this.$route.path.slice(1) || 'home';
-            this.$refs.navMenu.updateActiveName();
+            this.activeIndex = this.$route.path.slice(1) || 'home';
         })
-        
     }
 }
 </script>
 
 <style lang="less" scoped>
-.layout{
-    border: 1px solid #d7dde4;
-    border-top: none;
-    background: #f5f7f9;
-    position: relative;
-    border-radius: 4px;
-}
 .layout-logo{
-    width: 100px;
-    height: 30px;
-    background: #5b6270;
-    border-radius: 3px;
+    height: inherit;
+    width: 200px;
+    background: #aaa;
     float: left;
-    position: relative;
-    top: 15px;
-    left: 20px;
 }
-.layout-nav{
-    margin: 0 auto;
-    margin-right: 20px;
-    float: right;
-    >div{
-        display: inline-block;
+header{
+    border-bottom: 1px solid #e6e6e6;
+    >ul{
+        float: right;
+        margin-right: 30px;
     }
+}
+.header-dark{
+    background: #515a6e;
+}
+.header-light{
+    background: #fff;
+    >ul:after{
+        background: #fff;
+    }
+}
+.header-primary{
+    background: #2D8CF0;
 }
 </style>
