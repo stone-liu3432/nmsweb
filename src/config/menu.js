@@ -3,7 +3,12 @@ const menu = [
         name: "home"
     },
     {
-        name: "device"
+        name: "deviceMgmt",
+        children: [
+            { name: 'topo' },
+            { name: 'device' },
+            { name: 'onulist' },
+        ]
     },
     {
         name: "alert"
@@ -12,7 +17,10 @@ const menu = [
         name: "performance"
     },
     {
-        name: "sytem"
+        name: "system"
+    },
+    {
+        name: 'task'
     }
 ];
 
