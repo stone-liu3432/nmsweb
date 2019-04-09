@@ -1,27 +1,20 @@
 <template>
     <div class="layout">
         <Header>
-            <Menu mode="horizontal" theme="dark" active-name="1">
+            <Menu mode="horizontal" theme="dark" :active-name="activeName" ref="navMenu" @on-select="changeMenu">
                 <div class="layout-logo"></div>
                 <div class="layout-nav">
-                    <MenuItem name="1">
-                        首页
-                    </MenuItem>
-                    <Submenu name="2">
-                        <template slot="title">
-                            设备管理
-                        </template>
-                        <MenuItem name="2-1">topo</MenuItem>
-                        <MenuItem name="2-2">设备列表</MenuItem>
-                        <MenuItem name="2-3">onu列表</MenuItem>
-                    </Submenu>
-                    <MenuItem name="3">事件告警</MenuItem>
-                    <MenuItem name="4">
-                        系统管理
-                    </MenuItem>
-                    <MenuItem name="5">
-                        任务管理
-                    </MenuItem>
+                    <div v-for="(item, index) in menu" :key="index" v-if="menu">
+                        <MenuItem :name="item.name" v-if="!item.children">{{ item.name }}</MenuItem>
+                        <Submenu :name="item.name" v-if="item.children">
+                            <template slot="title">
+                                {{ item.name }}
+                            </template>
+                            <MenuItem v-for="(_item, _index) in item.children" :key="_item.name" :name="_item.name">
+                                {{ _item.name }}
+                            </MenuItem>
+                        </Submenu>
+                    </div>
                 </div>
             </Menu>
         </Header>
@@ -29,8 +22,32 @@
 </template>
 
 <script>
+import { mapState } from "vuex"
 export default {
-    name: 'navHeader'
+    name: 'navHeader',
+    computed: {
+        ...mapState(['menu'])
+    },
+    data(){
+        return {
+            activeName: 'home'
+        }
+    },
+    created(){
+        
+    },
+    methods: {
+        changeMenu(name){
+            this.$router.push(name);
+        }
+    },
+    mounted(){
+        this.$nextTick(() =>{
+            this.activeName = this.$route.path.slice(1) || 'home';
+            this.$refs.navMenu.updateActiveName();
+        })
+        
+    }
 }
 </script>
 
@@ -56,5 +73,8 @@ export default {
     margin: 0 auto;
     margin-right: 20px;
     float: right;
+    >div{
+        display: inline-block;
+    }
 }
 </style>
