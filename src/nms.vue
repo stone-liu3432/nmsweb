@@ -27,6 +27,7 @@ html{
 }
 body{
     height: 100%;
+    margin: 0;
 }
 #app {
     font-family: Helvetica, Avenir, Arial, sans-serif;

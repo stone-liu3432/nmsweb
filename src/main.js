@@ -5,11 +5,11 @@ import store from './vuex/store'
 import NMS from './nms'
 import router from './router'
 import axios from 'axios'
-import iView from 'iview';
-import 'iview/dist/styles/iview.css';
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
-Vue.use(iView)
 Vue.use(Vuex)
+Vue.use(ElementUI)
 Vue.config.productionTip = false
 
 //  request拦截器  -->  全局request添加请求头
