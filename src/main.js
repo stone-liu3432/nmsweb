@@ -1,5 +1,7 @@
 import 'babel-polyfill'
 import Vue from 'vue'
+import Vuex from 'Vuex'
+import store from './vuex/store'
 import NMS from './nms'
 import router from './router'
 import axios from 'axios'
@@ -7,6 +9,7 @@ import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 
 Vue.use(iView)
+Vue.use(Vuex)
 Vue.config.productionTip = false
 
 //  request拦截器  -->  全局request添加请求头
@@ -32,6 +35,7 @@ Vue.prototype.$http = axios
 new Vue({
     el: '#app',
     router,
+    store,
     components: { NMS },
     template: '<NMS/>'
 })
