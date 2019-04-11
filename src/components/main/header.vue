@@ -1,7 +1,7 @@
 <template>
     <el-header>
         <div class="layout-logo"></div>
-        <el-menu :default-active="activeIndex" mode="horizontal" :router="true">
+        <el-menu :default-active="activeIndex" mode="horizontal" router>
             <template v-for="(item, index) in menu" v-if="menu">
                 <el-menu-item :index="item.name" v-if="!item.children">{{ item.name }}</el-menu-item>
                 <el-submenu :index="item.name" v-if="item.children">
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex"
+import { mapState,mapMutations } from 'vuex'
 export default {
     name: 'navHeader',
     computed: {
@@ -33,13 +33,23 @@ export default {
         
     },
     methods: {
-        
+        ...mapMutations({
+            updateBreadcrumb: 'updateBreadcrumb',
+        }),
     },
     mounted(){
         //  刷新页面时的菜单状态恢复
         this.$nextTick(() =>{
-            this.activeIndex = this.$route.path.slice(1) || 'home';
+            var activeIndex = this.$route.path.slice(1) || 'home';
+            this.activeIndex = activeIndex;
+            this.updateBreadcrumb(this.activeIndex);
         })
+    },
+    watch: {
+        '$route'(){
+            this.activeIndex = this.$route.path.slice(1);
+            this.updateBreadcrumb(this.activeIndex);
+        }
     }
 }
 </script>
