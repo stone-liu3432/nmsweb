@@ -9,7 +9,7 @@
 import echarts from 'echarts'
 import { mapState,mapMutations } from 'vuex'
 export default {
-    name: 'pie',
+    name: 'lineCharts',
     props: ['data', 'id'],
     mounted() {
         if(this.id){
@@ -20,7 +20,7 @@ export default {
     },
     computed: {
         name(){
-            return this.data.series[0].name;
+            return this.data.series[0].name || '';
         }
     },
     methods: {
