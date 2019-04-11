@@ -4,4 +4,5 @@
 
 ## 依赖项
 
-> [iview](https://github.com/iview/iview)
+> [element-ui](https://github.com/ElemeFE/element)
+> [echarts](https://github.com/apache/incubator-echarts)
