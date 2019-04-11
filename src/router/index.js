@@ -31,7 +31,7 @@ router.beforeEach((to, from, next)=>{
 });
 
 router.afterEach((to, from)=>{
-    store.commit("changeLoadingState", false);
+	store.commit("changeLoadingState", false);
 });
 
 export default router;
