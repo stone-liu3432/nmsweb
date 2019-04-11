@@ -2,87 +2,91 @@
     <div id="login">
         <div>
             <h1 style="margin: 10px;">login</h1>
-            <Form ref="formCustom" :model="formCustom" :rules="ruleCustom">
-                <FormItem prop="uname">
-                    <Input type="text" prefix="ios-contact" v-model="formCustom.uname" placeholder="user name"></Input>
-                </FormItem>
-                <FormItem prop="passwd">
-                    <Input type="password" prefix="ios-lock-outline" v-model="formCustom.passwd" placeholder="password"></Input>
-                </FormItem>
-                <FormItem>
-                    <Button type="primary" @click="handleSubmit('formCustom')" long>login</Button>
-                </FormItem>
-            </Form>
+            <el-form
+                :model="ruleForm"
+                status-icon
+                :rules="rules"
+                ref="ruleForm" 
+                label-width="100px"
+            >
+                <el-form-item prop="uname" label="user">
+                    <el-input v-model.number="ruleForm.uname"
+                    placeholder="user name"></el-input>
+                </el-form-item>
+                <el-form-item prop="pass" label="password">
+                    <el-input type="password" v-model="ruleForm.pass" auto-complete="off"
+                    placeholder="password"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('ruleForm')" style="width: 100%;">提交</el-button>
+                </el-form-item>
+            </el-form>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'login',
-    data(){
-        const validateUserName = (rule, value, callback) => {
-            if (!value) {
-                return callback(new Error('user name cannot be empty'));
+    name: "login",
+    data() {
+        var checkName = (rule, value, callback) => {
+            if (value === '') {
+                return callback(new Error("请输入用户名"));
             }
             if(!/^\w{4,16}$/.test(value)){
-                return callback(new Error('User name length is 4-16 character'));
+                return callback(new Error('用户名格式不正确'));
             }
             callback();
         };
-        const validatePass = (rule, value, callback) => {
-            if (!value) {
-                return callback(new Error('Please enter your password'));
+        var validatePass = (rule, value, callback) => {
+            if (value === "") {
+                callback(new Error("请输入密码"));
             }
             if(value.length < 4 || value.length > 32){
-                return callback(new Error('Password length is 4-32 character'));
+                return callback(new Error('密码格式不正确'));
             }
             callback();
         };
         return {
-             formCustom: {
-                passwd: '',
-                passwdCheck: '',
-                uname: ''
+            ruleForm: {
+                pass: "",
+                uname: ""
             },
-            ruleCustom: {
-                passwd: [
-                    { validator: validatePass, trigger: 'blur' }
-                ],
-                uname: [
-                    { validator: validateUserName, trigger: 'blur' }
-                ]
+            rules: {
+                pass: [{ validator: validatePass, trigger: "blur" }],
+                uname: [{ validator: checkName, trigger: "blur" }]
             }
-        }
+        };
     },
-    created(){},
+    created() {},
     methods: {
-        handleSubmit (name) {
-            this.$refs[name].validate(valid => {
+        submitForm(formName) {
+            this.$refs[formName].validate(valid => {
                 if (valid) {
-                    this.$Message.success('Success!');
-                    //  用户验证  to do 
-                    this.$router.push('main');
+                    // sucess  to do
                 } else {
-                    this.$Message.error('Fail!');
+                    //  error
+                    return false;
                 }
-            })
+            });
         }
     }
-}
+};
 </script>
 
 <style lang="less" scoped>
-#login{
+#login {
     height: 100%;
     min-width: 1280px;
     min-height: 768px;
-    >div{
+    > div {
         width: 500px;
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -100%);
+        padding: 20px;
+        border: 1px solid #ddd;
     }
 }
 </style>
