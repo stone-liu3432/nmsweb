@@ -26,35 +26,18 @@
 </template>
 
 <script>
+import { validatorUserName, validatorPassword } from '@/utils/validator'
 export default {
     name: "login",
     data() {
-        var checkName = (rule, value, callback) => {
-            if (value === '') {
-                return callback(new Error("请输入用户名"));
-            }
-            if(!/^\w{4,16}$/.test(value)){
-                return callback(new Error('用户名格式不正确'));
-            }
-            callback();
-        };
-        var validatePass = (rule, value, callback) => {
-            if (value === "") {
-                callback(new Error("请输入密码"));
-            }
-            if(value.length < 4 || value.length > 32){
-                return callback(new Error('密码格式不正确'));
-            }
-            callback();
-        };
         return {
             ruleForm: {
                 pass: "",
                 uname: ""
             },
             rules: {
-                pass: [{ validator: validatePass, trigger: "blur" }],
-                uname: [{ validator: checkName, trigger: "blur" }]
+                pass: [{ validator: validatorUserName, trigger: "blur" }],
+                uname: [{ validator: validatorPassword, trigger: "blur" }]
             }
         };
     },
@@ -64,6 +47,7 @@ export default {
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     // sucess  to do
+                    this.$router.push('/main');
                 } else {
                     //  error
                     return false;
