@@ -13,7 +13,7 @@ const performance = () => import(/* webpackChunkName: "perf" */ '@/components/co
 
 const topo = () => import(/* webpackChunkName: "device" */ '@/components/content/topo')
 const device = () => import(/* webpackChunkName: "device" */ '@/components/content/device')
-const onulist = () => import(/* webpackChunkName: "device" */ '@/components/content/onulist')
+const devDiscover = () => import(/* webpackChunkName: "device" */ '@/components/content/devDiscover')
 
 const routes = [
     {
@@ -60,11 +60,11 @@ const routes = [
                 component: device,
             },
             {
-                path: "/onulist",
+                path: "/device_discover",
                 meta: {
                     requireAuth: true
                 },
-                component: onulist,
+                component: devDiscover,
             },
             {
                 path: "/system",

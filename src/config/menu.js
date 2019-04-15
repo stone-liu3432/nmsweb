@@ -7,7 +7,7 @@ const menu = [
         children: [
             { name: 'topo' },
             { name: 'device' },
-            { name: 'onulist' },
+            { name: 'device_discover' },
         ]
     },
     {
