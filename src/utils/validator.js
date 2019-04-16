@@ -87,6 +87,20 @@ export function validatorPort(rule, value, callback){
     }
     callback();
 }
+//  任务名
+export function validatorTaskName(rule, value, callback){
+    if(!value){
+        return callback(new Error('task name'));
+    }
+    callback();
+}
+//  描述信息
+export function validatorDesc(rule, value, callback){
+    if(!value){
+        return callback(new Error('desc'));
+    }
+    callback();
+}
 const validator = {
     validatorDevName,
     validatorMac,
@@ -100,6 +114,7 @@ const validator = {
     validatorCommunity,
     validatorProtocol,
     validatorPort,
+    validatorTaskName,
 }
 
 export default validator;
