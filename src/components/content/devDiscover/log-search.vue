@@ -1,16 +1,21 @@
 <template>
     <div slot="label">
-        <el-form inline size="small" :model="logSearch" :rules="rules" ref="logSearch">
-            <el-form-item label="ip address" label-width="120px" prop="ipaddr">
-                <el-input v-model="logSearch.ipaddr" placeholder="ip address"></el-input>
-            </el-form-item>
-            <el-form-item label="时间范围" label-width="120px" prop="ipaddr">
-                <el-date-picker v-model="logSearch.stime" type="datetime" placeholder="开始时间"></el-date-picker>-
-                <el-date-picker v-model="logSearch.etime" type="datetime" placeholder="结束时间"></el-date-picker>
-                <el-button type="primary" @click="submitData">搜索</el-button>
-            </el-form-item>
-        </el-form>
-        <el-table :data="alertTable" border style="width: 100%">
+        <el-collapse>
+            <el-collapse-item title="搜索日志">
+                <el-form inline size="small" :model="logSearch" :rules="rules" ref="logSearch">
+                    <el-form-item label="ip address" label-width="120px" prop="ipaddr">
+                        <el-input v-model="logSearch.ipaddr" placeholder="ip address"></el-input>
+                    </el-form-item>
+                    <el-form-item label="时间范围" label-width="120px" prop="ipaddr">
+                        <el-date-picker v-model="logSearch.stime" type="datetime" placeholder="开始时间"></el-date-picker>-
+                        <el-date-picker v-model="logSearch.etime" type="datetime" placeholder="结束时间"></el-date-picker>
+                        <el-button type="primary" @click="submitData" style="margin-left: 20px;">搜索</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-collapse-item>
+        </el-collapse>
+        <h3>日志详情</h3>
+        <el-table :data="alertTable" border style="width: 100%; margin-top: 20px;">
             <el-table-column prop="alarm_id" label="ID" width="80"></el-table-column>
             <el-table-column prop="source" label="告警源"></el-table-column>
             <el-table-column prop="macaddr" label="MAC地址"></el-table-column>
@@ -76,11 +81,11 @@ export default {
             this.pageSize = val;
         },
         handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
         }
     }
 };
 </script>
 
 <style lang="less" scoped>
+
 </style>
