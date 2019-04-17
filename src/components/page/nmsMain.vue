@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="nms-main">
         <nav-header></nav-header>
         <content-area></content-area>
         <common-footer></common-footer>
@@ -22,5 +22,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.nms-main{
+    margin: 0 0 30px 0;
+}
 </style>
