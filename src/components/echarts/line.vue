@@ -1,12 +1,16 @@
 <template>
     <div class="pie" v-if="lineData">
-        <div>{{ name }}</div>
+        <div>{{ title }}</div>
         <div :ref="id"></div>
     </div>
 </template>
 
 <script>
-import echarts from 'echarts'
+import echarts from 'echarts/lib/echarts'
+import 'echarts/lib/chart/line'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/title'
+import 'echarts/lib/component/legend'
 import { mapState,mapMutations } from 'vuex'
 export default {
     name: 'lineCharts',
@@ -24,7 +28,7 @@ export default {
         }
     },
     computed: {
-        name(){
+        title(){
             return this.lineData.series[0].name || '';
         }
     },

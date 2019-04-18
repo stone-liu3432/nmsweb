@@ -1,12 +1,16 @@
 <template>
     <div class="pie" v-if="pieData">
-        <div>{{ name }}</div>
+        <div>{{ title }}</div>
         <div :ref="id"></div>
     </div>
 </template>
 
 <script>
-import echarts from 'echarts'
+import echarts from 'echarts/lib/echarts'
+import 'echarts/lib/chart/pie'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/title'
+import 'echarts/lib/component/legend'
 import { mapState,mapMutations } from 'vuex'
 export default {
     name: 'pie',
@@ -24,7 +28,7 @@ export default {
         }
     },
     computed: {
-        name(){
+        title(){
             return this.pieData.series[0].name || '';
         }
     },
