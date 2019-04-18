@@ -70,7 +70,7 @@
             :total="400"
         ></el-pagination>
         <el-dialog title="增加用户" :visible.sync="userCfgModal" center :before-close="clearData">
-            <el-form :model="form" :rules="rules" label-width="120px" v-if="isAddUser">
+            <el-form :model="form" :rules="rules" label-width="120px" ref="userInfo" v-if="modalType === 'add'">
                 <el-form-item label="用户名" prop="name">
                     <el-input v-model="form.username"></el-input>
                 </el-form-item>
@@ -93,7 +93,7 @@
                     <el-input v-model="form.description" type="textarea"></el-input>
                 </el-form-item>
             </el-form>
-            <el-form :model="form" :rules="rules" label-width="120px" v-if="!isAddUser">
+            <el-form :model="form" :rules="rules" label-width="120px" ref="userInfo" v-if="modalType === 'modifyInfo'">
                 <el-form-item label="用户名" prop="name">
                     <el-input v-model="form.username" disabled></el-input>
                 </el-form-item>
@@ -107,9 +107,23 @@
                     <el-input v-model="form.description" type="textarea"></el-input>
                 </el-form-item>
             </el-form>
+            <el-form :model="form" :rules="rules" label-width="120px" ref="userInfo" v-if="modalType === 'modifyPass'">
+                <el-form-item label="用户名" prop="name">
+                    <el-input v-model="form.username" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="原密码" prop="pass">
+                    <el-input v-model="form.pass"></el-input>
+                </el-form-item>
+                <el-form-item label="新密码" prop="pass1">
+                    <el-input v-model="form.pass1"></el-input>
+                </el-form-item>
+                <el-form-item label="确认新密码" prop="pass2">
+                    <el-input v-model="form.pass2"></el-input>
+                </el-form-item>
+            </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="submitForm">确 定</el-button>
                 <el-button @click="closeModal">取 消</el-button>
+                <el-button type="primary" @click="submitForm('userInfo')">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -138,8 +152,9 @@ export default {
             pageSizes,
             multipleSelection: [],
             userCfgModal: false,
-            isAddUser: false,
+            modalType: "",
             form: {
+                pass: "",
                 username: "",
                 pass1: "",
                 pass2: "",
@@ -154,26 +169,47 @@ export default {
     methods: {
         addUser() {
             this.userCfgModal = true;
-            this.isAddUser = true;
+            this.modalType = "add";
         },
         delUserBatch() {
             if (this.multipleSelection.length === 0) {
+                this.$message({
+                    type: 'info',
+                    message: '未选中任何用户'
+                })
                 return;
             }
             console.log("del batch");
         },
         delUser(data) {
-            console.log(data);
+            this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+                center: true
+            }).then(() => {
+                this.$message({
+                    type: "success",
+                    message: "点击确认"
+                });
+            }).catch(() => {
+                this.$message({
+                    type: "info",
+                    message: "点击取消"
+                });
+            });
         },
         modifyUser(data) {
             this.userCfgModal = true;
-            this.isAddUser = false;
+            this.modalType = "modifyInfo";
             Object.keys(data).forEach(item => {
                 this.form[item] = data[item];
-            })
+            });
         },
         modifyPass(data) {
-            console.log(data);
+            this.userCfgModal = true;
+            this.modalType = "modifyPass";
+            this.form.username = data.username;
         },
         handleSizeChange(val) {
             this.pageSize = val;
@@ -182,15 +218,29 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
-        submitForm(){},
-        closeModal(){
-            this.userCfgModal = false;
-            this.isAddUser = false;
+        submitForm(formName) {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    console.log('submit!');
+                    //  to do
+                    this.closeModal();
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         },
-        clearData(done){
+        closeModal() {
+            this.userCfgModal = false;
+            this.modalType = "";
             Object.keys(this.form).forEach(item => {
-                this.form[item] = '';
-            })
+                this.form[item] = "";
+            });
+        },
+        clearData(done) {
+            Object.keys(this.form).forEach(item => {
+                this.form[item] = "";
+            });
             done();
         }
     }
