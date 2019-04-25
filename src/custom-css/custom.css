@@ -8,18 +8,13 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
 
 .el-collapse-item__header{
     background: #E4E7ED;
-    text-indent: 16px;
+    padding-left: 16px;
 }
 
 .collapse-margin{
     margin-top: 10px;
 }
 
-/* 
-* 折叠面板打开时，箭头icon图标会向下偏移，将其复位用
-* icon 大小为 29*13
-* 旋转90度时，Y轴方向为元素宽度
- */
 .el-collapse-item__arrow.is-active {
-    transform: rotate(90deg) translateX(-30%);
+    transform: rotate(90deg);
 }
