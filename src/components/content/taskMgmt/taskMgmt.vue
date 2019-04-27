@@ -1,18 +1,5 @@
 <template>
     <div slot="label">
-        <!-- 
-            "name":"EPON-OLT-E04",
-            "devicelist":["192.168.100.171"],
-            "status":true,
-            "template":"tasktemplate1",
-            "mode":"manual",
-            "concurrent":true,
-            "stime":"2019/01/01 01:01:01",
-            "etime":"2019/01/02 01:01:01",
-            "description":"new task",
-            "user":"admin",
-            "timestamp":"2019/01/02 01:01:01"
-        -->
         <el-collapse>
             <el-collapse-item title="添加任务">
                 <el-form
@@ -20,7 +7,7 @@
                     :rules="rules"
                     ref="addTask"
                     size="small"
-                    label-width="150px">
+                    label-width="150px" class="collapse-margin">
                     <el-row>
                         <el-col :span="8">
                             <el-form-item label="任务名称" prop="name">

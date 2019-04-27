@@ -1,16 +1,8 @@
 <template>
     <div slot="label">
-        <!-- 
-            "name":"upgradefirmware",
-            "type":"upgradefirmware",
-            "upgradefile":"template1",
-            "user":"admin",
-            "timestamp":"2019/04/04 09:09:09",
-            "description":"HSGQ-E08 upgrade firmware file"
-        -->
          <el-collapse>
             <el-collapse-item title="添加任务模板">
-                <el-form label-width="100px" size="small" :model="taskData">
+                <el-form label-width="100px" size="small" :model="taskData" class="collapse-margin">
                     <el-form-item label="类型">
                         <el-select v-model="taskData.type">
                             <el-option v-for="(item, index) in taskType" :key="index" :value="item"></el-option>
