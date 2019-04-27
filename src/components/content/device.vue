@@ -40,7 +40,7 @@
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 20, 50, 100]"
+                :page-sizes="pageSizes"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="400"
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import { pageSizes } from '@/utils/common-data'
 export default {
     name: "deviceMgmt",
     data() {
@@ -103,8 +104,11 @@ export default {
                 }
             ],
             currentPage: 4,
-            pageSize: 20
+            pageSize: 20,
+            pageSizes,
         };
+    },
+    created(){
     },
     methods: {
         nodeClick(item, node, self) {
@@ -122,6 +126,8 @@ export default {
         handleCurrentChange(val) {
             console.log(`当前页: ${val}`);
         }
+    },
+    beforeDestroy(){
     }
 };
 </script>
