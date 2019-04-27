@@ -1,63 +1,57 @@
 <template>
-    <div>
-        <el-row :gutter="20">
-            <el-col :span="20">
-                <el-row :gutter="20">
-                    <el-col :span="12">
-                        <pie :data="data" :id="id" v-if="data"></pie>
-                    </el-col>
-                    <el-col :span="12">
-                        <line-charts :data="data1" :id="id1"></line-charts>
-                    </el-col>
-                </el-row>
-            </el-col>
-            <el-col :span="4">
-                <div style="width: 100%;height: 1280px;background: #ccc;margin-top: 20px;">test</div>
-            </el-col>
-        </el-row>
-    </div>
+    <el-row :gutter="20">
+        <el-col :span="20">
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <pie-charts :pie-data="cpuInfo" :id="cpuID" v-if="cpuInfo.series"></pie-charts>
+                </el-col>
+                <el-col :span="12">
+                    <pie-charts :pie-data="memoryInfo" :id="memoryID" v-if="memoryInfo.series"></pie-charts>
+                </el-col>
+                <el-col :span="12">
+                    <pie-charts :pie-data="devInfo" :id="devID" v-if="devInfo.series"></pie-charts>
+                </el-col>
+                <el-col :span="12">
+                    <pie-charts :pie-data="onuInfo" :id="onuID" v-if="onuInfo.series"></pie-charts>
+                </el-col>
+            </el-row>
+        </el-col>
+        <el-col :span="4">
+            <div></div>
+        </el-col>
+    </el-row>
 </template>
 
 <script>
-import pie from '../echarts/pie'
+import pieCharts from '../echarts/pie'
 import lineCharts from '../echarts/line'
 import { initPieData, initLineData } from '@/utils/common'
 import { mapState,mapMutations } from 'vuex'
 export default {
     name: 'home',
-    computed: mapState(['charts']),
+    computed: mapState(['charts', 'lanMap']),
     data(){
         return {
-            data: {},
-            id: 'test',
-            data1: {},
-            id1: 'test1',
-            test: 0,
-            debounced: true
+            debounced: true,
+            cpuInfo: {},
+            memoryInfo: {},
+            cpuID: 'cpu-used',
+            memoryID: 'memory-used',
+            devInfo: {},
+            devID: 'device-info',
+            onuInfo: {},
+            onuID: 'all-onu-info'
         }
     },
-    components: { pie, lineCharts },
+    components: { pieCharts, lineCharts },
     created(){
-        this.data = initPieData({
-            name: 'EPON',
-            data: [
-                {value: 85, name: 'online'},
-                {value: 3, name: 'offline'},
-                {value: 16, name: 'warning'}
-            ]
-        })
-        this.data1 = initLineData({
-            name: 'test1',
-            xAxis: ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00'],
-            data: [820, 932, 901, 934, 1290, 1330]
-        })
+
     },
     mounted(){
         var _this = this;
         document.body.onresize = function(){
             if(_this.debounced){
                 _this.debounced = false;
-                // to do
                 _this.charts.forEach(item =>{
                     if(typeof item.resize === 'function'){
                         item.resize();
@@ -68,8 +62,78 @@ export default {
                 }, 300)
             }
         }
+        this.$nextTick(() =>{
+            this.getSysInfo();
+            this.getDevInfo();
+            this.getOnuInfo();
+        })
     },
     methods: {
+        getSysInfo(){
+            this.$http.get('/api/server').then(res =>{
+                if(res.data.code === 1){
+                    var data = res.data.data;
+                    this.cpuInfo = initPieData({
+                        name: this.lanMap['cpu'],
+                        data: [
+                            { value: data.cpu, name: this.lanMap['in_use'] },
+                            { value: 100 - data.cpu, name: this.lanMap['idle']}
+                        ]
+                    })
+                    this.memoryInfo = initPieData({
+                        name: this.lanMap['memory'],
+                        data: [
+                            { value: data.memory_used, name: this.lanMap['memory_used']},
+                            { value: data.memory_total - data.memory_used, name: this.lanMap['idle']}
+                        ]
+                    })
+                }else{
+                    this.cpuInfo = {};
+                    this.memoryInfo = {};
+                }
+            }).catch(err =>{
+
+            })
+        },
+        getDevInfo(){
+            this.$http.get('/api/server?device=eponolt').then(res =>{
+                if(res.data.code === 1){
+                    var data = res.data.data;
+                    this.devInfo = initPieData({
+                        name: 'EPON/GPON',
+                        data: [
+                            { value: data.error, name: this.lanMap['error']},
+                            { value: data.offline, name: this.lanMap['offline']},
+                            { value: data.online, name: this.lanMap['online']},
+                        ]
+                    })
+                }else{
+                    this.devInfo = {};
+                }
+            }).catch(err => {
+
+            })
+        },
+        getOnuInfo(){
+            this.$http.get('/api/server?device=epononu').then(res =>{
+                if(res.data.code === 1){
+                    var data = res.data.data;
+                    this.onuInfo = initPieData({
+                        name: 'ONU',
+                        data: [
+                            { value: data.offline, name: this.lanMap['offline']},
+                            { value: data.register, name: this.lanMap['register']},
+                            { value: data.initial, name: this.lanMap['initial']},
+                            { value: data.authorized, name: this.lanMap['authorized']}
+                        ]
+                    })
+                }else{
+                    this.onuInfo = {};
+                }
+            }).catch(err=>{
+
+            })
+        }
     },
     beforeDestroy(){
         document.body.onresize = null;
@@ -78,5 +142,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 </style>
