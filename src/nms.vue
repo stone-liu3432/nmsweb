@@ -5,27 +5,45 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
+import zh from "@/locale/zh-cn";
+import en from "@/locale/en";
+const lang = {
+    zh,
+    en
+};
 export default {
     name: "nms",
-    created(){
-        
+    computed: mapState(["language", "lanMap"]),
+    created() {
+        this.changeLang("zh");
     },
     components: {},
-    data(){
-        return {}
+    data() {
+        return {
+            
+        };
     },
-    mounted(){
-        
+    mounted() {},
+    methods: {
+        ...mapMutations({
+            changeLang: "changeLang",
+            changeLangMap: "changeLangMap"
+        })
     },
-    methods: {}
+    watch: {
+        language() {
+            this.changeLangMap(lang[this.language]);
+        }
+    }
 };
 </script>
 
 <style>
-html{
+html {
     height: 100%;
 }
-body{
+body {
     height: 100%;
     margin: 0;
 }
