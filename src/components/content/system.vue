@@ -21,7 +21,7 @@ export default {
     components: { userMgmt, permissions, software },
     data() {
         return {
-            activeName: "userMgmt"
+            activeName: "software"
         };
     }
 };
