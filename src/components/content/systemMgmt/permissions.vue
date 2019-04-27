@@ -5,8 +5,14 @@
 </template>
 
 <script>
+import { pageSizes } from "@/utils/common-data";
 export default {
-    name: 'permissions'
+    name: 'permissions',
+    data(){
+        return {
+
+        }
+    }
 }
 </script>
 

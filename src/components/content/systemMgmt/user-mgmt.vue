@@ -10,7 +10,7 @@
             </el-col>
         </el-row>
         <el-table
-            :data="taskTable"
+            :data="userInfo"
             border
             stripe
             style="margin-top: 20px;"
@@ -19,45 +19,45 @@
             <el-table-column type="expand">
                 <template slot-scope="props">
                     <el-form label-position="left" inline class="table-expand">
-                        <el-form-item label="用户名">
+                        <el-form-item :label="lanMap['username']">
                             <span>{{ props.row.username }}</span>
                         </el-form-item>
-                        <el-form-item label="角色名称">
+                        <el-form-item :label="lanMap['role']">
                             <span>{{ props.row.role }}</span>
                         </el-form-item>
-                        <el-form-item label="用户标签">
+                        <el-form-item :label="lanMap['label']">
                             <span>{{ props.row.label }}</span>
                         </el-form-item>
-                        <el-form-item label="操作员电话">
+                        <el-form-item :label="lanMap['phone']">
                             <span>{{ props.row.phone }}</span>
                         </el-form-item>
-                        <el-form-item label="状态">
+                        <el-form-item :label="lanMap['status']">
                             <span>{{ props.row.status }}</span>
                         </el-form-item>
-                        <el-form-item label="创建时间">
+                        <el-form-item :label="lanMap['timestamp']">
                             <span>{{ props.row.timestamp }}</span>
                         </el-form-item>
-                        <el-form-item label="备注">
+                        <el-form-item :label="lanMap['desctiption']">
                             <span>{{ props.row.description }}</span>
                         </el-form-item>
-                        <el-form-item label="最后登录时间">
+                        <el-form-item :label="lanMap['lastlogintime']">
                             <span>{{ props.row.lastlogintime }}</span>
                         </el-form-item>
                     </el-form>
                 </template>
             </el-table-column>
             <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="username" label="用户名"></el-table-column>
-            <el-table-column prop="status" label="状态"></el-table-column>
-            <el-table-column prop="description" label="描述信息"></el-table-column>
-            <el-table-column label="配置">
+            <el-table-column prop="username" :label="lanMap['username']"></el-table-column>
+            <el-table-column prop="status" :label="lanMap['status']"></el-table-column>
+            <el-table-column prop="description" :label="lanMap['description']"></el-table-column>
+            <el-table-column :label="lanMap['config']">
                 <template slot-scope="scope">
-                    <el-button @click="delUser(scope.row)" type="text" size="small">删除</el-button>
+                    <el-button @click="delUser(scope.row)" type="text" size="small">{{ lanMap['delete'] }}</el-button>
                     <el-button @click="modifyUser(scope.row)" type="text" size="small">修改用户信息</el-button>
                     <el-button @click="modifyPass(scope.row)" type="text" size="small">修改密码</el-button>
                 </template>
             </el-table-column>
-            <div slot="empty">empty</div>
+            <div slot="empty">{{ lanMap['empty'] }}</div>
         </el-table>
         <el-pagination
             style="float: right;"
@@ -67,75 +67,97 @@
             :page-sizes="pageSizes"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="400"
+            :total="user.length"
+            v-if="user.length > pageSize"
         ></el-pagination>
         <el-dialog title="增加用户" :visible.sync="userCfgModal" center :before-close="clearData">
-            <el-form :model="form" :rules="rules" label-width="120px" ref="userInfo" v-if="modalType === 'add'">
-                <el-form-item label="用户名" prop="name">
+            <el-form
+                :model="form"
+                :rules="rules"
+                label-width="120px"
+                ref="userInfo"
+                v-if="modalType === 'add'"
+            >
+                <el-form-item :label="lanMap['username']" prop="name">
                     <el-input v-model="form.username"></el-input>
                 </el-form-item>
-                <el-form-item label="密码" prop="pass1">
+                <el-form-item :label="lanMap['password']" prop="pass1">
                     <el-input v-model="form.pass1" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="确认密码" prop="pass2">
+                <el-form-item :label="lanMap['re_enter_pass']" prop="pass2">
                     <el-input v-model="form.pass2" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="权限" prop="role">
+                <el-form-item :label="lanMap['role']" prop="role">
                     <el-input v-model="form.role"></el-input>
                 </el-form-item>
-                <el-form-item label="标签" prop="label">
+                <el-form-item :label="lanMap['label']" prop="label">
                     <el-input v-model="form.label"></el-input>
                 </el-form-item>
-                <el-form-item label="电话" prop="phone">
+                <el-form-item :label="lanMap['phone']" prop="phone">
                     <el-input v-model="form.phone"></el-input>
                 </el-form-item>
-                <el-form-item label="备注" prop="description">
+                <el-form-item :label="lanMap['description']" prop="description">
                     <el-input v-model="form.description" type="textarea"></el-input>
                 </el-form-item>
             </el-form>
-            <el-form :model="form" :rules="rules" label-width="120px" ref="userInfo" v-if="modalType === 'modifyInfo'">
-                <el-form-item label="用户名" prop="name">
+            <el-form
+                :model="form"
+                :rules="rules"
+                label-width="120px"
+                ref="userInfo"
+                v-if="modalType === 'modifyInfo'"
+            >
+                <el-form-item :label="lanMap['username']" prop="name">
                     <el-input v-model="form.username" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="标签" prop="label">
+                <el-form-item :label="lanMap['label']" prop="label">
                     <el-input v-model="form.label"></el-input>
                 </el-form-item>
-                <el-form-item label="电话" prop="phone">
+                <el-form-item :label="lanMap['phone']" prop="phone">
                     <el-input v-model="form.phone"></el-input>
                 </el-form-item>
-                <el-form-item label="备注" prop="description">
+                <el-form-item :label="lanMap['description']" prop="description">
                     <el-input v-model="form.description" type="textarea"></el-input>
                 </el-form-item>
             </el-form>
-            <el-form :model="form" :rules="rules" label-width="120px" ref="userInfo" v-if="modalType === 'modifyPass'">
-                <el-form-item label="用户名" prop="name">
+            <el-form
+                :model="form"
+                :rules="rules"
+                label-width="120px"
+                ref="userInfo"
+                v-if="modalType === 'modifyPass'"
+            >
+                <el-form-item :label="lanMap['username']" prop="name">
                     <el-input v-model="form.username" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="原密码" prop="pass">
+                <el-form-item :label="lanMap['old_pass']" prop="pass">
                     <el-input v-model="form.pass"></el-input>
                 </el-form-item>
-                <el-form-item label="新密码" prop="pass1">
+                <el-form-item :label="lanMap['new_pass']" prop="pass1">
                     <el-input v-model="form.pass1"></el-input>
                 </el-form-item>
-                <el-form-item label="确认新密码" prop="pass2">
+                <el-form-item :label="lanMap['re_enter_pass']" prop="pass2">
                     <el-input v-model="form.pass2"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="closeModal">取 消</el-button>
-                <el-button type="primary" @click="submitForm('userInfo')">确 定</el-button>
+                <el-button @click="closeModal">{{ lanMap['cancel'] }}</el-button>
+                <el-button type="primary" @click="submitForm('userInfo')">{{ lanMap['apply'] }}</el-button>
             </div>
         </el-dialog>
     </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { pageSizes } from "@/utils/common-data";
 export default {
     name: "userMgmt",
+    computed: mapState(["lanMap"]),
     data() {
         return {
-            taskTable: [
+            user: [],
+            userInfo: [
                 {
                     username: "100",
                     role: "admin",
@@ -166,7 +188,34 @@ export default {
             rules: {}
         };
     },
+    created() {
+        this.getData();
+    },
     methods: {
+        getData() {
+            this.$http
+                .get("/api/server/user")
+                .then(res => {
+                    if (res.data.code === 1) {
+                        this.user = res.data.data;
+                        this.currentPage = 1;
+                        if(this.user && this.user.length){
+                            if(this.user.length > this.pageSize){
+                                this.userInfo = this.user.slice(0, this.pageSize);
+                            }else{
+                                this.userInfo = this.user;
+                            }
+                        }else{
+                            this.user = [];
+                            this.userInfo = [];
+                        }
+                    } else {
+                        this.user = [];
+                        this.userInfo = [];
+                    }
+                })
+                .catch(err => {});
+        },
         addUser() {
             this.userCfgModal = true;
             this.modalType = "add";
@@ -174,30 +223,41 @@ export default {
         delUserBatch() {
             if (this.multipleSelection.length === 0) {
                 this.$message({
-                    type: 'info',
-                    message: '未选中任何用户'
-                })
+                    type: "info",
+                    message: "未选中任何用户"
+                });
                 return;
             }
             console.log("del batch");
         },
-        delUser(data) {
-            this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                type: "warning",
-                center: true
-            }).then(() => {
-                this.$message({
-                    type: "success",
-                    message: "点击确认"
-                });
-            }).catch(() => {
-                this.$message({
-                    type: "info",
-                    message: "点击取消"
-                });
-            });
+        delUser(user) {
+            this.$confirm(
+                "此操作将永久删除该用户, 是否继续?",
+                this.lanMap["tips"],
+                {
+                    confirmButtonText: this.lanMap["apply"],
+                    cancelButtonText: this.lanMap["cancel"],
+                    type: "warning",
+                    center: true
+                }
+            )
+                .then(() => {
+                    var data = {
+                        method: "delete",
+                        param: {
+                            username: user.username
+                        }
+                    };
+                    this.$http
+                        .post("/api/server/user", data)
+                        .then(res => {
+                            if (res.data.code === 1) {
+                            } else {
+                            }
+                        })
+                        .catch(err => {});
+                })
+                .catch(() => {});
         },
         modifyUser(data) {
             this.userCfgModal = true;
@@ -214,18 +274,26 @@ export default {
         handleSizeChange(val) {
             this.pageSize = val;
         },
-        handleCurrentChange(val) {},
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            var start = (val - 1) * this.pageSize;
+            if(start + this.pageSize > this.user.length){
+                this.userInfo = this.user.slice(start);
+            }else{
+                this.userInfo = this.user.slice(start, this.pageSize);
+            }
+        },
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    console.log('submit!');
+                    console.log("submit!");
                     //  to do
                     this.closeModal();
                 } else {
-                    console.log('error submit!!');
+                    console.log("error submit!!");
                     return false;
                 }
             });
