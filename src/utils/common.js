@@ -37,7 +37,7 @@ export function initPieData(opt){
                 type: 'pie',
                 radius : '55%',
                 center: ['50%', '50%'],
-                data: opt.data || {},
+                data: opt.data || [],
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 5,
@@ -50,6 +50,15 @@ export function initPieData(opt){
     }
 }
 
+
+/* 
+    折线图
+    ex:    {
+            name: 'test1',  //  项标题
+            xAxis: ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00'],  //  横坐标标记
+            data: [820, 932, 901, 934, 1290, 1330, 120]     //  数据
+        }
+*/
 export function initLineData(opt){
     if(!opt) return {}
     var xAxis = opt.xAxis || [], data = opt.data || [];

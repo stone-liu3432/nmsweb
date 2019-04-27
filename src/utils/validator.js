@@ -12,34 +12,39 @@ export function validatorDevName(rule, value, callback){
 }
 //  MAC地址
 export function validatorMac(rule, value, callback){
-    if(!value){
+    var reg = /([a-fA-F0-9]{2}\:){5}[a-fA-F0-9]{2}/g;
+    if(!reg.test(value)){
         return callback(new Error('mac'));
     }
     callback();
 }
 //  IP地址
 export function validatorIpAddr(rule, value, callback){
-    if(!value){
+    var reg = /^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/;
+    if(!reg.test(value)){
         return callback(new Error('ip address'));
     }
     callback();
 }
 //  IP掩码
 export function validatorIpMask(rule, value, callback){
-    if(!value){
+    var reg = /^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/;
+    if(!reg.test(value)){
         return callback(new Error('ip mask'));
     }
     callback();
 }
 //  设备型号
 export function validatorModel(rule, value, callback){
-    if(!value){
+    //  <4-18>   dev-model
+    var reg = /^[a-zA-Z0-9\-]{4, 18}$/;
+    if(!reg.test(value)){
         return callback(new Error('device model'));
     }
     callback();
 }
 //  设备类型
-export function validatorClass(rule, value, callback){
+export function validatorMclass(rule, value, callback){
     if(!value){
         return callback(new Error('class'));
     }
@@ -96,8 +101,38 @@ export function validatorTaskName(rule, value, callback){
 }
 //  描述信息
 export function validatorDesc(rule, value, callback){
-    if(!value){
+    //  < 4-256 >  description  
+    var reg = /^.{4, 256}$/;
+    if(!reg.test(value)){
         return callback(new Error('desc'));
+    }
+    callback();
+}
+
+export function validatorName(rule, value, callback){
+    //  < 4 - 33 >   name  label  groupname  creater  contact  
+    var reg = /^\w{4,33}$/;
+    if(!value || !reg.test(value)){
+        return callback(new Error('name'));
+    }
+    callback();
+}
+
+export function validatorAddr(rule, value, callback){
+    // < 4-128 >  address
+    // var reg = /^[a-zA-Z0-9,\-\(\)\u4e00-\u9fa5\（\）\《\》\—\；\，\。\“\”\<\>\！]{4, 128}$/;
+    var reg = /^.{4, 128}$/;
+    if(!reg.test(value)){
+        return callback(new Error('address'));
+    }
+    callback();
+}
+
+export function validatorAccount(rule, value, callback){
+    //  < 4-65 >  account -> 客户拔号帐号
+    var reg = /^[a-zA-Z0-9@_\.]{4, 65}$/;
+    if(!reg.test(value)){
+        return callback(new Error('account'));
     }
     callback();
 }
@@ -115,6 +150,9 @@ const validator = {
     validatorProtocol,
     validatorPort,
     validatorTaskName,
+    validatorDesc,
+    validatorName,
+    validatorAddr,
 }
 
 export default validator;
