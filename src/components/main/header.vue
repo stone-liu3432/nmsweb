@@ -3,13 +3,13 @@
         <div class="layout-logo"></div>
         <el-menu :default-active="activeIndex" mode="horizontal" router>
             <template v-for="(item, index) in menu" v-if="menu">
-                <el-menu-item :index="item.name" v-if="!item.children">{{ item.name }}</el-menu-item>
+                <el-menu-item :index="item.name" v-if="!item.children">{{ lanMap[item.name] }}</el-menu-item>
                 <el-submenu :index="item.name" v-if="item.children">
                     <template slot="title">
-                        {{ item.name }}
+                        {{ lanMap[item.name] }}
                     </template>
                     <el-menu-item :index="_item.name" v-for="(_item, _index) in item.children" :key="_index">
-                        {{ _item.name }}
+                        {{ lanMap[_item.name] }}
                     </el-menu-item>
                 </el-submenu>
             </template>
@@ -22,7 +22,7 @@ import { mapState,mapMutations } from 'vuex'
 export default {
     name: 'navHeader',
     computed: {
-        ...mapState(['menu', 'theme'])
+        ...mapState(['menu', 'theme', 'lanMap'])
     },
     data(){
         return {
