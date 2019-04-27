@@ -20,6 +20,7 @@ router.beforeEach((to, from, next)=>{
 			next();
 		}else if(process.env.NODE_ENV == 'production'){
 			// to do
+			next();
 		}
 	}else{
 		if(!sessionStorage.getItem("x-token")){
