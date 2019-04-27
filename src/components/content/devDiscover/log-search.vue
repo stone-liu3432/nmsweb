@@ -2,7 +2,7 @@
     <div slot="label">
         <el-collapse>
             <el-collapse-item title="搜索日志">
-                <el-form inline size="small" :model="logSearch" :rules="rules" ref="logSearch">
+                <el-form inline size="small" :model="logSearch" :rules="rules" ref="logSearch" class="collapse-margin">
                     <el-form-item label="ip address" label-width="120px" prop="ipaddr">
                         <el-input v-model="logSearch.ipaddr" placeholder="ip address"></el-input>
                     </el-form-item>
