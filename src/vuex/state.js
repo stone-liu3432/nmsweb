@@ -8,7 +8,9 @@ let state = {
     //  保存所有echarts实例
     charts: [],
     //  面包屑导航数据
-    breadcrumb: 'home'
+    breadcrumb: 'home',
+    language: '',
+    lanMap: {}
 }
 
 export default state

@@ -10,6 +10,12 @@ const mutations = {
     },
     updateBreadcrumb(state, data){
         state.breadcrumb = data;
+    },
+    changeLang(state, data){
+        state.language = data;
+    },
+    changeLangMap(state, data){
+        state.lanMap = data;
     }
 }
 
