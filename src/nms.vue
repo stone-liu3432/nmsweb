@@ -16,7 +16,9 @@ export default {
     name: "nms",
     computed: mapState(["language", "lanMap"]),
     created() {
-        this.changeLang("zh");
+        this.$i18n.locale = sessionStorage.getItem('lang') || 'en';
+        this.changeLangMap(lang[sessionStorage.getItem('lang') || 'en']);
+        this.changeLang(this.$i18n.locale);
     },
     components: {},
     data() {
@@ -34,6 +36,7 @@ export default {
     watch: {
         language() {
             this.changeLangMap(lang[this.language]);
+            this.$i18n.locale = this.language;
         }
     }
 };
