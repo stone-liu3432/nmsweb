@@ -124,7 +124,8 @@ export default {
                             { value: data.offline, name: this.lanMap['offline']},
                             { value: data.register, name: this.lanMap['register']},
                             { value: data.initial, name: this.lanMap['initial']},
-                            { value: data.authorized, name: this.lanMap['authorized']}
+                            { value: data.authorized, name: this.lanMap['authorized']},
+                            { value: data.unauth, name: this.lanMap['unauth'] }
                         ]
                     })
                 }else{
@@ -137,6 +138,17 @@ export default {
     },
     beforeDestroy(){
         document.body.onresize = null;
+    },
+    watch: {
+        lanMap(){
+            this.cpuInfo = {};
+            this.memoryInfo = {};
+            this.devInfo = {};
+            this.onuInfo = {};
+            this.getSysInfo();
+            this.getDevInfo();
+            this.getOnuInfo();
+        }
     }
 }
 </script>
