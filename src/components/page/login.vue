@@ -10,10 +10,10 @@
                 label-width="100px"
                 :status-icon="true"
             >
-                <el-form-item prop="uname" label="user">
+                <el-form-item prop="uname" :label="lanMap['username']">
                     <el-input v-model.number="ruleForm.uname" placeholder="user name"></el-input>
                 </el-form-item>
-                <el-form-item prop="pass" label="password">
+                <el-form-item prop="pass" :label="lanMap['password']">
                     <el-input
                         type="password"
                         v-model="ruleForm.pass"
@@ -21,6 +21,10 @@
                         placeholder="password"
                         @keydown.native.enter="submitForm('ruleForm')"
                     ></el-input>
+                </el-form-item>
+                <el-form-item :label="lanMap['language']">
+                    <el-radio v-model="ruleForm.lang" label="zh">简体中文</el-radio>
+                    <el-radio v-model="ruleForm.lang" label="en">English</el-radio>
                 </el-form-item>
                 <el-form-item>
                     <el-button
@@ -35,7 +39,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { validatorName, validatorPassword } from "@/utils/validator";
 import md5 from "md5";
 export default {
@@ -45,7 +49,8 @@ export default {
         return {
             ruleForm: {
                 pass: "",
-                uname: ""
+                uname: "",
+                lang: ''
             },
             rules: {
                 pass: [{ validator: validatorPassword, trigger: "blur" }],
@@ -53,8 +58,13 @@ export default {
             }
         };
     },
-    created() {},
+    created() {
+        this.ruleForm.lang = sessionStorage.getItem('lang') || 'en';
+    },
     methods: {
+        ...mapMutations({
+            changeLang: "changeLang"
+        }),
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
@@ -72,6 +82,8 @@ export default {
                         .then(res => {
                             if (res.data.code === 1) {
                                 this.$message.success("login success");
+                                sessionStorage.setItem('user', this.ruleForm.uname);
+                                sessionStorage.setItem('x-token', res.headers['x-token']);
                                 this.$router.push("/main");
                             } else {
                                 this.$message.error(res.data.message);
@@ -83,6 +95,12 @@ export default {
                     return false;
                 }
             });
+        }
+    },
+    watch: {
+        'ruleForm.lang'(){
+            sessionStorage.setItem('lang', this.ruleForm.lang);
+            this.changeLang(this.ruleForm.lang);
         }
     }
 };
