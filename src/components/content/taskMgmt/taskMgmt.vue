@@ -7,15 +7,17 @@
                     :rules="rules"
                     ref="addTask"
                     size="small"
-                    label-width="150px" class="collapse-margin">
+                    label-width="150px"
+                    class="collapse-margin"
+                >
                     <el-row>
                         <el-col :span="8">
-                            <el-form-item label="任务名称" prop="name">
-                                <el-input v-model="addTask.name"></el-input>
+                            <el-form-item :label="lanMap['taskname']" prop="taskname">
+                                <el-input v-model="addTask.taskname"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="任务类型" prop="mode">
+                            <el-form-item :label="lanMap['mode']">
                                 <el-select v-model="addTask.mode">
                                     <el-option value="manual"></el-option>
                                     <el-option value="time"></el-option>
@@ -23,72 +25,90 @@
                             </el-form-item>
                         </el-col>
                     </el-row>
-                    <el-form-item label="设备列表" prop="devicelist">
-                        <el-transfer v-model="addTask.devicelist" :data="devlist" style="border: 1px solid #ddd;"></el-transfer>
+                    <el-form-item :label="lanMap['devicelist']">
+                        <el-transfer
+                            v-model="addTask.devicelist"
+                            :data="devlist"
+                            style="border: 1px solid #ddd;"
+                            :titles="['source', 'target']"
+                        ></el-transfer>
                     </el-form-item>
                     <el-row>
                         <el-col :span="8">
-                            <el-form-item label="状态" prop="status">
+                            <el-form-item :label="lanMap['status']">
                                 <el-switch v-model="addTask.status"></el-switch>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="是否立即执行" prop="concurrent">
+                            <el-form-item :label="lanMap['concurrent']">
                                 <el-switch v-model="addTask.concurrent"></el-switch>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-col :span="8">
-                            <el-form-item label="start time" prop="stime">
+                            <el-form-item :label="lanMap['stime']">
                                 <el-date-picker
                                     type="datetime"
-                                    placeholder="选择日期"
+                                    :placeholder="lanMap['select_date']"
                                     v-model="addTask.stime"
                                     style="width: 100%;"
                                 ></el-date-picker>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="end time" prop="etime">
-                                <el-time-picker
+                            <el-form-item :label="lanMap['etime']">
+                                <el-date-picker
                                     type="datetime"
-                                    placeholder="选择时间"
+                                    :placeholder="lanMap['select_date']"
                                     v-model="addTask.etime"
                                     style="width: 100%;"
-                                ></el-time-picker>
+                                ></el-date-picker>
                             </el-form-item>
                         </el-col>
                     </el-row>
-                    <el-form-item label="模板" prop="template">
+                    <el-form-item :label="lanMap['template']">
                         <el-select v-model="addTask.template">
                             <el-option label="test" value="test"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="描述信息" prop="description">
+                    <el-form-item :label="lanMap['description']" prop="description">
                         <el-input type="textarea" v-model="addTask.description"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="submitForm('addTask')" style="width: 200px;">添加</el-button>
+                        <el-button
+                            type="primary"
+                            @click="submitForm('addTask')"
+                            style="width: 200px;"
+                        >{{ lanMap['add'] }}</el-button>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
         </el-collapse>
         <h3>已有任务列表</h3>
         <el-table :data="taskTable" border style="margin-top: 20px;">
-            <el-table-column prop="name" label="任务名称"></el-table-column>
-            <el-table-column prop="execstatus" label="执行状态" width="100"></el-table-column>
-            <el-table-column prop="status" :formatter="formatStatus" label="使能状态" width="80"></el-table-column>
-            <el-table-column prop="mode" label="任务类型" width="80"></el-table-column>
-            <el-table-column prop="user" label="创建者"></el-table-column>
-            <el-table-column prop="timestamp" label="创建时间"></el-table-column>
-            <el-table-column prop="description" label="描述信息"></el-table-column>
-            <el-table-column label="配置">
+            <el-table-column prop="taskname" :label="lanMap['taskname']"></el-table-column>
+            <el-table-column prop="execstatus" :label="lanMap['execstatus']" width="100"></el-table-column>
+            <el-table-column
+                prop="status"
+                :formatter="formatStatus"
+                :label="lanMap['status']"
+                width="80"
+            ></el-table-column>
+            <el-table-column prop="mode" :label="lanMap['mode']" width="80"></el-table-column>
+            <el-table-column prop="user" :label="lanMap['user']"></el-table-column>
+            <el-table-column prop="timestamp" :label="lanMap['timestamp']"></el-table-column>
+            <el-table-column prop="description" :label="lanMap['description']"></el-table-column>
+            <el-table-column :label="lanMap['config']">
                 <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
+                    <el-button
+                        @click="delTask(scope.row)"
+                        type="text"
+                        size="small"
+                    >{{ lanMap['delete'] }}</el-button>
                 </template>
             </el-table-column>
-            <div slot="empty">empty</div>
+            <div slot="empty">{{ lanMap['empty'] }}</div>
         </el-table>
         <el-pagination
             style="float: right;"
@@ -98,35 +118,29 @@
             :page-sizes="pageSizes"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="400"
+            :total="task.data && task.data.length"
+            v-if="task.data && task.data.length > pageSize"
         ></el-pagination>
     </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { pageSizes } from "@/utils/common-data";
-import { validatorTaskName, validatorDesc } from '@/utils/validator'
+import { validatorName, validatorDesc } from "@/utils/validator";
 export default {
     name: "taskMgmt",
+    computed: mapState(["lanMap"]),
     data() {
         return {
-            taskTable: [
-                {
-                    name: "name1",
-                    description: "for upgrade olt firmware",
-                    status: true,
-                    execstatus: "stoped",
-                    mode: "manual",
-                    user: "admin",
-                    timestamp: "2019/01/01 09:09:09"
-                }
-            ],
+            task: {},
+            taskTable: [],
             currentPage: 1,
             pageSize: 20,
             pageSizes,
             devlist: [],
             addTask: {
-                name: "",
+                taskname: "",
                 devicelist: [],
                 status: true,
                 template: "",
@@ -137,42 +151,134 @@ export default {
                 description: ""
             },
             rules: {
-                name: [
-                    { validator: validatorTaskName, trigger: 'blur' }
-                ],
-                stime: [
-                    { validator: '', trigger: 'blur' }
-                ],
-                etime: [
-                    { validator: '', trigger: 'blur' }
-                ],
-                description: [
-                    { validator: validatorDesc, trigger: 'blur' }
-                ],
+                taskname: [{ validator: validatorName, trigger: "blur" }],
+                description: [{ validator: validatorDesc, trigger: "blur" }]
             }
         };
     },
+    created() {
+        this.getData();
+    },
     methods: {
-        handleClick(data) {
-            console.log(data);
+        delTask(data) {
+            this.$confirm("确认删除？", {
+                type: "warning",
+                confirmButtonText: this.lanMap["apply"],
+                cancelButtonText: this.lanMap["cancel"]
+            })
+                .then(_ => {
+                    var _data = {
+                        method: "delete",
+                        param: {
+                            taskname: data.taskname
+                        }
+                    };
+                    this.$http
+                        .post("/api/server/task", _data)
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success("success");
+                                this.getData();
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        })
+                        .catch(err => {});
+                })
+                .catch(_ => {});
         },
         handleSizeChange(val) {
             this.pageSize = val;
         },
-        handleCurrentChange(val) {},
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            var start = this.pageSize * (val - 1);
+            if (start + this.pageSize > this.task.data.length) {
+                this.taskTable = this.task.data.slice(start, this.pageSize);
+            } else {
+                this.taskTable = this.task.data.slice(start);
+            }
+        },
         formatStatus(row, col) {
-            return row[col.property] ? "Enable" : "disabled";
+            return row[col.property] ? "Enable" : "Disabled";
         },
         submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
-                console.log(this.addTask);
+            if (!this.addTask.devicelist.length) {
+                this.$message.error("devicelist");
+                return;
+            }
+            if (!this.addTask.template) {
+                this.$message.error("template");
+                return;
+            }
+            if (!this.addTask.mode) {
+                this.$message.error("mode");
+                return;
+            }
+            if (!this.addTask.stime) {
+                this.$message.error("start time");
+                return;
+            }
+            if (!this.addTask.etime) {
+                this.$message.error("end time");
+                return;
+            }
+            this.$refs[formName].validate(valid => {
                 if (valid) {
-                    alert('submit!');
+                    var data = {
+                        method: "add",
+                        param: {
+                            name: this.addTask.taskname,
+                            devicelist: this.addTask.devicelist,
+                            status: this.addTask.status,
+                            template: this.addTask.template,
+                            mode: this.addTask.mode,
+                            concurrent: this.addTask.concurrent,
+                            stime: this.addTask.stime,
+                            etime: this.addTask.etime,
+                            description: this.addTask.description,
+                            user: sessionStorage.getItem('user'),
+                        }
+                    };
+                    this.$http.post('/api/server/task', data).then(res =>{
+                        if(res.data.code === 1){
+                            this.$message.success(res.data.message);
+                            this.getData();
+                        }else{
+                            this.$message.error(res.data.message);
+                        }
+                    }).catch(err =>{})
                 } else {
-                    console.log('error submit!!');
                     return false;
                 }
             });
+        },
+        getData() {
+            this.$http
+                .get("/api/server/task")
+                .then(res => {
+                    if (res.data.code === 1) {
+                        this.task = res.data;
+                        this.currentPage = 1;
+                        if (this.task.data && this.task.data.length) {
+                            if (this.task.data.length > this.pageSize) {
+                                this.taskTable = this.task.data.slice(
+                                    0,
+                                    this.pageSize
+                                );
+                            } else {
+                                this.taskTable = this.task.data;
+                            }
+                        } else {
+                            this.task = {};
+                            this.taskTable = [];
+                        }
+                    } else {
+                        this.task = {};
+                        this.taskTable = [];
+                    }
+                })
+                .catch(err => {});
         }
     }
 };
