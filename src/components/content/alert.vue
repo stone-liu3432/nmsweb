@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-table :data="alertTable" border style="width: 100%; margin-top: 20px;">
-            <el-table-column prop="alarm_id" :label="lanMap['alarm_id']" width="80"></el-table-column>
+            <el-table-column prop="alarm_id" :label="lanMap['alarm_id']" width="100"></el-table-column>
             <el-table-column prop="source" :label="lanMap['source']"></el-table-column>
             <el-table-column prop="macaddr" :label="lanMap['macaddr']"></el-table-column>
             <el-table-column prop="type" :label="lanMap['type']" width="80"></el-table-column>
@@ -34,18 +34,7 @@ export default {
     data() {
         return {
             alert: [],
-            alertTable: [
-                {
-                    alarm_id: 0x1001,
-                    source: "192.168.100.171",
-                    macaddr: "38:3a:21:20:01:01",
-                    type: 1,
-                    level: 2,
-                    location: 65792,
-                    description: "ONU LINK UP",
-                    timestamp: "2019/01/01 09:09:09"
-                }
-            ],
+            alertTable: [],
             currentPage: 1,
             pageSize: 20,
             pageSizes,
