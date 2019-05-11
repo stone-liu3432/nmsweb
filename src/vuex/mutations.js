@@ -13,6 +13,7 @@ const mutations = {
     },
     changeLang(state, data){
         state.language = data;
+        sessionStorage.setItem('lang', data);
     },
     changeLangMap(state, data){
         state.lanMap = data;

@@ -10,6 +10,7 @@ import VueI18n from "vue-i18n";
 import locale from "element-ui/lib/locale";
 import enLocale from "element-ui/lib/locale/lang/en";
 import zhLocale from "element-ui/lib/locale/lang/zh-CN";
+import { removeUnderline } from '@/utils/common'
 import "element-ui/lib/theme-chalk/index.css";
 import "@/custom-css/custom.css";
 
@@ -25,6 +26,8 @@ locale.i18n((key, value) => i18n.t(key, value));
 
 Vue.use(Vuex);
 Vue.use(ElementUI);
+
+Vue.filter('removeUnderline', removeUnderline);
 Vue.config.productionTip = false;
 
 axios.defaults.timeout = 5000;
@@ -42,7 +45,7 @@ axios.interceptors.request.use(
         //  to do
         var token = sessionStorage.getItem('x-token');
         if(token){
-            config['x-token'] = token;
+            config.headers['x-token'] = token;
         }
         return config;
     },

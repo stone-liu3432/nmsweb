@@ -1,55 +1,70 @@
-function isArray(obj){
-    return Object.prototype.toString.call(obj) === '[object Array]';
+function isArray(obj) {
+    return Object.prototype.toString.call(obj) === "[object Array]";
 }
-
-/* 
-*   初始化echarts饼图数据
-*   @param  opt : object
-*   opt : name-> string, data-> object[]
-*   opt-> data : name-> string, value-> number
-*   @return object  echarts init data
-*/
-export function initPieData(opt){
-    if(!opt) return {}
-    var name = opt.name || '';
+//  时间格式化
+export function formatDate(strTime, format) {
+    format = format || "yyyy-MM-dd hh:mm:ss";
+    var date = new Date(strTime);
+    var dateMap = {
+        yyyy: date.getFullYear(),
+        MM: date.getMonth() + 1,
+        dd: date.getDate(),
+        hh: date.getHours(),
+        mm: date.getMinutes() > 9 ? date.getMinutes() : "0" + date.getMinutes(),
+        ss: date.getSeconds() > 9 ? date.getSeconds() : "0" + date.getSeconds()
+    };
+    for (var k in dateMap) {
+        format = format.replace(new RegExp(k, "g"), dateMap[k]);
+    }
+    return format;
+}
+/*
+ *   初始化echarts饼图数据
+ *   @param  opt : object
+ *   opt : name-> string, data-> object[]
+ *   opt-> data : name-> string, value-> number
+ *   @return object  echarts init data
+ */
+export function initPieData(opt) {
+    if (!opt) return {};
+    var name = opt.name || "";
     var data = [];
-    if(isArray(opt.data)){
-        opt.data.forEach(item =>{
-            if(item.name){
+    if (isArray(opt.data)) {
+        opt.data.forEach(item => {
+            if (item.name) {
                 data.push(item.name);
             }
-        })
+        });
     }
     return {
-        tooltip : {
-            trigger: 'item',
+        tooltip: {
+            trigger: "item",
             //   {a}（系列名称-> series.name），{b}（数据项名称-> series.data.name），{c}（数值-> series.data.value）, {d}（百分比）
             formatter: name ? "{a} <br/> {b} : {c} ({d}%)" : "{b} : {c} ({d}%)"
         },
         legend: {
-            orient: 'vertical',
-            left: 'left',
+            orient: "vertical",
+            left: "left",
             data
         },
-        series : [
+        series: [
             {
                 name,
-                type: 'pie',
-                radius : '55%',
-                center: ['50%', '50%'],
+                type: "pie",
+                radius: "55%",
+                center: ["50%", "50%"],
                 data: opt.data || [],
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 5,
                         shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        shadowColor: "rgba(0, 0, 0, 0.5)"
                     }
                 }
             }
         ]
-    }
+    };
 }
-
 
 /* 
     折线图
@@ -59,29 +74,37 @@ export function initPieData(opt){
             data: [820, 932, 901, 934, 1290, 1330, 120]     //  数据
         }
 */
-export function initLineData(opt){
-    if(!opt) return {}
-    var xAxis = opt.xAxis || [], data = opt.data || [];
-    var name = opt.name || '';
-    if(!isArray(xAxis) || !isArray(data)){
-        return {}
+export function initLineData(opt) {
+    if (!opt) return {};
+    var xAxis = opt.xAxis || [],
+        data = opt.data || [];
+    var name = opt.name || "";
+    if (!isArray(xAxis) || !isArray(data)) {
+        return {};
     }
     return {
-        tooltip : {
-            trigger: 'item',
+        tooltip: {
+            trigger: "item",
             formatter: " {b}&nbsp;&nbsp;&nbsp;{c} "
         },
         xAxis: {
-            type: 'category',
+            type: "category",
             data: xAxis
         },
         yAxis: {
-            type: 'value'
+            type: "value"
         },
-        series: [{
-            data: data,
-            type: 'line',
-            name
-        }]
-    }
+        series: [
+            {
+                data: data,
+                type: "line",
+                name
+            }
+        ]
+    };
+}
+
+export function removeUnderline(value){
+    if(!value) return '';
+    return value.replace(/_/g, ' ');
 }
