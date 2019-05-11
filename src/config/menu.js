@@ -1,4 +1,4 @@
-const menu = [
+export default [
     {
         name: "home"
     },
@@ -23,5 +23,3 @@ const menu = [
         name: 'task'
     }
 ];
-
-export default menu;
