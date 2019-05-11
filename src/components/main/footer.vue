@@ -1,12 +1,32 @@
 <template>
     <div id="footer">
-        footer
+        <span>{{ lanMap['sys_time'] + ': ' + date }}</span>
+        <span class="lang">
+            {{ lanMap['language'] }}
+            <span :style="{ 'color': language === 'zh' ? '#409EFF' : '' }" @click="changeLang('zh')">简体中文</span>
+            <span :style="{ 'color': language === 'en' ? '#409EFF' : '' }" @click="changeLang('en')">English</span>
+        </span>
     </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
+import { formatDate } from '@/utils/common';
 export default {
-    name: 'commonFooter'
+    name: 'commonFooter',
+    computed: mapState(["language", "lanMap"]),
+    data(){
+        return {
+            date: formatDate(Date.now())
+        }
+    },
+    created(){
+    },
+    methods: {
+        ...mapMutations({
+            changeLang: "changeLang"
+        }),
+    },
 }
 </script>
 
@@ -18,7 +38,13 @@ export default {
     height: 30px;
     line-height: 30px;
     width: 100%;
-    background: #666;
-    color: #fff;
+    text-align: center;
+}
+.lang{
+    margin: 0 0 0 30px;
+    >span{
+        margin: 0 0 0 6px;
+        cursor: pointer;
+    }
 }
 </style>
