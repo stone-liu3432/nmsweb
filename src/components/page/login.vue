@@ -8,17 +8,16 @@
                 :rules="rules"
                 ref="ruleForm"
                 label-width="100px"
-                :status-icon="true"
             >
                 <el-form-item prop="uname" :label="lanMap['username']">
-                    <el-input v-model.number="ruleForm.uname" placeholder="user name"></el-input>
+                    <el-input v-model.number="ruleForm.uname" :placeholder="lanMap['username']"></el-input>
                 </el-form-item>
                 <el-form-item prop="pass" :label="lanMap['password']">
                     <el-input
                         type="password"
                         v-model="ruleForm.pass"
                         auto-complete="off"
-                        placeholder="password"
+                        :placeholder="lanMap['password']"
                         @keydown.native.enter="submitForm('ruleForm')"
                     ></el-input>
                 </el-form-item>
@@ -53,8 +52,8 @@ export default {
                 lang: ''
             },
             rules: {
-                pass: [{ validator: validatorPassword, trigger: "blur" }],
-                uname: [{ validator: validatorName, trigger: "blur" }]
+                pass: [{ validator: validatorPassword, trigger: "change" }],
+                uname: [{ validator: validatorName, trigger: "change" }]
             }
         };
     },
