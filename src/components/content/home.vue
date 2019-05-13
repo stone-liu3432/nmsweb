@@ -29,7 +29,7 @@ import { initPieData, initLineData } from '@/utils/common'
 import { mapState,mapMutations } from 'vuex'
 export default {
     name: 'home',
-    computed: mapState(['charts', 'lanMap']),
+    computed: mapState(['charts', 'langMap']),
     data(){
         return {
             debounced: true,
@@ -74,17 +74,17 @@ export default {
                 if(res.data.code === 1){
                     var data = res.data.data;
                     this.cpuInfo = initPieData({
-                        name: this.lanMap['cpu'],
+                        name: this.langMap['cpu'],
                         data: [
-                            { value: data.cpu, name: this.lanMap['in_use'] },
-                            { value: 100 - data.cpu, name: this.lanMap['idle']}
+                            { value: data.cpu, name: this.langMap['in_use'] },
+                            { value: 100 - data.cpu, name: this.langMap['idle']}
                         ]
                     })
                     this.memoryInfo = initPieData({
-                        name: this.lanMap['memory'],
+                        name: this.langMap['memory'],
                         data: [
-                            { value: data.memory_used, name: this.lanMap['memory_used']},
-                            { value: data.memory_total - data.memory_used, name: this.lanMap['idle']}
+                            { value: data.memory_used, name: this.langMap['memory_used']},
+                            { value: data.memory_total - data.memory_used, name: this.langMap['idle']}
                         ]
                     })
                 }else{
@@ -102,9 +102,9 @@ export default {
                     this.devInfo = initPieData({
                         name: 'EPON/GPON',
                         data: [
-                            { value: data.error, name: this.lanMap['error']},
-                            { value: data.offline, name: this.lanMap['offline']},
-                            { value: data.online, name: this.lanMap['online']},
+                            { value: data.error, name: this.langMap['error']},
+                            { value: data.offline, name: this.langMap['offline']},
+                            { value: data.online, name: this.langMap['online']},
                         ]
                     })
                 }else{
@@ -121,11 +121,11 @@ export default {
                     this.onuInfo = initPieData({
                         name: 'ONU',
                         data: [
-                            { value: data.offline, name: this.lanMap['offline']},
-                            { value: data.register, name: this.lanMap['register']},
-                            { value: data.initial, name: this.lanMap['initial']},
-                            { value: data.authorized, name: this.lanMap['authorized']},
-                            { value: data.unauth, name: this.lanMap['unauth'] }
+                            { value: data.offline, name: this.langMap['offline']},
+                            { value: data.register, name: this.langMap['register']},
+                            { value: data.initial, name: this.langMap['initial']},
+                            { value: data.authorized, name: this.langMap['authorized']},
+                            { value: data.unauth, name: this.langMap['unauth'] }
                         ]
                     })
                 }else{
@@ -140,7 +140,7 @@ export default {
         document.body.onresize = null;
     },
     watch: {
-        lanMap(){
+        langMap(){
             this.cpuInfo = {};
             this.memoryInfo = {};
             this.devInfo = {};

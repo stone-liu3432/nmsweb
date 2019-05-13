@@ -1,15 +1,15 @@
 <template>
     <div>
         <el-table :data="alertTable" border style="width: 100%; margin-top: 20px;">
-            <el-table-column prop="alarm_id" :label="lanMap['alarm_id']" width="100"></el-table-column>
-            <el-table-column prop="source" :label="lanMap['source']"></el-table-column>
-            <el-table-column prop="macaddr" :label="lanMap['macaddr']"></el-table-column>
-            <el-table-column prop="type" :label="lanMap['type']" width="80"></el-table-column>
-            <el-table-column prop="level" :label="lanMap['level']" width="80"></el-table-column>
-            <el-table-column prop="location" :label="lanMap['location']"></el-table-column>
-            <el-table-column prop="description" :label="lanMap['description']"></el-table-column>
-            <el-table-column prop="timestamp" :label="lanMap['timestamp']"></el-table-column>
-            <div slot="empty">{{ lanMap['empty'] }}</div>
+            <el-table-column prop="alarm_id" :label="langMap['alarm_id']" width="100"></el-table-column>
+            <el-table-column prop="source" :label="langMap['source']"></el-table-column>
+            <el-table-column prop="macaddr" :label="langMap['macaddr']"></el-table-column>
+            <el-table-column prop="type" :label="langMap['type']" width="80"></el-table-column>
+            <el-table-column prop="level" :label="langMap['level']" width="80"></el-table-column>
+            <el-table-column prop="location" :label="langMap['location']"></el-table-column>
+            <el-table-column prop="description" :label="langMap['description']"></el-table-column>
+            <el-table-column prop="timestamp" :label="langMap['timestamp']"></el-table-column>
+            <div slot="empty">{{ langMap['empty'] }}</div>
         </el-table>
         <el-pagination
             style="float: right;"
@@ -30,7 +30,7 @@ import { mapState } from 'vuex'
 import { pageSizes } from '@/utils/common-data'
 export default {
     name: "alert",
-    computed: mapState(['lanMap']),
+    computed: mapState(['langMap']),
     data() {
         return {
             alert: [],
