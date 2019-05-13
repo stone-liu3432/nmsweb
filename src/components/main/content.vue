@@ -1,6 +1,6 @@
 <template>
     <el-main>
-        <div class="custom-breadcrumb">{{ lanMap[breadcrumb] }}</div>
+        <div class="custom-breadcrumb">{{ langMap[breadcrumb] }}</div>
         <router-view/>
     </el-main>
 </template>
@@ -9,7 +9,7 @@
 import { mapState,mapMutations } from 'vuex'
 export default {
     name: 'contentArea',
-    computed: mapState(['breadcrumb', 'lanMap']),
+    computed: mapState(['breadcrumb', 'langMap']),
     created(){
     },
     methods: {

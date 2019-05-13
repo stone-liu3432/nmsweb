@@ -35,6 +35,7 @@ export default {
             visibilityChange = "webkitvisibilitychange";
         }
         // 添加监听器
+        //  IE9不支持此事件  IE9下页面最小化时JS不会暂停，无需停止socket
         document.addEventListener(visibilityChange, function(e) {
             document[hidden] && console.log("当前页面被隐藏");
             if(document[hidden]){

@@ -1,7 +1,7 @@
 <template>
     <div id="login">
         <div>
-            <h1 style="margin: 10px;">{{ lanMap['login'] }}</h1>
+            <h1 style="margin: 10px;">{{ langMap['login'] }}</h1>
             <el-form
                 :model="ruleForm"
                 status-icon
@@ -9,19 +9,19 @@
                 ref="ruleForm"
                 label-width="100px"
             >
-                <el-form-item prop="uname" :label="lanMap['username']">
-                    <el-input v-model.number="ruleForm.uname" :placeholder="lanMap['username']"></el-input>
+                <el-form-item prop="uname" :label="langMap['username']">
+                    <el-input v-model.number="ruleForm.uname" :placeholder="langMap['username']"></el-input>
                 </el-form-item>
-                <el-form-item prop="pass" :label="lanMap['password']">
+                <el-form-item prop="pass" :label="langMap['password']">
                     <el-input
                         type="password"
                         v-model="ruleForm.pass"
                         auto-complete="off"
-                        :placeholder="lanMap['password']"
+                        :placeholder="langMap['password']"
                         @keydown.native.enter="submitForm('ruleForm')"
                     ></el-input>
                 </el-form-item>
-                <el-form-item :label="lanMap['language']">
+                <el-form-item :label="langMap['language']">
                     <el-radio v-model="ruleForm.lang" label="zh">简体中文</el-radio>
                     <el-radio v-model="ruleForm.lang" label="en">English</el-radio>
                 </el-form-item>
@@ -30,7 +30,7 @@
                         type="primary"
                         @click="submitForm('ruleForm')"
                         style="width: 100%;"
-                    >{{ lanMap['login'] }}</el-button>
+                    >{{ langMap['login'] }}</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -43,7 +43,7 @@ import { validatorName, validatorPassword } from "@/utils/validator";
 import md5 from "md5";
 export default {
     name: "login",
-    computed: mapState(["language", "lanMap"]),
+    computed: mapState(["language", "langMap"]),
     data() {
         return {
             ruleForm: {
