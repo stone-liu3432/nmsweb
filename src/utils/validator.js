@@ -23,7 +23,7 @@ export function validatorIpAddr(rule, value, callback) {
         return reg.test(rule);
     }
     if (!reg.test(value)) {
-        return callback(new Error(store.state.lanMap['validator_ip_tips']));
+        return callback(new Error(store.state.langMap['validator_ip_tips']));
     }
     callback();
 }
@@ -35,7 +35,7 @@ export function validatorModel(rule, value, callback) {
         return reg.test(rule);
     }
     if (!reg.test(value)) {
-        return callback(new Error(store.state.lanMap['validator_model_tips']));
+        return callback(new Error(store.state.langMap['validator_model_tips']));
     }
     callback();
 }
@@ -47,7 +47,7 @@ export function validatorDesc(rule, value, callback) {
         return reg.test(rule);
     }
     if (!reg.test(value)) {
-        return callback(new Error(store.state.lanMap['validator_desc_tips']));
+        return callback(new Error(store.state.langMap['validator_desc_tips']));
     }
     callback();
 }
@@ -59,7 +59,7 @@ export function validatorName(rule, value, callback) {
         return reg.test(rule);
     }
     if (!value || !reg.test(value)) {
-        return callback(new Error(store.state.lanMap['validator_name_tips']));
+        return callback(new Error(store.state.langMap['validator_name_tips']));
     }
     callback();
 }
@@ -72,7 +72,7 @@ export function validatorAddr(rule, value, callback) {
         return reg.test(rule);
     }
     if (!reg.test(value)) {
-        return callback(new Error(store.state.lanMap['validator_addr_tips']));
+        return callback(new Error(store.state.langMap['validator_addr_tips']));
     }
     callback();
 }
@@ -84,7 +84,7 @@ export function validatorAccount(rule, value, callback) {
         return reg.test(rule);
     }
     if (!reg.test(value)) {
-        return callback(new Error(store.state.lanMap['validator_account_tips']));
+        return callback(new Error(store.state.langMap['validator_account_tips']));
     }
     callback();
 }
@@ -96,7 +96,7 @@ export function validatorPassword(rule, value, callback) {
         return reg.test(rule);
     }
     if (!reg.test(value)) {
-        return callback(new Error(store.state.lanMap['validator_pass_tips']));
+        return callback(new Error(store.state.langMap['validator_pass_tips']));
     }
     callback();
 }

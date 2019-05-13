@@ -14,7 +14,7 @@ const lang = {
 };
 export default {
     name: "nms",
-    computed: mapState(["language", "lanMap"]),
+    computed: mapState(["language", "langMap"]),
     created() {
         this.$i18n.locale = sessionStorage.getItem('lang') || 'en';
         this.changeLangMap(lang[sessionStorage.getItem('lang') || 'en']);
