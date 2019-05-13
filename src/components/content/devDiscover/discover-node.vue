@@ -1,56 +1,55 @@
 <template>
     <div>
-        <!--  
-            "name":"EPON-OLT-E04",
-            "ipaddr":"192.168.100.171",
-            "macaddr":"38:3a:21:20:00:01",
-            "model":"HSGQ-E08",
-            "class":"EPON",
-            "groupname":"1",
-            "creater":"admin",
-            "timestamp":"2019/12/12 09:09:09"
-        -->
-        <el-form inline size="small" :model="addData" :rules="rules" ref="devData">
+        <el-form size="small" :model="addData" :rules="rules" ref="devData" label-width="120px">
             <el-row>
                 <el-col :span="8">
-                    <el-form-item label="name" label-width="120px" prop="devname">
-                        <el-input v-model="addData.name" placeholder="protocol"></el-input>
+                    <el-form-item :label="langMap['name']" prop="name">
+                        <el-input v-model="addData.name" :placeholder="langMap['name']"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
-                    <el-form-item label="ip address" label-width="120px" prop="ipaddr">
-                        <el-input v-model="addData.ipaddr" placeholder="ip address"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-col :span="8">
-                    <el-form-item label="mac" label-width="120px" prop="mac">
-                        <el-input v-model="addData.macaddr" placeholder="mac"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="model" label-width="120px" prop="model">
-                        <el-input v-model="addData.model" placeholder="model"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-col :span="8">
-                    <el-form-item label="class" label-width="120px" prop="class">
-                        <el-input v-model="addData.class" placeholder="class"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="group name" label-width="120px" prop="groupname">
-                        <el-input v-model="addData.groupname" placeholder="group name"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row>
                 <el-col :span="8" :offset="1">
+                    <el-form-item :label="langMap['model']" prop="model">
+                        <el-input v-model="addData.model" :placeholder="langMap['model']"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item :label="langMap['ipaddr']" prop="ipaddr">
+                        <el-input v-model="addData.ipaddr" :placeholder="langMap['ipaddr']"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8" :offset="1">
+                    <el-form-item :label="langMap['ipmask']" prop="ipmask">
+                        <el-input v-model="addData.ipmask" :placeholder="langMap['ipmask']"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item :label="langMap['mclass']" prop="class">
+                        <el-select v-model="addData.class" :placeholder="langMap['mclass']">
+                            <el-option value="EPON"></el-option>
+                            <el-option value="GPON"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8" :offset="1">
+                    <el-form-item :label="langMap['groupname']" prop="groupname">
+                        <el-select v-model="addData.groupname" :placeholder="langMap['groupname']">
+                            <el-option :value="item" v-for="(item, index) in groups" :key="index"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col>
                     <el-form-item size="small">
-                        <el-button type="primary" style="width: 200px;" @click="submitForm('devData')">添加</el-button>
+                        <el-button
+                            type="primary"
+                            style="width: 200px;"
+                            @click="submitForm('devData')"
+                        >{{ langMap['add'] }}</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -59,57 +58,125 @@
 </template>
 
 <script>
-import validator from '@/utils/validator'
+import { mapState } from "vuex";
+import validator from "@/utils/validator";
 export default {
-    name: 'discover-node',
-    data(){
+    name: "discover-node",
+    computed: mapState(["langMap"]),
+    data() {
         return {
             addData: {
-                ipaddr: '',
-                macaddr: '',
-                model: '',
-                class: '',
-                groupname: '',
-                name: ''
+                ipaddr: "",
+                ipmask: "",
+                //macaddr: "",
+                model: "",
+                class: "EPON",
+                groupname: "",
+                name: ""
             },
             rules: {
-                devname: [
-                    { validator: validator.validatorDevName, trigger: 'blur' }
-                ],
-                mac: [
-                    { validator: validator.validatorMac, trigger: 'blur' }
-                ],
-                ipaddr: [
-                    { validator: validator.validatorIpAddr, trigger: 'blur' }
+                name: [
+                    {
+                        validator: validator.validatorName,
+                        trigger: ["blur", "change"]
+                    }
                 ],
                 groupname: [
-                    { validator: validator.validatorGroupName, trigger: 'blur' }
+                    {
+                        validator: validator.validatorName,
+                        trigger: ["blur", "change"]
+                    }
                 ],
-                class: [
-                    { validator: validator.validatorClass, trigger: 'blur' }
+                ipaddr: [
+                    {
+                        validator: validator.validatorIpAddr,
+                        trigger: ["blur", "change"]
+                    }
                 ],
                 model: [
-                    { validator: validator.validatorModel, trigger: 'blur' }
+                    {
+                        validator: validator.validatorModel,
+                        trigger: ["blur", "change"]
+                    }
+                ],
+                ipmask: [
+                    {
+                        validator: validator.validatorIpAddr,
+                        trigger: ["change", "blur"]
+                    }
                 ]
-            }
-        }
+            },
+            groups: [],
+            //devList: []  暂未支持
+        };
+    },
+    created() {
+        this.getGroup();
     },
     methods: {
-        submitForm(formName){
-            this.$refs[formName].validate((valid) => {
+        submitForm(formName) {
+            this.$refs[formName].validate(valid => {
                 if (valid) {
-                    // to do
-                    alert('submit success');
+                    var data = {
+                        method: "add",
+                        param: {
+                            name: this.addData.name,
+                            ipaddr: this.addData.ipaddr,
+                            ipmask: this.addData.ipmask,
+                            model: this.addData.model,
+                            mclass: this.addData.class,
+                            groupname: this.addData.groupname
+                        }
+                    };
+                    this.$http
+                        .post("/api/device/olt", data)
+                        .then(res => {
+                            if(res.data.code === 1){
+                                this.$message.success(this.langMap[data.method + '_success']);
+                                this.$refs[formName].resetFields();
+                                this.addData.groupname = this.groups[0];
+                            }else{
+                                this.$message.error(res.data.message);
+                            }
+                        })
+                        .catch(err => {});
                 } else {
-                    console.log('error submit!!');
                     return false;
                 }
             });
+        },
+        getGroup() {
+            this.$http
+                .get("/api/server/group")
+                .then(res => {
+                    if (res.data.code === 1) {
+                        if (res.data.data && res.data.data.length) {
+                            res.data.data.forEach(item => {
+                                this.groups.push(item.name);
+                            });
+                            this.addData.groupname = this.groups[0];
+                        } else {
+                            this.groups = [];
+                        }
+                    } else {
+                        this.groups = [];
+                    }
+                })
+                .catch(err => {});
         }
+        //  暂未支持
+        // getDev(){
+        //     this.$http.get('/api/device/olt?type=list').then(res =>{
+        //         if(res.data.code === 1){
+
+        //         }else{
+
+        //         }
+        //     }).catch(err =>{})
+        // }
     }
-}
+};
 </script>
 
 <style lang="less" scoped>
-
 </style>
