@@ -12,7 +12,7 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
 }
 
 .collapse-margin{
-    margin-top: 10px;
+    margin: 10px 0 10px 0;
 }
 
 .el-collapse-item__arrow.is-active {
