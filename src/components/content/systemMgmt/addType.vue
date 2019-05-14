@@ -1,30 +1,43 @@
 <template>
-    <el-form :model="fData" :rules="rules">
-        <el-form-item label="名称" :label-width="labelWidth" prop="name">
+    <el-form :model="fData" :rules="rules" ref="addTypeForm" label-width="100px">
+        <el-form-item :label="langMap['name']" prop="name">
             <el-input v-model="fData.name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="标签" :label-width="labelWidth">
-            <el-input v-model="fData.reason" auto-complete="off"></el-input>
+        <el-form-item :label="langMap['reason']" prop="reason">
+            <el-input type="textarea" v-model="fData.reason" auto-complete="off"></el-input>
         </el-form-item>
     </el-form>
 </template>
 
 <script>
-import { validatorName } from '@/utils/validator'
+import { mapState } from "vuex";
+import { validatorName, validatorDesc } from '@/utils/validator'
 export default {
     name: 'addType',
+    computed: mapState(['langMap']),
     data(){
         return {
             fData: {
                 name: '',
                 reason: ''
             },
-            labelWidth: '100px',
             rules: {
                 name: [
-                    { validator: validatorName, trigger: 'blur' }
+                    { validator: validatorName, trigger: ['change', 'blur'] }
+                ],
+                reason: [
+                    { validator: validatorDesc, trigger: ['change', 'blur'] }
                 ]
             }
+        }
+    },
+    methods: {
+        validatorForm(){
+            var flag = false;
+            this.$refs['addTypeForm'].validate(valid =>{
+                flag = valid;
+            })
+            return flag;
         }
     }
 }
