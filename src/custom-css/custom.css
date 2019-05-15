@@ -1,17 +1,17 @@
-div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
-    color: #409EFF;
+div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+    color: #409eff;
 }
 
-.el-table__expanded-cell[class*=cell] {
+.el-table__expanded-cell[class*="cell"] {
     background: #ebeef5;
 }
 
-.el-collapse-item__header{
-    background: #E4E7ED;
+.el-collapse-item__header {
+    background: #e4e7ed;
     padding-left: 16px;
 }
 
-.collapse-margin{
+.collapse-margin {
     margin: 10px 0 10px 0;
 }
 
@@ -19,6 +19,20 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
     transform: rotate(90deg);
 }
 
-.custom-shadow{
+.custom-shadow {
     box-shadow: 0 0 5px 1px #333;
+}
+
+/* table row 告警级别背景色 */
+.el-table .critical-row {
+    background: rgb(253, 247, 237);
+}
+.el-table .major-row {
+    background: rgb(240, 215, 169);
+}
+.el-table .minor-row {
+    background: rgb(235, 194, 119);
+}
+.el-table .warning-row {
+    background: rgb(211, 164, 76);
 }

@@ -19,3 +19,19 @@ export const STATUS = [
     'link_lost',
     'end'
 ];
+//  告警类型
+export const ALARM_TYPE = [
+    'environ',
+    'equipment',
+    'process',
+    'service',
+    'comm',
+    'tca'
+]
+//  告警级别
+export const ALARM_LEVEL = [
+    'critical',
+    'major',
+    'minor',
+    'waring'
+]
