@@ -1,10 +1,10 @@
 <template>
     <div>
         <el-tabs v-model="activeName" type="card">
-            <el-tab-pane label="任务管理" name="taskMgmt">
+            <el-tab-pane :label="langMap['task_mgmt']" name="taskMgmt">
                 <task-mgmt></task-mgmt>
             </el-tab-pane>
-            <el-tab-pane label="任务模板管理" name="taskTempMgmt">
+            <el-tab-pane :label="langMap['task_temp_mgmt']" name="taskTempMgmt">
                 <task-temp-mgmt></task-temp-mgmt>
             </el-tab-pane>
         </el-tabs>
@@ -12,10 +12,12 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import taskMgmt from './taskMgmt/taskMgmt'
 import taskTempMgmt from './taskMgmt/taskTempMgmt'
 export default {
     name: 'task',
+    computed: mapState(["langMap"]),
     components: { taskMgmt, taskTempMgmt },
     data(){
         return {

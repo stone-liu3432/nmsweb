@@ -1,18 +1,29 @@
 <template>
     <div slot="label">
         <el-collapse>
-            <el-collapse-item title="添加任务模板">
-                <el-form label-width="100px" size="small" :model="taskData" class="collapse-margin">
-                    <el-form-item :label="lanMap['type']">
+            <el-collapse-item :title="langMap['add_task_temp']">
+                <el-form
+                    label-width="100px"
+                    size="small"
+                    ref="addTaskTemp"
+                    :rules="rules"
+                    :model="taskData"
+                    class="collapse-margin"
+                >
+                    <el-form-item :label="langMap['type']">
                         <el-select v-model="taskData.type">
                             <el-option v-for="(item, index) in taskType" :key="index" :value="item"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item :label="lanMap['name']">
+                    <el-form-item :label="langMap['name']" prop="name">
                         <el-input v-model="taskData.name" style="width: 215px;"></el-input>
                     </el-form-item>
-                    <!-- param -->
-                    <el-form-item :label="lanMap['description']">
+                    <el-form-item :label="langMap['upgradefile']">
+                        <el-select v-model="taskData.upgradefile">
+                            <el-option v-for="(item, index) in swName" :key="index" :value="item"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item :label="langMap['description']" prop="description">
                         <el-input
                             type="textarea"
                             v-model="taskData.description"
@@ -23,28 +34,29 @@
                         type="primary"
                         size="small"
                         style="width: 200px;margin-left: 100px;"
-                        @click="addTaskType"
-                    >{{ lanMap['add'] }}</el-button>
+                        @click="addTaskType('addTaskTemp')"
+                    >{{ langMap['add'] }}</el-button>
                 </el-form>
             </el-collapse-item>
         </el-collapse>
-        <h3>已有任务模板列表</h3>
+        <h3>{{ langMap['exist_task_temp_list'] }}</h3>
         <el-table :data="taskTable" border>
-            <el-table-column prop="name" :label="lanMap['name']"></el-table-column>
-            <el-table-column prop="type" :label="lanMap['type']"></el-table-column>
-            <el-table-column prop="user" :label="lanMap['creater']"></el-table-column>
-            <el-table-column prop="timestamp" :label="lanMap['timestamp']"></el-table-column>
-            <el-table-column prop="description" :label="lanMap['description']"></el-table-column>
-            <el-table-column :label="lanMap['config']">
+            <el-table-column prop="name" :label="langMap['name']"></el-table-column>
+            <el-table-column prop="type" :label="langMap['type']"></el-table-column>
+            <el-table-column prop="upgradefile" :label="langMap['upgradefile']"></el-table-column>
+            <el-table-column prop="creater" :label="langMap['creater']"></el-table-column>
+            <el-table-column prop="timestamp" :label="langMap['timestamp']"></el-table-column>
+            <el-table-column prop="description" :label="langMap['description']"></el-table-column>
+            <el-table-column :label="langMap['config']">
                 <template slot-scope="scope">
                     <el-button
                         @click="delTaskTemp(scope.row)"
                         type="text"
                         size="small"
-                    >{{ lanMap['delete'] }}</el-button>
+                    >{{ langMap['delete'] }}</el-button>
                 </template>
             </el-table-column>
-            <div slot="empty">{{ lanMap['empty'] }}</div>
+            <div slot="empty">{{ langMap['empty'] }}</div>
         </el-table>
         <el-pagination
             style="float: right;"
@@ -63,38 +75,46 @@
 <script>
 import { mapState } from "vuex";
 import { pageSizes } from "@/utils/common-data";
+import { validatorName, validatorDesc } from "@/utils/validator";
 export default {
     name: "taskTempMgmt",
-    computed: mapState(["lanMap"]),
+    computed: mapState(["langMap"]),
     data() {
         return {
             taskTemp: {},
             taskData: {
                 name: "",
                 type: "",
+                upgradefile: '',
                 description: ""
             },
-            taskType: [
-                "upgradefirmware",
-                "upgradesystem",
-                "upgradefullversion"
-            ],
+            taskType: [],
+            swName: [],
             taskTable: [],
             currentPage: 1,
             pageSize: 20,
-            pageSizes
+            pageSizes,
+            rules: {
+                name: [
+                    { validator: validatorName, trigger: ["change", "blur"] }
+                ],
+                description: [
+                    { validator: validatorDesc, trigger: ["change", "blur"] }
+                ]
+            }
         };
     },
     created() {
         this.getData();
         this.getType();
+        this.getSw();
     },
     methods: {
         delTaskTemp(data) {
-            this.$confirm("是否确认删除？", this.lanMap["tips"], {
+            this.$confirm(this.langMap["cfm_del_tips"], this.langMap["tips"], {
                 type: "warning",
-                confirmButtonText: this.lanMap["apply"],
-                cancelButtonText: this.lanMap["cancel"]
+                confirmButtonText: this.langMap["apply"],
+                cancelButtonText: this.langMap["cancel"]
             })
                 .then(_ => {
                     var _data = {
@@ -107,7 +127,9 @@ export default {
                         .post("/api/server/tasktemplate", _data)
                         .then(res => {
                             if (res.data.code === 1) {
-                                this.$message.success("success");
+                                this.$message.success(
+                                    this.langMap[_data.method + "_success"]
+                                );
                                 this.getData();
                             } else {
                                 this.$message.error(res.data.message);
@@ -133,6 +155,8 @@ export default {
             this.$http
                 .get("/api/server/tasktemplate")
                 .then(res => {
+                    this.taskTemp = {};
+                    this.taskTable = [];
                     if (res.data.code === 1) {
                         this.taskTemp = res.data;
                         this.currentPage = 1;
@@ -143,13 +167,7 @@ export default {
                             } else {
                                 this.taskTable = data;
                             }
-                        } else {
-                            this.taskTemp = {};
-                            this.taskTable = [];
                         }
-                    } else {
-                        this.taskTemp = {};
-                        this.taskTable = [];
                     }
                 })
                 .catch(err => {});
@@ -158,19 +176,59 @@ export default {
             this.$http
                 .get("/api/server/tasktype")
                 .then(res => {
+                    this.taskType = [];
                     if (res.data.code === 1) {
                         if (res.data.data && res.data.data.length) {
                             this.taskType = res.data.data;
-                        } else {
-                            this.taskType = [];
+                            this.taskData.type = this.taskType[0];
                         }
-                    } else {
-                        this.taskType = [];
                     }
                 })
                 .catch(err => {});
         },
-        addTaskType() {}
+        //  获取软件库列表
+        getSw(){
+            this.$http.get('/api/server/software').then(res =>{
+                this.swName = [];
+                if(res.data.code === 1){
+                    if(res.data.data && res.data.data.length){
+                        res.data.data.forEach(item =>{
+                            this.swName.push(item.name);
+                        })
+                        this.taskData.upgradefile = this.swName[0];
+                    }
+                }
+            }).catch(err =>{})
+        },
+        addTaskType(formName) {
+            if (!this.taskType.length || !this.taskData.type) {
+                return;
+            }
+            if(!this.swName.length || !this.taskData.upgradefile){
+                return;
+            }
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    var data = {
+                        method: "add",
+                        param: {
+                            name: this.taskData.name,
+                            type: this.taskData.type,
+                            upgradefile: this.taskData.upgradefile,
+                            description: this.taskData.description
+                        }
+                    };
+                    this.$http.post('/api/server/tasktemplate', data).then(res =>{
+                        if(res.data.code === 1){
+                            this.$message.success(this.langMap[data.method + '_success']);
+                            this.getData();
+                        }else{
+                            this.$message.error(res.data.message);
+                        }
+                    }).catch(err =>{})
+                }
+            });
+        }
     }
 };
 </script>

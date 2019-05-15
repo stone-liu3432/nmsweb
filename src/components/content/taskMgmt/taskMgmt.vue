@@ -1,7 +1,7 @@
 <template>
     <div slot="label">
         <el-collapse>
-            <el-collapse-item title="添加任务">
+            <el-collapse-item :title="langMap['add_task']">
                 <el-form
                     :model="addTask"
                     :rules="rules"
@@ -12,67 +12,71 @@
                 >
                     <el-row>
                         <el-col :span="8">
-                            <el-form-item :label="lanMap['taskname']" prop="taskname">
+                            <el-form-item :label="langMap['taskname']" prop="taskname">
                                 <el-input v-model="addTask.taskname"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item :label="lanMap['mode']">
+                            <el-form-item :label="langMap['mode']" prop="mode">
                                 <el-select v-model="addTask.mode">
-                                    <el-option value="manual"></el-option>
-                                    <el-option value="time"></el-option>
+                                    <el-option value="manual" :label="langMap['manual_task']"></el-option>
+                                    <el-option value="time" :label="langMap['time_task']"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
                     </el-row>
-                    <el-form-item :label="lanMap['devicelist']">
+                    <el-form-item :label="langMap['devicelist']" prop="devlist">
                         <el-transfer
                             v-model="addTask.devicelist"
                             :data="devlist"
                             style="border: 1px solid #ddd;"
                             :titles="['source', 'target']"
+                            :props="{
+                                key: 'ipaddr',
+                                label: 'name'
+                            }"
                         ></el-transfer>
                     </el-form-item>
                     <el-row>
                         <el-col :span="8">
-                            <el-form-item :label="lanMap['status']">
+                            <el-form-item :label="langMap['status']">
                                 <el-switch v-model="addTask.status"></el-switch>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item :label="lanMap['concurrent']">
+                            <el-form-item :label="langMap['concurrent']">
                                 <el-switch v-model="addTask.concurrent"></el-switch>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-col :span="8">
-                            <el-form-item :label="lanMap['stime']">
+                            <el-form-item :label="langMap['stime']" prop="stime">
                                 <el-date-picker
                                     type="datetime"
-                                    :placeholder="lanMap['select_date']"
+                                    :placeholder="langMap['select_date']"
                                     v-model="addTask.stime"
                                     style="width: 100%;"
                                 ></el-date-picker>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item :label="lanMap['etime']">
+                            <el-form-item :label="langMap['etime']" prop="etime">
                                 <el-date-picker
                                     type="datetime"
-                                    :placeholder="lanMap['select_date']"
+                                    :placeholder="langMap['select_date']"
                                     v-model="addTask.etime"
                                     style="width: 100%;"
                                 ></el-date-picker>
                             </el-form-item>
                         </el-col>
                     </el-row>
-                    <el-form-item :label="lanMap['template']">
+                    <el-form-item :label="langMap['template']" prop="template">
                         <el-select v-model="addTask.template">
-                            <el-option label="test" value="test"></el-option>
+                            <el-option :value="item" v-for="(item, index) in taskTemp" :key="index"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item :label="lanMap['description']" prop="description">
+                    <el-form-item :label="langMap['description']" prop="description">
                         <el-input type="textarea" v-model="addTask.description"></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -80,35 +84,36 @@
                             type="primary"
                             @click="submitForm('addTask')"
                             style="width: 200px;"
-                        >{{ lanMap['add'] }}</el-button>
+                            :disabled="!taskTemp.length || !devlist.length"
+                        >{{ langMap['add'] }}</el-button>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
         </el-collapse>
-        <h3>已有任务列表</h3>
+        <h3>{{ langMap['exist_task_list'] }}</h3>
         <el-table :data="taskTable" border style="margin-top: 20px;">
-            <el-table-column prop="taskname" :label="lanMap['taskname']"></el-table-column>
-            <el-table-column prop="execstatus" :label="lanMap['execstatus']" width="100"></el-table-column>
+            <el-table-column prop="taskname" :label="langMap['taskname']"></el-table-column>
+            <el-table-column prop="execstatus" :label="langMap['execstatus']" width="100"></el-table-column>
             <el-table-column
                 prop="status"
                 :formatter="formatStatus"
-                :label="lanMap['status']"
+                :label="langMap['status']"
                 width="80"
             ></el-table-column>
-            <el-table-column prop="mode" :label="lanMap['mode']" width="80"></el-table-column>
-            <el-table-column prop="user" :label="lanMap['user']"></el-table-column>
-            <el-table-column prop="timestamp" :label="lanMap['timestamp']"></el-table-column>
-            <el-table-column prop="description" :label="lanMap['description']"></el-table-column>
-            <el-table-column :label="lanMap['config']">
+            <el-table-column prop="mode" :label="langMap['mode']" width="80"></el-table-column>
+            <el-table-column prop="user" :label="langMap['user']"></el-table-column>
+            <el-table-column prop="timestamp" :label="langMap['timestamp']"></el-table-column>
+            <el-table-column prop="description" :label="langMap['description']"></el-table-column>
+            <el-table-column :label="langMap['config']">
                 <template slot-scope="scope">
                     <el-button
                         @click="delTask(scope.row)"
                         type="text"
                         size="small"
-                    >{{ lanMap['delete'] }}</el-button>
+                    >{{ langMap['delete'] }}</el-button>
                 </template>
             </el-table-column>
-            <div slot="empty">{{ lanMap['empty'] }}</div>
+            <div slot="empty">{{ langMap['empty'] }}</div>
         </el-table>
         <el-pagination
             style="float: right;"
@@ -128,9 +133,34 @@
 import { mapState } from "vuex";
 import { pageSizes } from "@/utils/common-data";
 import { validatorName, validatorDesc } from "@/utils/validator";
+import store from '@/vuex/store'
+const validsTime = (rule, value, callback) =>{
+    if(!value){
+        return callback(new Error(store.state.langMap['no_stime_tips']))
+    }
+    callback();
+}
+const valideTime = (rule, value, callback) =>{
+    if(!value){
+        return callback(new Error(store.state.langMap['no_etime_tips']))
+    }
+    callback();
+}
+const validDevList = (rule, value, callback) =>{
+    if(!value){
+        return callback(new Error(store.state.langMap['no_devlist_tips']))
+    }
+    callback();
+}
+const validTemp = (rule, value, callback) =>{
+    if(!value){
+        return callback(new Error(store.state.langMap['no_temp_tips']))
+    }
+    callback();
+}
 export default {
     name: "taskMgmt",
-    computed: mapState(["lanMap"]),
+    computed: mapState(["langMap"]),
     data() {
         return {
             task: {},
@@ -139,32 +169,39 @@ export default {
             pageSize: 20,
             pageSizes,
             devlist: [],
+            taskTemp: [],
             addTask: {
                 taskname: "",
                 devicelist: [],
                 status: true,
                 template: "",
-                mode: "",
+                mode: "manual",
                 concurrent: true,
                 stime: "",
                 etime: "",
                 description: ""
             },
             rules: {
-                taskname: [{ validator: validatorName, trigger: "blur" }],
-                description: [{ validator: validatorDesc, trigger: "blur" }]
+                taskname: [{ validator: validatorName, trigger: ["blur", 'change'] }],
+                description: [{ validator: validatorDesc, trigger: ["blur", 'change'] }],
+                devlist: [{ validator: validDevList, trigger: 'blur' }],
+                stime: [{ validator: validsTime, trigger: ['change', 'blur'] }],
+                etime: [{ validator: valideTime, trigger: ['change', 'blur'] }],
+                template: [{ validator: validTemp, trigger: ['change', 'blur'] }]
             }
         };
     },
     created() {
         this.getData();
+        this.getTemp();
+        this.getDev();
     },
     methods: {
         delTask(data) {
-            this.$confirm("确认删除？", {
+            this.$confirm(this.langMap["cfm_del_tips"], this.langMap["tips"], {
                 type: "warning",
-                confirmButtonText: this.lanMap["apply"],
-                cancelButtonText: this.lanMap["cancel"]
+                confirmButtonText: this.langMap["apply"],
+                cancelButtonText: this.langMap["cancel"]
             })
                 .then(_ => {
                     var _data = {
@@ -177,7 +214,9 @@ export default {
                         .post("/api/server/task", _data)
                         .then(res => {
                             if (res.data.code === 1) {
-                                this.$message.success("success");
+                                this.$message.success(
+                                    this.langMap[_data.method + "_success"]
+                                );
                                 this.getData();
                             } else {
                                 this.$message.error(res.data.message);
@@ -203,26 +242,6 @@ export default {
             return row[col.property] ? "Enable" : "Disabled";
         },
         submitForm(formName) {
-            if (!this.addTask.devicelist.length) {
-                this.$message.error("devicelist");
-                return;
-            }
-            if (!this.addTask.template) {
-                this.$message.error("template");
-                return;
-            }
-            if (!this.addTask.mode) {
-                this.$message.error("mode");
-                return;
-            }
-            if (!this.addTask.stime) {
-                this.$message.error("start time");
-                return;
-            }
-            if (!this.addTask.etime) {
-                this.$message.error("end time");
-                return;
-            }
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     var data = {
@@ -237,17 +256,22 @@ export default {
                             stime: this.addTask.stime,
                             etime: this.addTask.etime,
                             description: this.addTask.description,
-                            user: sessionStorage.getItem('user'),
+                            user: sessionStorage.getItem("user")
                         }
                     };
-                    this.$http.post('/api/server/task', data).then(res =>{
-                        if(res.data.code === 1){
-                            this.$message.success(res.data.message);
-                            this.getData();
-                        }else{
-                            this.$message.error(res.data.message);
-                        }
-                    }).catch(err =>{})
+                    this.$http
+                        .post("/api/server/task", data)
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap[data.method + "_success"]
+                                );
+                                this.getData();
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        })
+                        .catch(err => {});
                 } else {
                     return false;
                 }
@@ -257,6 +281,8 @@ export default {
             this.$http
                 .get("/api/server/task")
                 .then(res => {
+                    this.task = {};
+                    this.taskTable = [];
                     if (res.data.code === 1) {
                         this.task = res.data;
                         this.currentPage = 1;
@@ -269,13 +295,36 @@ export default {
                             } else {
                                 this.taskTable = this.task.data;
                             }
-                        } else {
-                            this.task = {};
-                            this.taskTable = [];
                         }
-                    } else {
-                        this.task = {};
-                        this.taskTable = [];
+                    }
+                })
+                .catch(err => {});
+        },
+        getTemp() {
+            this.$http
+                .get("/api/server/tasktemplate")
+                .then(res => {
+                    this.taskTemp = [];
+                    if (res.data.code === 1) {
+                        if (res.data.data && res.data.data.length) {
+                            res.data.data.forEach(item => {
+                                this.taskTemp.push(item.name);
+                            });
+                            this.addTask.template = this.taskTemp[0];
+                        }
+                    }
+                })
+                .catch(err => {});
+        },
+        getDev() {
+            this.$http
+                .get("/api/device/olt?type=list")
+                .then(res => {
+                    this.devlist = [];
+                    if (res.data.code === 1) {
+                        if (res.data.data && res.data.data.length) {
+                            this.devlist = res.data.data;
+                        }
                     }
                 })
                 .catch(err => {});
