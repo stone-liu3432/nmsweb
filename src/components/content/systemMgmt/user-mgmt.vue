@@ -95,7 +95,7 @@
                 v-if="modalType === 'add'"
                 key="addUser"
             >
-                <el-form-item :label="langMap['username']" prop="name">
+                <el-form-item :label="langMap['username']" prop="username">
                     <el-input v-model="form.username"></el-input>
                 </el-form-item>
                 <el-form-item :label="langMap['password']" prop="pass1">
@@ -217,7 +217,7 @@ export default {
                 description: ""
             },
             addRules: {
-                name: [
+                username: [
                     {
                         validator: validator.validatorName,
                         trigger: ["change", "blur"]
