@@ -23,124 +23,159 @@
 </template>
 
 <script>
-import pieCharts from '../echarts/pie'
-import lineCharts from '../echarts/line'
-import { initPieData, initLineData } from '@/utils/common'
-import { mapState,mapMutations } from 'vuex'
+import pieCharts from "../echarts/pie";
+import lineCharts from "../echarts/line";
+import { initPieData, initLineData } from "@/utils/common";
+import { mapState, mapMutations } from "vuex";
 export default {
-    name: 'home',
-    computed: mapState(['charts', 'langMap']),
-    data(){
+    name: "home",
+    computed: mapState(["charts", "langMap"]),
+    data() {
         return {
             debounced: true,
             cpuInfo: {},
             memoryInfo: {},
-            cpuID: 'cpu-used',
-            memoryID: 'memory-used',
+            cpuID: "cpu-used",
+            memoryID: "memory-used",
             devInfo: {},
-            devID: 'device-info',
+            devID: "device-info",
             onuInfo: {},
-            onuID: 'all-onu-info'
-        }
+            onuID: "all-onu-info"
+        };
     },
     components: { pieCharts, lineCharts },
-    created(){
-
-    },
-    mounted(){
+    created() {},
+    mounted() {
         var _this = this;
-        document.body.onresize = function(){
-            if(_this.debounced){
+        document.body.onresize = function() {
+            if (_this.debounced) {
                 _this.debounced = false;
-                _this.charts.forEach(item =>{
-                    if(typeof item.resize === 'function'){
+                _this.charts.forEach(item => {
+                    if (typeof item.resize === "function") {
                         item.resize();
                     }
-                })
-                setTimeout(() =>{
+                });
+                setTimeout(() => {
                     _this.debounced = true;
-                }, 300)
+                }, 300);
             }
-        }
-        this.$nextTick(() =>{
-            this.getSysInfo();
-            this.getDevInfo();
-            this.getOnuInfo();
-        })
+        };
+        this.getDevInfo();
+        this.getOnuInfo();
+        this.getSysInfo();
     },
     methods: {
-        getSysInfo(){
-            this.$http.get('/api/server').then(res =>{
-                if(res.data.code === 1){
-                    var data = res.data.data;
-                    this.cpuInfo = initPieData({
-                        name: this.langMap['cpu'],
-                        data: [
-                            { value: data.cpu, name: this.langMap['in_use'] },
-                            { value: 100 - data.cpu, name: this.langMap['idle']}
-                        ]
-                    })
-                    this.memoryInfo = initPieData({
-                        name: this.langMap['memory'],
-                        data: [
-                            { value: data.memory_used, name: this.langMap['memory_used']},
-                            { value: data.memory_total - data.memory_used, name: this.langMap['idle']}
-                        ]
-                    })
-                }else{
-                    this.cpuInfo = {};
-                    this.memoryInfo = {};
-                }
-            }).catch(err =>{
-
-            })
+        getSysInfo() {
+            this.$http
+                .get("/api/server?form=status")
+                .then(res => {
+                    if (res.data.code === 1) {
+                        var data = res.data.data;
+                        this.cpuInfo = initPieData({
+                            name: this.langMap["cpu"],
+                            data: [
+                                {
+                                    value: data.cpu,
+                                    name: this.langMap["in_use"]
+                                },
+                                {
+                                    value: 100 - data.cpu,
+                                    name: this.langMap["idle"]
+                                }
+                            ]
+                        });
+                        this.memoryInfo = initPieData({
+                            name: this.langMap["memory"],
+                            data: [
+                                {
+                                    value: data.memory_used,
+                                    name: this.langMap["memory_used"]
+                                },
+                                {
+                                    value: data.memory_total - data.memory_used,
+                                    name: this.langMap["idle"]
+                                }
+                            ]
+                        });
+                    } else {
+                        this.cpuInfo = {};
+                        this.memoryInfo = {};
+                    }
+                })
+                .catch(err => {});
         },
-        getDevInfo(){
-            this.$http.get('/api/server?device=eponolt').then(res =>{
-                if(res.data.code === 1){
-                    var data = res.data.data;
-                    this.devInfo = initPieData({
-                        name: 'EPON/GPON',
-                        data: [
-                            { value: data.error, name: this.langMap['error']},
-                            { value: data.offline, name: this.langMap['offline']},
-                            { value: data.online, name: this.langMap['online']},
-                        ]
-                    })
-                }else{
-                    this.devInfo = {};
-                }
-            }).catch(err => {
-
-            })
+        getDevInfo() {
+            this.$http
+                .get("/api/server?device=eponolt")
+                .then(res => {
+                    if (res.data.code === 1) {
+                        var data = res.data.data;
+                        this.devInfo = initPieData({
+                            name: "EPON/GPON",
+                            data: [
+                                {
+                                    value: data.error,
+                                    name: this.langMap["error"]
+                                },
+                                {
+                                    value: data.offline,
+                                    name: this.langMap["offline"]
+                                },
+                                {
+                                    value: data.online,
+                                    name: this.langMap["online"]
+                                }
+                            ]
+                        });
+                    } else {
+                        this.devInfo = {};
+                    }
+                })
+                .catch(err => {});
         },
-        getOnuInfo(){
-            this.$http.get('/api/server?device=epononu').then(res =>{
-                if(res.data.code === 1){
-                    var data = res.data.data;
-                    this.onuInfo = initPieData({
-                        name: 'ONU',
-                        data: [
-                            { value: data.offline, name: this.langMap['offline']},
-                            { value: data.register, name: this.langMap['register']},
-                            { value: data.initial, name: this.langMap['initial']},
-                            { value: data.authorized, name: this.langMap['authorized']},
-                            { value: data.unauth, name: this.langMap['unauth'] }
-                        ]
-                    })
-                }else{
-                    this.onuInfo = {};
-                }
-            }).catch(err=>{
-
-            })
+        getOnuInfo() {
+            this.$http
+                .get("/api/server?device=epononu")
+                .then(res => {
+                    if (res.data.code === 1) {
+                        var data = res.data.data;
+                        this.onuInfo = initPieData({
+                            name: "ONU",
+                            data: [
+                                {
+                                    value: data.offline,
+                                    name: this.langMap["offline"]
+                                },
+                                {
+                                    value: data.register,
+                                    name: this.langMap["register"]
+                                },
+                                {
+                                    value: data.initial,
+                                    name: this.langMap["initial"]
+                                },
+                                {
+                                    value: data.authorized,
+                                    name: this.langMap["authorized"]
+                                },
+                                {
+                                    value: data.unauth,
+                                    name: this.langMap["unauth"]
+                                }
+                            ]
+                        });
+                    } else {
+                        this.onuInfo = {};
+                    }
+                })
+                .catch(err => {});
         }
     },
-    beforeDestroy(){
+    beforeDestroy() {
         document.body.onresize = null;
     },
     watch: {
-        langMap(){
+        langMap() {
             this.cpuInfo = {};
             this.memoryInfo = {};
             this.devInfo = {};
@@ -150,7 +185,7 @@ export default {
             this.getOnuInfo();
         }
     }
-}
+};
 </script>
 
 <style lang="less" scoped>
