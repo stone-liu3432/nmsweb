@@ -23,7 +23,7 @@ export default {
     computed: mapState(["langMap"]),
     data() {
         return {
-            activeName: "software"
+            activeName: "userMgmt"
         };
     }
 };

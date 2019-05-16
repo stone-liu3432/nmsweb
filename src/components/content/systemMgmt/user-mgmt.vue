@@ -26,8 +26,8 @@
                         <el-form-item :label="langMap['username']">
                             <span>{{ props.row.username }}</span>
                         </el-form-item>
-                        <el-form-item :label="langMap['role']">
-                            <span>{{ props.row.role }}</span>
+                        <el-form-item :label="langMap['rolename']">
+                            <span>{{ props.row.rolename }}</span>
                         </el-form-item>
                         <el-form-item :label="langMap['label']">
                             <span>{{ props.row.label }}</span>
@@ -104,8 +104,8 @@
                 <el-form-item :label="langMap['re_enter_pass']" prop="pass2">
                     <el-input v-model="form.pass2" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item :label="langMap['role']" prop="role">
-                    <el-select v-model="form.role">
+                <el-form-item :label="langMap['rolename']" prop="role">
+                    <el-select v-model="form.rolename">
                         <el-option :value="item" v-for="(item, index) in roles" :key="index"></el-option>
                     </el-select>
                 </el-form-item>
@@ -211,7 +211,7 @@ export default {
                 username: "",
                 pass1: "",
                 pass2: "",
-                role: "",
+                rolename: "",
                 label: "",
                 phone: "",
                 description: ""
@@ -332,7 +332,7 @@ export default {
                             res.data.data.forEach(item => {
                                 this.roles.push(item.rolename);
                             });
-                            this.form.role = this.roles[0];
+                            this.form.rolename = this.roles[0];
                         }
                     }
                 })
@@ -444,7 +444,7 @@ export default {
                                 key: md5(
                                     `${this.form.username}:${this.form.pass1}`
                                 ),
-                                role: this.form.rule,
+                                rolename: this.form.rolename,
                                 label: this.form.label,
                                 phone: this.form.phone,
                                 description: this.form.description
@@ -470,9 +470,9 @@ export default {
                         data = {
                             method: "modify",
                             param: {
-                                username: this.from.username,
+                                username: this.form.username,
                                 key: md5(
-                                    `${this.form.username}:${this.from.pass1}`
+                                    `${this.form.username}:${this.form.pass1}`
                                 )
                             }
                         };
@@ -502,7 +502,7 @@ export default {
                 this.form[item] = "";
             });
             if (this.roles.length) {
-                this.form.role = this.roles[0];
+                this.form.rolename = this.roles[0];
             }
         },
         clearData(done) {
@@ -510,7 +510,7 @@ export default {
                 this.form[item] = "";
             });
             if (this.roles.length) {
-                this.form.role = this.roles[0];
+                this.form.rolename = this.roles[0];
             }
             done();
         }
