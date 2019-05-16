@@ -32,6 +32,7 @@ export default {
 
 <style lang="less" scoped>
 #footer{
+    background: #fff;
     position: fixed;
     bottom: 0;
     left: 0;
