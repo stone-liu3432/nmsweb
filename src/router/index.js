@@ -19,8 +19,12 @@ router.beforeEach((to, from, next)=>{
 		if (process.env.NODE_ENV == 'development'){
 			next();
 		}else if(process.env.NODE_ENV == 'production'){
-			// to do
-			next();
+			if (sessionStorage.getItem("x-token")){
+				next();
+			}else{
+				sessionStorage.removeItem('user');
+				next({ path: "/login" });
+			}
 		}
 	}else{
 		if(!sessionStorage.getItem("x-token")){
