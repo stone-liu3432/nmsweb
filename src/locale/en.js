@@ -130,6 +130,7 @@ export default {
     clear_success: 'Cleared successfully',
     destroy_success: 'Successful destruction',
     modify_success: 'Modify successfully',
+    upload_success: 'Upload success',
 
     user_mgmt: 'User Management',
     auth_mgmt: 'Authority Management',
@@ -161,5 +162,17 @@ export default {
     dev_group_mgmt: 'Device group management',
     cfm_del_tips: 'Whether to confirm the deletion ?',
     no_user_select: 'No users selected',
-    invalid_pass: 'Inconsistent password entered twice'
+    invalid_pass: 'Inconsistent password entered twice',
+    no_supprot_now: 'Not supported now',
+    upgradefile: 'Upgrade file',
+    no_devlist_tips: 'Need to add at least one device',
+    no_stime_tips: 'Please select the start time',
+    no_etime_tips: 'Please select the end time',
+    no_temp_tips: 'Please select the template',
+    manual_task: 'Manual task',
+    time_task: 'Timed task',
+    illegal_login_info: " Illegal Login Information",
+    login_timeout: " Login timeout, Please Login",
+    logout: 'Logout',
+    logout_tips: 'Confirm to logout ?'
 };

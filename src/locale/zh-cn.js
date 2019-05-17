@@ -72,7 +72,7 @@ export default {
     port: "端口",
     alarm_id: "告警ID",
     source: "告警源",
-    type: "告警类型",
+    type: "类型",
     level: "告警级别",
     taskname: "任务名",
     execstatus: "执行状态",
@@ -130,6 +130,7 @@ export default {
     clear_success: '清除成功',
     destroy_success: '销毁成功',
     modify_success: '修改成功',
+    upload_success: '上传成功',
 
     user_mgmt: '用户管理',
     auth_mgmt: '权限管理',
@@ -161,5 +162,17 @@ export default {
     dev_group_mgmt: '设备分组管理',
     cfm_del_tips: '是否确认删除?',
     no_user_select: '未选中任何用户',
-    invalid_pass: '两次输入的密码不一致'
+    invalid_pass: '两次输入的密码不一致',
+    no_supprot_now: '暂未支持',
+    upgradefile: '升级文件',
+    no_devlist_tips: '需至少添加一台设备',
+    no_stime_tips: '请选择开始时间',
+    no_etime_tips: '请选择结束时间',
+    no_temp_tips: '请选择模板',
+    manual_task: '手动任务',
+    time_task: '定时任务',
+    illegal_login_info: "非法登录信息",
+    login_timeout: "登录超时，请重新登录",
+    logout: '退出',
+    logout_tips: '是否确认退出?'
 };
