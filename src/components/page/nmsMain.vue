@@ -38,19 +38,13 @@ export default {
         this.$http.interceptors.response.use(
             response => {
                 if (response.data.code === 8) {
-                    this.$message({
-                        type: "error",
-                        text: this.langMap["illegal_login_info"]
-                    });
+                    this.$message.error(this.langMap["illegal_login_info"]);
                     sessionStorage.removeItem("user");
                     sessionStorage.removeItem("x-token");
                     this.$router.push("/login");
                 }
                 if (response.data.code === 6) {
-                    this.$message({
-                        type: "error",
-                        text: this.langMap["login_timeout"]
-                    });
+                    this.$message.error(this.langMap["login_timeout"]);
                     sessionStorage.removeItem("user");
                     sessionStorage.removeItem("x-token");
                     this.$router.push("/login");
