@@ -13,7 +13,7 @@
                     <el-form-item :label="langMap['protocol']" label-width="150px" prop="protocol">
                         <el-select v-model="networkData.protocol" :placeholder="langMap['protocol']">
                             <el-option value="http"></el-option>
-                            <el-option value="snmp"></el-option>
+                            <el-option value="snmp" disabled></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -53,7 +53,7 @@
                             <el-option
                                 v-for="(item, index) in groups"
                                 :key="index"
-                                :value="item.name"
+                                :value="item.groupname"
                             ></el-option>
                         </el-select>
                     </el-form-item>
@@ -101,6 +101,26 @@
                 </el-col>
             </el-row>
         </el-form>
+        <hr>
+        <el-table :data="showDevList" style="width: 100%" border v-if="devList.length">
+            <el-table-column prop="protocol" :label="langMap['protocol']"></el-table-column>
+            <el-table-column prop="sipaddr" :label="langMap['sipaddr']"></el-table-column>
+            <el-table-column prop="eipaddr" :label="langMap['eipaddr']"></el-table-column>
+            <el-table-column prop="ipmask" :label="langMap['ipmask']"></el-table-column>
+            <el-table-column prop="groupname" :label="langMap['groupname']"></el-table-column>
+            <el-table-column prop="snmpversion" :label="langMap['snmpversion']" :formatter="formatItem"></el-table-column>
+            <el-table-column prop="snmpcommunity" :label="langMap['snmpcommunity']" :formatter="formatItem"></el-table-column>
+            <el-table-column :formatter="formatPort" :label="langMap['port']"></el-table-column>
+        </el-table>
+        <el-pagination
+            style="float: right;"
+            @current-change="currentChange"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="showDevList.length"
+            v-if="devList.length > pageSize"
+        ></el-pagination>
     </div>
 </template>
 
@@ -109,7 +129,7 @@ import { mapState } from "vuex";
 import validator from "@/utils/validator";
 function validatorPort(rule, value, callback) {
     var val = ~~value;
-    if (val !== 80 && val !== 443 && (val < 10000 || val > 50000)) {
+    if (val !== 80 && val !== 443 && val !== 162 && (val < 10000 || val > 50000)) {
         return callback(new Error("80, 443, 10000-50000"));
     }
     callback();
@@ -133,10 +153,14 @@ export default {
                 groupname: "",
                 snmpversion: "v2c",
                 snmpcommunity: "",
-                httpport: "",
+                httpport: 80,
                 protocol: "http",
                 ipmask: ""
             },
+            devList: [],
+            showDevList: [],
+            pageSize: 20,
+            currentPage: 1,
             rules: {
                 sipaddr: [
                     {
@@ -171,12 +195,12 @@ export default {
     methods: {
         getGroup() {
             this.$http
-                .get("/api/server/group")
+                .get("/api/device/group")
                 .then(res => {
                     if (res.data.code === 1) {
                         if (res.data.data && res.data.data.length) {
                             this.groups = res.data.data;
-                            this.networkData.groupname = this.groups[0].name;
+                            this.networkData.groupname = this.groups[0].groupname;
                         } else {
                             this.groups = [];
                         }
@@ -201,12 +225,14 @@ export default {
                             eipaddr: this.networkData.eipaddr,
                             ipmask: this.networkData.ipmask,
                             groupname: this.networkData.groupname,
-                            httpport: this.networkData.httpport
                         }
                     };
                     if (this.networkData.protocol === "snmp") {
+                        data.param.snmpport = this.networkData.httpport;
                         data.param.snmpversion = this.networkData.snmpversion;
                         data.param.snmpcommunity = this.networkData.snmpcommunity;
+                    }else{
+                        data.param.httpport = this.networkData.httpport;
                     }
                     this.$http
                         .post("/api/device/discovery", data)
@@ -214,7 +240,9 @@ export default {
                             if (res.data.code === 1) {
                                 this.$message.success(this.langMap[data.method + '_success']);
                                 this.$refs[formName].resetFields();
-                                this.networkData.groupname = this.groups[0].name;
+                                this.networkData.groupname = this.groups[0].groupname;
+                                this.networkData.httpport = 80;
+                                this.getDiscoveryList();
                             } else {
                                 this.$message.error(res.data.message);
                             }
@@ -224,6 +252,46 @@ export default {
                     return false;
                 }
             });
+        },
+        getDiscoveryList(){
+            this.$http.get('/api/device/discovery').then(res =>{
+                this.devList = [];
+                this.showDevList = [];
+                this.currentPage = 1;
+                if(res.data.code === 1){
+                    if(res.data.data && res.data.data.length){
+                        this.devList = res.data.data;
+                        if(this.pageSize > this.devList.length){
+                            this.showDevList = this.devList;
+                        }else{
+                            this.showDevList = this.devList.slice(0, this.pageSize);
+                        }
+                    }
+                }
+            }).catch(err =>{})
+        },
+        currentChange(val){
+            var start = this.pageSize * (val - 1);
+            if(this.pageSize + start > this.devList.length){
+                this.showDevList = this.devList.slice(start);
+            }else{
+                this.showDevList = this.devList.slice(start, start + this.pageSize);
+            }
+        },
+        formatItem(row, column){
+            return row.protocol === 'http' ? ' - ' : row[column.property];
+        },
+        formatPort(row, column){
+            return row.protocol === 'http' ? row['httpport'] : row['snmpport'];
+        }
+    },
+    watch: {
+        'networkData.protocol'(){
+            if(this.networkData.protocol === 'http'){
+                this.networkData.httpport = 80;
+            }else{
+                this.networkData.httpport = 162;
+            }
         }
     }
 };

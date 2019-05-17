@@ -147,12 +147,12 @@ export default {
         },
         getGroup() {
             this.$http
-                .get("/api/server/group")
+                .get("/api/device/group")
                 .then(res => {
                     if (res.data.code === 1) {
                         if (res.data.data && res.data.data.length) {
                             res.data.data.forEach(item => {
-                                this.groups.push(item.name);
+                                this.groups.push(item.groupname);
                             });
                             this.addData.groupname = this.groups[0];
                         } else {

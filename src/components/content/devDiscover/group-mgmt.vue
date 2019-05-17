@@ -10,8 +10,8 @@
                     status-icon
                     ref="addGroup"
                 >
-                    <el-form-item :label="langMap['name']" prop="name">
-                        <el-input v-model="addGroup.name" :placeholder="langMap['name']"></el-input>
+                    <el-form-item :label="langMap['groupname']" prop="name">
+                        <el-input v-model="addGroup.groupname" :placeholder="langMap['groupname']"></el-input>
                     </el-form-item>
                     <el-form-item :label="langMap['description']" prop="description">
                         <el-input
@@ -32,7 +32,7 @@
             </el-collapse-item>
         </el-collapse>
         <el-table :data="showGroups" border style="width: 100%; margin-top: 20px;">
-            <el-table-column prop="name" :label="langMap['name']"></el-table-column>
+            <el-table-column prop="groupname" :label="langMap['name']"></el-table-column>
             <el-table-column prop="description" :label="langMap['description']"></el-table-column>
             <el-table-column prop="creater" :label="langMap['creater']"></el-table-column>
             <el-table-column prop="timestamp" :label="langMap['timestamp']"></el-table-column>
@@ -69,7 +69,7 @@ export default {
             pageSize: 20,
             activeName: "",
             addGroup: {
-                name: "",
+                groupname: "",
                 description: ""
             },
             groupRules: {
@@ -94,8 +94,10 @@ export default {
     methods: {
         getData() {
             this.$http
-                .get("/api/server/group")
+                .get("/api/device/group")
                 .then(res => {
+                    this.groups = [];
+                    this.showGroups = [];
                     if (res.data.code === 1) {
                         if (res.data.data && res.data.data.length) {
                             this.groups = res.data.data;
@@ -108,13 +110,7 @@ export default {
                             } else {
                                 this.showGroups = this.groups;
                             }
-                        } else {
-                            this.groups = [];
-                            this.showGroups = [];
                         }
-                    } else {
-                        this.groups = [];
-                        this.showGroups = [];
                     }
                 })
                 .catch(err => {});
@@ -126,14 +122,14 @@ export default {
             this.currentPage = val;
             var start = this.pageSize * (val - 1);
             if (start + this.pageSize > this.groups.length) {
-                this.showGroups = this.groups.slice(start, this.pageSize);
+                this.showGroups = this.groups.slice(start, start + this.pageSize);
             } else {
                 this.showGroups = this.groups.slice(start);
             }
         },
         deleteGroup(val) {
             this.$confirm(
-                "此操作将永久删除该分组, 是否继续?",
+                this.langMap['cfm_del_tips'],
                 this.langMap["tips"],
                 {
                     confirmButtonText: this.langMap["apply"],
@@ -145,7 +141,7 @@ export default {
                     var data = {
                         method: "delete",
                         param: {
-                            name: val.name
+                            groupname: val.name
                         }
                     };
                     this.$http
@@ -168,7 +164,7 @@ export default {
                     var data = {
                         method: "add",
                         param: {
-                            groupname: this.addGroup.name,
+                            groupname: this.addGroup.groupname,
                             description: this.addGroup.description
                         }
                     };
@@ -177,7 +173,7 @@ export default {
                         .then(res => {
                             if(res.data.code === 1){
                                 this.$message.success(this.langMap[data.method + '_success']);
-                                this.addGroup.name = '';
+                                this.addGroup.groupname = '';
                                 this.addGroup.description = '';
                                 this.activeName = '';
                                 this.getData();
