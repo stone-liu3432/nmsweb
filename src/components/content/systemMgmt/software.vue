@@ -206,7 +206,7 @@ export default {
             if (start + this.pageSize > this.swType.length) {
                 this.softwareTypes = this.swType.slice(start);
             } else {
-                this.softwareTypes = this.swType.slice(start, this.pageSize);
+                this.softwareTypes = this.swType.slice(start, start + this.pageSize);
             }
         },
         storageCurrentChange(val) {
@@ -215,7 +215,7 @@ export default {
             if (start + this.pageSize > this.sw.length) {
                 this.softwareStorage = this.sw.slice(start);
             } else {
-                this.softwareStorage = this.sw.slice(start, this.pageSize);
+                this.softwareStorage = this.sw.slice(start, start + this.pageSize);
             }
         },
         submitUpload() {

@@ -299,6 +299,8 @@ export default {
             this.$http
                 .get("/api/server/user")
                 .then(res => {
+                    this.user = [];
+                    this.userInfo = [];
                     if (res.data.code === 1) {
                         this.user = res.data.data;
                         this.currentPage = 1;
@@ -311,13 +313,7 @@ export default {
                             } else {
                                 this.userInfo = this.user;
                             }
-                        } else {
-                            this.user = [];
-                            this.userInfo = [];
                         }
-                    } else {
-                        this.user = [];
-                        this.userInfo = [];
                     }
                 })
                 .catch(err => {});
@@ -422,7 +418,7 @@ export default {
             if (start + this.pageSize > this.user.length) {
                 this.userInfo = this.user.slice(start);
             } else {
-                this.userInfo = this.user.slice(start, this.pageSize);
+                this.userInfo = this.user.slice(start, start + this.pageSize);
             }
         },
         handleSelectionChange(val) {
@@ -484,6 +480,7 @@ export default {
                                 this.$message.success(
                                     this.langMap[data.method + "_success"]
                                 );
+                                this.getData();
                                 this.closeModal();
                             } else {
                                 this.$message.error(res.data.message);
