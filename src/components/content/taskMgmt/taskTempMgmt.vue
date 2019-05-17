@@ -148,7 +148,7 @@ export default {
             if (start + this.pageSize > this.taskTemp.data.length) {
                 this.taskTable = this.taskTemp.data.slice(start);
             } else {
-                this.taskTable = this.taskTemp.data.slice(start, pageSize);
+                this.taskTable = this.taskTemp.data.slice(start, start + this.pageSize);
             }
         },
         getData() {
@@ -163,7 +163,7 @@ export default {
                         if (res.data.data && res.data.data.length) {
                             var data = res.data.data;
                             if (data.length > this.pageSize) {
-                                this.taskTable = data.slice(0, pageSize);
+                                this.taskTable = data.slice(0, this.pageSize);
                             } else {
                                 this.taskTable = data;
                             }

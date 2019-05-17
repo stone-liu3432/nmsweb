@@ -233,7 +233,7 @@ export default {
             this.currentPage = val;
             var start = this.pageSize * (val - 1);
             if (start + this.pageSize > this.task.data.length) {
-                this.taskTable = this.task.data.slice(start, this.pageSize);
+                this.taskTable = this.task.data.slice(start, start + this.pageSize);
             } else {
                 this.taskTable = this.task.data.slice(start);
             }
