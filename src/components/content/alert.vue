@@ -40,7 +40,7 @@
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="alert.length"
-            v-if="alertTable.length > pageSize"
+            v-if="alert.length > pageSize"
         ></el-pagination>
     </div>
 </template>
@@ -68,39 +68,39 @@ export default {
     methods: {
         tableRowClassName({ row, rowIndex }) {
             var level = ALARM_LEVEL[row.level];
-            return level ? `${level}-row` : '';
+            return level ? `${level}-row` : "";
         },
         handleSizeChange(val) {
             this.pageSize = val;
         },
         handleCurrentChange(val) {
-            var pre = this.pageSize * (this.currentPage - 1);
-            if (pre + this.pageSize > this.alert.length) {
-                this.alertTable = this.alert.slice(pre);
+            this.currentPage = val;
+            var start = this.pageSize * (val - 1);
+            if (start + this.pageSize > this.alert.length) {
+                this.alertTable = this.alert.slice(start);
             } else {
-                this.alertTable = this.alert.slice(pre, this.pageSize);
+                this.alertTable = this.alert.slice(start, start + this.pageSize);
             }
         },
         getData() {
             this.$http
                 .get("/api/alarm")
                 .then(res => {
+                    this.alert = [];
+                    this.alertTable = [];
                     if (res.data.code === 1) {
                         this.alert = res.data.data;
                         this.currentPage = 1;
                         if (this.alert && this.alert.length) {
                             if (this.alert.length > this.pageSize) {
                                 this.alertTable = this.alert.slice(
-                                    this.currentPage - 1,
-                                    this.pageSize * this.currentPage
+                                    0,
+                                    this.pageSize
                                 );
                             } else {
                                 this.alertTable = this.alert;
                             }
                         }
-                    } else {
-                        this.alert = [];
-                        this.alertTable = [];
                     }
                 })
                 .catch(err => {});
