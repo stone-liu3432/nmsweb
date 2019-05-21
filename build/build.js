@@ -3,6 +3,7 @@ require("./check-versions")();
 
 process.env.NODE_ENV = "production";
 
+const fs = require("fs");
 const ora = require("ora");
 const rm = require("rimraf");
 const path = require("path");
@@ -11,22 +12,62 @@ const webpack = require("webpack");
 const config = require("../config");
 const webpackConfig = require("./webpack.prod.conf");
 
+/* ----------------------------------上传到共享文件夹------------------------------------- */
+var autoSync = filename => {
+    let filePath = "\\\\192.168.5.28\\HSGQ File Server\\鸿升研发\\NMS_WEB";
+    let files = fs.readdirSync(filePath);
+    files.forEach(filename => {
+        var filedir = path.join(filePath, filename);
+        fs.stat(filedir, (eror, stats) => {
+            if (eror) {
+                console.warn("获取文件stats失败");
+            } else {
+                var isFile = stats.isFile();
+                if (isFile && filename.indexOf("nms2019") > -1) {
+                    fs.unlinkSync(filedir);
+                    console.log(`删除 ${chalk.green(filedir)} 成功 ！\n`);
+                }
+            }
+        });
+    });
+    let data = fs.readFileSync(filename);
+    fs.writeFile(
+        path.join(filePath, filename.slice(filename.lastIndexOf("\\") + 1)),
+        data,
+        function(err) {
+            if (err) {
+                return console.error(err);
+            }
+            console.log(
+                chalk.yellow(
+                    `压缩文件 ${chalk.green(
+                        filename.slice(filename.lastIndexOf("\\") + 1)
+                    )} 同步至服务器成功！\n`
+                )
+            );
+        }
+    );
+};
+/* --------------------------------上传到共享文件夹结束------------------------------------- */
+
 /* --------------------------------------------------文件自动打包zip 开始--------------------------------------------------- */
 var autoArchiver = () => {
     let archiver = require("archiver");
-    let fs = require("fs");
     console.time("文件压缩成功，共计用时：");
     // 创建文件输出流
-    let output = fs.createWriteStream(
-        path.resolve(__dirname, "../dist/nms") + timeStramp() + ".zip"
-    );
+    let filename =
+        path.resolve(__dirname, "../dist/nms") + timeStramp() + ".zip";
+    let output = fs.createWriteStream(filename);
     let archive = archiver("zip", {
         zlib: { level: 9 } // 设置压缩级别
     });
     // 文件输出流结束
     output.on("close", function() {
         console.timeEnd("文件压缩成功，共计用时：");
-        console.log(chalk.green(`压缩后文件大小共 ${archive.pointer()} 字节 \n`));
+        console.log(
+            chalk.green(`\n压缩后文件大小共 ${archive.pointer()} 字节 \n\n`)
+        );
+        autoSync(filename);
     });
     // 数据源是否耗尽
     output.on("end", function() {
