@@ -35,3 +35,8 @@ export const ALARM_LEVEL = [
     'minor',
     'waring'
 ]
+
+export const MCLASS = {
+    1: 'EOPN',
+    2: 'GPON'
+}
