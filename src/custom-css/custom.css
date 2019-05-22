@@ -37,3 +37,11 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
 .el-table .warning-row {
     background: #e2b076;
 }
+
+.el-dialog__header{
+    padding: 20px;
+    border-bottom: 1px solid #ccc;
+    font-size: 18px;
+    color: #666;
+    font-weight: 600;
+}
