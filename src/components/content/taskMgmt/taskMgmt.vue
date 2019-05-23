@@ -25,7 +25,7 @@
                             </el-form-item>
                         </el-col>
                     </el-row>
-                    <el-form-item :label="langMap['devicelist']" prop="devlist">
+                    <el-form-item :label="langMap['devicelist']" prop="devicelist">
                         <el-transfer
                             v-model="addTask.devicelist"
                             :data="devlist"
@@ -184,7 +184,7 @@ export default {
             rules: {
                 taskname: [{ validator: validatorName, trigger: ["blur", 'change'] }],
                 description: [{ validator: validatorDesc, trigger: ["blur", 'change'] }],
-                devlist: [{ validator: validDevList, trigger: 'blur' }],
+                devicelist: [{ validator: validDevList, trigger: 'blur' }],
                 stime: [{ validator: validsTime, trigger: ['change', 'blur'] }],
                 etime: [{ validator: valideTime, trigger: ['change', 'blur'] }],
                 template: [{ validator: validTemp, trigger: ['change', 'blur'] }]
@@ -247,14 +247,14 @@ export default {
                     var data = {
                         method: "add",
                         param: {
-                            name: this.addTask.taskname,
+                            taskname: this.addTask.taskname,
                             devicelist: this.addTask.devicelist,
                             status: this.addTask.status,
                             template: this.addTask.template,
                             mode: this.addTask.mode,
                             concurrent: this.addTask.concurrent,
-                            stime: this.addTask.stime,
-                            etime: this.addTask.etime,
+                            stime: new Date(this.addTask.stime).getTime(),
+                            etime: new Date(this.addTask.etime).getTime(),
                             description: this.addTask.description,
                             user: sessionStorage.getItem("user")
                         }
