@@ -37,6 +37,6 @@ export const ALARM_LEVEL = [
 ]
 
 export const MCLASS = {
-    1: 'EOPN',
+    1: 'EPON',
     2: 'GPON'
 }
