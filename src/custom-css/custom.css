@@ -23,6 +23,9 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
     box-shadow: 0 0 5px 1px #333;
 }
 
+.el-dropdown{
+    cursor: pointer;
+}
 /* table row 告警级别背景色 */
 .el-table .critical-row {
     background: #e94a1a;
@@ -36,6 +39,10 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
 }
 .el-table .warning-row {
     background: #e2b076;
+}
+
+.is-fullscreen .el-dialog__header{
+    border: none;
 }
 
 .el-dialog__header{
