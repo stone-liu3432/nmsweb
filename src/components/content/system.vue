@@ -1,13 +1,13 @@
 <template>
     <el-tabs v-model="activeName" type="card" class="system-mgmt">
         <el-tab-pane :label="langMap['user_mgmt']" name="userMgmt">
-            <user-mgmt></user-mgmt>
+            <user-mgmt v-if="activeName === 'userMgmt'"></user-mgmt>
         </el-tab-pane>
         <el-tab-pane :label="langMap['auth_mgmt']" name="permissions">
-            <permissions></permissions>
+            <permissions v-if="activeName === 'permissions'"></permissions>
         </el-tab-pane>
         <el-tab-pane :label="langMap['sw_lib_mgmt']" name="software">
-            <software></software>
+            <software v-if="activeName === 'software'"></software>
         </el-tab-pane>
     </el-tabs>
 </template>

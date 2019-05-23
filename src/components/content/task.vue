@@ -2,10 +2,10 @@
     <div>
         <el-tabs v-model="activeName" type="card">
             <el-tab-pane :label="langMap['task_mgmt']" name="taskMgmt">
-                <task-mgmt></task-mgmt>
+                <task-mgmt ref="taskMgmt" v-if="activeName === 'taskMgmt'"></task-mgmt>
             </el-tab-pane>
             <el-tab-pane :label="langMap['task_temp_mgmt']" name="taskTempMgmt">
-                <task-temp-mgmt></task-temp-mgmt>
+                <task-temp-mgmt v-if="activeName === 'taskTempMgmt'"></task-temp-mgmt>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -25,6 +25,15 @@ export default {
         }
     },
     methods: {
+    },
+    watch: {
+        activeName(){
+            if(this.activeName === 'taskMgmt'){
+                this.$nextTick(_ =>{
+                    this.$refs.taskMgmt.getTemp();
+                })
+            }
+        }
     }
 }
 </script>
