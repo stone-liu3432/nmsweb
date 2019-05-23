@@ -10,7 +10,7 @@
                     status-icon
                     ref="addGroup"
                 >
-                    <el-form-item :label="langMap['groupname']" prop="name">
+                    <el-form-item :label="langMap['groupname']" prop="groupname">
                         <el-input v-model="addGroup.groupname" :placeholder="langMap['groupname']"></el-input>
                     </el-form-item>
                     <el-form-item :label="langMap['description']" prop="description">
@@ -73,7 +73,7 @@ export default {
                 description: ""
             },
             groupRules: {
-                name: [
+                groupname: [
                     {
                         validator: validator.validatorName,
                         trigger: ["change", "blur"]
