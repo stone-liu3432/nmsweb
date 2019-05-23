@@ -22,7 +22,7 @@ main{
     width: 100%;
 }
 .custom-breadcrumb{
-    margin: 8px 0 8px 10px;
+    margin: 8px 0 20px 10px;
     font-size: 16px;
     color: #233;
     text-align-last: left;
