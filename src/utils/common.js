@@ -106,5 +106,6 @@ export function initLineData(opt) {
 
 export function removeUnderline(value){
     if(!value) return '';
-    return value.replace(/_/g, ' ');
+    var str = value.replace(/_/g, ' ');
+    return str.substring(0,1).toUpperCase() + str.substring(1);
 }
