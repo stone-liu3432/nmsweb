@@ -26,15 +26,7 @@ export default {
     },
     methods: {
     },
-    watch: {
-        activeName(){
-            if(this.activeName === 'taskMgmt'){
-                this.$nextTick(_ =>{
-                    this.$refs.taskMgmt.getTemp();
-                })
-            }
-        }
-    }
+    watch: {}
 }
 </script>
 

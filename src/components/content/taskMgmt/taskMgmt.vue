@@ -1,6 +1,6 @@
 <template>
     <div slot="label">
-        <el-collapse>
+        <el-collapse v-model="activeName" accordion>
             <el-collapse-item :title="langMap['add_task']">
                 <el-form
                     :model="addTask"
@@ -57,6 +57,7 @@
                                     :placeholder="langMap['select_date']"
                                     v-model="addTask.stime"
                                     style="width: 100%;"
+                                    :picker-options="pickerOptionsStime"
                                 ></el-date-picker>
                             </el-form-item>
                         </el-col>
@@ -67,6 +68,7 @@
                                     :placeholder="langMap['select_date']"
                                     v-model="addTask.etime"
                                     style="width: 100%;"
+                                    :picker-options="pickerOptionsEtime"
                                 ></el-date-picker>
                             </el-form-item>
                         </el-col>
@@ -133,36 +135,37 @@
 import { mapState } from "vuex";
 import { pageSizes } from "@/utils/common-data";
 import { validatorName, validatorDesc } from "@/utils/validator";
-import store from '@/vuex/store'
-const validsTime = (rule, value, callback) =>{
-    if(!value){
-        return callback(new Error(store.state.langMap['no_stime_tips']))
+import store from "@/vuex/store";
+const validsTime = (rule, value, callback) => {
+    if (!value) {
+        return callback(new Error(store.state.langMap["no_stime_tips"]));
     }
     callback();
-}
-const valideTime = (rule, value, callback) =>{
-    if(!value){
-        return callback(new Error(store.state.langMap['no_etime_tips']))
+};
+const valideTime = (rule, value, callback) => {
+    if (!value) {
+        return callback(new Error(store.state.langMap["no_etime_tips"]));
     }
     callback();
-}
-const validDevList = (rule, value, callback) =>{
-    if(!value){
-        return callback(new Error(store.state.langMap['no_devlist_tips']))
+};
+const validDevList = (rule, value, callback) => {
+    if (!value.length) {
+        return callback(new Error(store.state.langMap["no_devlist_tips"]));
     }
     callback();
-}
-const validTemp = (rule, value, callback) =>{
-    if(!value){
-        return callback(new Error(store.state.langMap['no_temp_tips']))
+};
+const validTemp = (rule, value, callback) => {
+    if (!value) {
+        return callback(new Error(store.state.langMap["no_temp_tips"]));
     }
     callback();
-}
+};
 export default {
     name: "taskMgmt",
     computed: mapState(["langMap"]),
     data() {
         return {
+            activeName: "",
             task: {},
             taskTable: [],
             currentPage: 1,
@@ -182,12 +185,24 @@ export default {
                 description: ""
             },
             rules: {
-                taskname: [{ validator: validatorName, trigger: ["blur", 'change'] }],
-                description: [{ validator: validatorDesc, trigger: ["blur", 'change'] }],
-                devicelist: [{ validator: validDevList, trigger: 'blur' }],
-                stime: [{ validator: validsTime, trigger: ['change', 'blur'] }],
-                etime: [{ validator: valideTime, trigger: ['change', 'blur'] }],
-                template: [{ validator: validTemp, trigger: ['change', 'blur'] }]
+                taskname: [
+                    { validator: validatorName, trigger: ["blur", "change"] }
+                ],
+                description: [
+                    { validator: validatorDesc, trigger: ["blur", "change"] }
+                ],
+                devicelist: [{ validator: validDevList, trigger: "blur" }],
+                stime: [{ validator: validsTime, trigger: ["change", "blur"] }],
+                etime: [{ validator: valideTime, trigger: ["change", "blur"] }],
+                template: [
+                    { validator: validTemp, trigger: ["change", "blur"] }
+                ]
+            },
+            pickerOptionsStime: {
+                disabledDate: time => time.getTime() < Date.now() - 8.64e7
+            },
+            pickerOptionsEtime: {
+                disabledDate: time => time.getTime() < Date.now() - 8.64e7
             }
         };
     },
@@ -233,7 +248,10 @@ export default {
             this.currentPage = val;
             var start = this.pageSize * (val - 1);
             if (start + this.pageSize > this.task.data.length) {
-                this.taskTable = this.task.data.slice(start, start + this.pageSize);
+                this.taskTable = this.task.data.slice(
+                    start,
+                    start + this.pageSize
+                );
             } else {
                 this.taskTable = this.task.data.slice(start);
             }
@@ -244,6 +262,8 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
+                    var stime = new Date(this.addTask.stime).getTime(),
+                        etime = new Date(this.addTask.etime).getTime();
                     var data = {
                         method: "add",
                         param: {
@@ -253,8 +273,8 @@ export default {
                             template: this.addTask.template,
                             mode: this.addTask.mode,
                             concurrent: this.addTask.concurrent,
-                            stime: new Date(this.addTask.stime).getTime(),
-                            etime: new Date(this.addTask.etime).getTime(),
+                            stime: stime < etime ? stime : etime,
+                            etime: stime > etime ? stime : etime,
                             description: this.addTask.description,
                             user: sessionStorage.getItem("user")
                         }
@@ -267,6 +287,11 @@ export default {
                                     this.langMap[data.method + "_success"]
                                 );
                                 this.getData();
+                                this.activeName = "";
+                                this.$refs[formName].resetFields();
+                                if (this.taskTemp.length) {
+                                    this.addTask.template = this.taskTemp[0];
+                                }
                             } else {
                                 this.$message.error(res.data.message);
                             }
