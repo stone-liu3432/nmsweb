@@ -50,11 +50,14 @@
         </el-collapse>
         <h3>{{ langMap['sw_lib'] }}</h3>
         <div style="margin: 10px 0;">
-            <el-button
-                type="primary"
-                size="small"
-                @click="openModal('updateFile')"
-            >{{ langMap['upload_sw'] }}</el-button>
+            <el-tooltip :content="langMap['no_sw_type_tips']" :disabled="softwareTypes.length > 0">
+                <el-button
+                    type="primary"
+                    size="small"
+                    @click="openModal('updateFile')"
+                    :disabled="softwareTypes.length <= 0"
+                >{{ langMap['upload_sw'] }}</el-button>
+            </el-tooltip>
             <el-button size="small" type="danger" @click="delSWBatch">{{ langMap['del_select'] }}</el-button>
         </div>
         <el-table
@@ -101,7 +104,7 @@
             :before-close="closeModal"
             v-if="!!modalType"
         >
-            <sw-update-file ref="swUpdateFile" v-if="modalType === 'updateFile'"></sw-update-file>
+            <sw-update-file ref="swUpdateFile" v-if="modalType === 'updateFile'" :types="softwareTypes"></sw-update-file>
             <add-type ref="addType" v-if="modalType === 'addType'"></add-type>
             <span slot="footer">
                 <el-button @click="closeModal">{{ langMap['cancel'] }}</el-button>
@@ -225,7 +228,7 @@ export default {
                 this.$http({
                     url: "/api/server/upload",
                     method: "post",
-                    params: { name: node.fData.name, label: node.fData.label },
+                    params: { name: node.fData.name, label: node.fData.label, type: node.fData.type },
                     data: node.fData.file,
                     headers: { "content-type": "multipart/form-data" }
                 })
@@ -335,7 +338,7 @@ export default {
                     var param = {
                         method: "delete",
                         param: {
-                            name: node.filename
+                            name: node.name
                         }
                     };
                     this.$http
