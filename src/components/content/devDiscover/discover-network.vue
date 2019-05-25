@@ -184,7 +184,7 @@ export default {
                 snmpcommunity: "",
                 httpport: 80,
                 protocol: "http",
-                ipmask: ""
+                ipmask: "255.255.255.0"
             },
             devList: [],
             showDevList: [],

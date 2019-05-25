@@ -28,9 +28,9 @@
             <el-row>
                 <el-col :span="8">
                     <el-form-item :label="langMap['mclass']" prop="class">
-                        <el-select v-model="addData.class" :placeholder="langMap['mclass']">
-                            <el-option value="EPON"></el-option>
-                            <el-option value="GPON"></el-option>
+                        <el-select v-model.number="addData.class" :placeholder="langMap['mclass']">
+                            <el-option :value="1" label="EPON">EPON</el-option>
+                            <el-option :value="2" label="GPON">GPON</el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -67,10 +67,10 @@ export default {
         return {
             addData: {
                 ipaddr: "",
-                ipmask: "",
+                ipmask: "255.255.255.0",
                 //macaddr: "",
                 model: "",
-                class: "EPON",
+                class: 1,
                 groupname: "",
                 name: ""
             },
