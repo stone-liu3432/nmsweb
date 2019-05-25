@@ -6,6 +6,11 @@
         <el-form-item :label="langMap['label']" prop="label">
             <el-input v-model="fData.label" auto-complete="off"></el-input>
         </el-form-item>
+        <el-form-item :label="langMap['type']" prop="type">
+            <el-select v-model="fData.type">
+                <el-option v-for="(item,index) in types" :key="index" :value="item.name">{{ item.name }}</el-option>
+            </el-select>
+        </el-form-item>
         <el-form-item :label="langMap['select_file']">
             <el-upload
                 ref="uploadSW"
@@ -24,15 +29,23 @@
 <script>
 import { mapState } from "vuex";
 import { validatorName } from '@/utils/validator'
+var validFile = (rules, value, callback) =>{
+    if(!value){
+        return callback(new Error(' '));
+    }
+    callback();
+}
 export default {
     name: 'swUpdateFile',
     computed: mapState(['langMap']),
+    props: ['types'],
     data(){
         return {
             fData: {
                 name: '',
                 label: '',
-                file: ''
+                file: '',
+                type: '',
             },
             labelWidth: '100px',
             filename: '',
@@ -42,12 +55,15 @@ export default {
                 ],
                 label: [
                     { validator: validatorName, trigger: ['blur', 'change'] }
-                ]
+                ],
             }
         }
     },
     created(){
         this.filename = this.langMap['select_file'];
+        if(this.types && this.types.length){
+            this.fData.type = this.types[0].name;
+        }
     },
     methods: {
         uploadFile(item){
@@ -59,12 +75,19 @@ export default {
         resetForm(){
             this.$refs.uploadSW.clearFiles();
             this.filename = this.langMap['select_file'];
+            if(this.types && this.types.length){
+                this.fData.type = this.types[0].name;
+            }
         },
         validatorForm(){
             var flag = false;
             this.$refs['uploadFileForm'].validate(valid =>{
                 flag = valid;
             })
+            if(flag && !this.fData.file){
+                flag = false;
+                this.$message.error(this.langMap['no_file_tips']);
+            }
             return flag;
         }
     }
