@@ -36,7 +36,7 @@
                             <span>{{ props.row.phone }}</span>
                         </el-form-item>
                         <el-form-item :label="langMap['status']">
-                            <span>{{ props.row.status }}</span>
+                            <span>{{ props.row.status ? langMap['online'] : langMap['offline'] }}</span>
                         </el-form-item>
                         <el-form-item :label="langMap['timestamp']">
                             <span>{{ props.row.timestamp }}</span>
@@ -52,7 +52,7 @@
             </el-table-column>
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="username" :label="langMap['username']"></el-table-column>
-            <el-table-column prop="status" :label="langMap['status']"></el-table-column>
+            <el-table-column prop="status" :formatter="formatStatus" :label="langMap['status']"></el-table-column>
             <el-table-column prop="description" :label="langMap['description']"></el-table-column>
             <el-table-column :label="langMap['config']">
                 <template slot-scope="scope">
@@ -510,6 +510,9 @@ export default {
                 this.form.rolename = this.roles[0];
             }
             done();
+        },
+        formatStatus(row, column){
+            return row[column.property] ? this.langMap['online'] : this.langMap['offline'];
         }
     }
 };
