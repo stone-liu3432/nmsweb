@@ -2,7 +2,10 @@
     <div slot="label">
         <h3>{{ langMap['sw_ver'] }}</h3>
         <el-collapse v-model="activeName" accordion class="sw-type-header">
-            <el-collapse-item :title="langMap['view_sw_ver']" name="1">
+            <el-collapse-item name="1">
+                <template slot="title">
+                    <el-button type="primary" size="small">{{ langMap['view_sw_ver'] }}</el-button>
+                </template>
                 <div class="collapse-margin">
                     <el-button
                         type="primary"
@@ -126,7 +129,7 @@
 <script>
 import swUpdateFile from "./swUpdateFile";
 import addType from "./addType";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations } from "Vuex";
 export default {
     name: "software",
     components: { swUpdateFile, addType },

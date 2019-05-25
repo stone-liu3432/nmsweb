@@ -12,15 +12,17 @@
   "dependencies": {
     "archiver": "^3.0.0",
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "echarts": "^4.2.1",
-    "element-ui": "^2.4.11",
+    "element-ui": "^2.8.2",
     "iview": "^3.3.3",
     "less-loader": "^4.1.0",
     "md5": "^2.2.1",
     "node-less": "^1.0.0",
-    "vue": "^2.5.2",
+    "vue": "^2.5.21",
     "vue-i18n": "^8.11.2",
     "vue-router": "^3.0.1",
+    "vue-template-compiler": "^2.5.21",
     "vuex": "^3.1.0"
   },
   "devDependencies": {

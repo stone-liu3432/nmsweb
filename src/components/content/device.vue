@@ -16,8 +16,6 @@
                     highlight-current
                     :props="defaultProps"
                     @node-click="nodeClick"
-                    :current-node-key="areaData[0].id"
-                    v-if="areaData.length"
                 ></el-tree>
             </el-col>
             <el-col :span="20">
@@ -29,7 +27,6 @@
                 <template v-if="showFlag === 'olt'">
                     <!-- v-if 渲染时，相同元素会被复用，数据项不同时，需给控制的元素加上唯一的key，避免渲染空模板报错 -->
                     <el-table :data="devTable" style="width: 100%" key="olt">
-                        <!-- <el-table-column prop="devid" label="ID" width="100"></el-table-column> -->
                         <el-table-column prop="name" :label="langMap['name']"></el-table-column>
                         <el-table-column prop="macaddr" label="MAC" width="180"></el-table-column>
                         <el-table-column prop="ipaddr" :label="langMap['ipaddr']" width="180"></el-table-column>
@@ -38,7 +35,13 @@
                             :formatter="showStatus"
                             :label="langMap['status']"
                             width="100"
-                        ></el-table-column>
+                        >
+                            <template slot-scope="scope">
+                                <el-tag
+                                    :type="scope.row.status ? '' : 'danger'"
+                                >{{ scope.row.status ? langMap['online'] : langMap['offline'] }}</el-tag>
+                            </template>
+                        </el-table-column>
                         <el-table-column
                             prop="mclass"
                             :formatter="formatClass"
@@ -48,7 +51,11 @@
                         <el-table-column prop="groupname" :label="langMap['groupname']"></el-table-column>
                         <el-table-column :label="langMap['config']" width="100">
                             <template slot-scope="scope">
-                                <el-dropdown @command="dropdownClick" trigger="click">
+                                <el-dropdown
+                                    @command="dropdownClick"
+                                    trigger="click"
+                                    style="user-select: none;"
+                                >
                                     <span class="el-dropdown-link">
                                         {{ langMap['config'] }}
                                         <i
@@ -109,7 +116,11 @@
                         <el-table-column prop="groupname" :label="langMap['groupname']"></el-table-column>
                         <el-table-column :label="langMap['config']" width="100">
                             <template slot-scope="scope">
-                                <el-dropdown @command="dropdownClick" trigger="click">
+                                <el-dropdown
+                                    @command="dropdownClick"
+                                    trigger="click"
+                                    style="user-select: none;"
+                                >
                                     <span class="el-dropdown-link">
                                         {{ langMap['config'] }}
                                         <i
@@ -157,15 +168,13 @@
             ></dev-set-info>
             <div slot="footer">
                 <el-button @click="showConfigDialog = false;">{{ langMap['cancel'] }}</el-button>
-                <el-button type="primary" @click="submitForm">{{ langMap['apply'] }}</el-button>
+                <el-button type="primary" @click="submitConfig">{{ langMap['apply'] }}</el-button>
             </div>
         </el-dialog>
         <el-dialog
             :visible.sync="showMgmtDialog"
-            fullscreen
             key="devMgmt"
             @opened="dialogOpen"
-            :close-on-press-escape="false"
         >
             <olt-mgmt
                 v-if="handleFlag === 'mgmt' && devFlag === 'olt'"
@@ -182,7 +191,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import { pageSizes, STATUS, MCLASS } from "@/utils/common-data";
 import { removeUnderline } from "@/utils/common";
 import devSetInfo from "./device/oltSetInfo";
@@ -240,9 +249,9 @@ export default {
                 })
                 .catch(err => {});
         },
-        nodeClick(item, node, self) {
+        nodeClick(item) {
             this.cacheTree = this.$refs["tree"].getCurrentKey();
-            this.currentTreeData = Object.assign({}, { item, node, self });
+            this.currentTreeData = Object.assign({}, item);
             if (!item.children) {
                 this.showFlag = "onu";
                 this.getOnu(item.data.devid);
@@ -312,6 +321,7 @@ export default {
                 .then(res => {
                     this.devList = [];
                     this.areaData = [];
+                    this.devTable = [];
                     if (res.data.code === 1) {
                         if (res.data.data && res.data.data.length) {
                             this.areaData = this.processDev(res.data.data);
@@ -330,12 +340,26 @@ export default {
                                     this.$refs["tree"].setCurrentKey(
                                         this.cacheTree
                                     );
-                                    var {
-                                        item,
-                                        node,
-                                        self
-                                    } = this.currentTreeData;
-                                    this.nodeClick(item, node, self);
+                                    this.areaData.forEach(item => {
+                                        if (item.id === this.cacheTree) {
+                                            this.nodeClick(item);
+                                        }
+                                    });
+                                });
+                            } else {
+                                this.$nextTick(_ => {
+                                    if (this.$refs["tree"]) {
+                                        this.$refs["tree"].setCurrentKey(
+                                            this.areaData[0].id
+                                        );
+                                        this.cacheTree = this.$refs[
+                                            "tree"
+                                        ].getCurrentKey();
+                                        this.currentTreeData = Object.assign(
+                                            {},
+                                            this.areaData[0]
+                                        );
+                                    }
                                 });
                             }
                         }
@@ -512,7 +536,7 @@ export default {
         composeData(dev, flag, row) {
             return { dev, flag, row };
         },
-        submitForm() {
+        submitConfig() {
             var data = this.$refs["oltSetInfo"].devInfo;
             var result = this.$refs["oltSetInfo"].validForm();
             if (result) {

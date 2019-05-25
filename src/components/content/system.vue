@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import userMgmt from '@/components/content/systemMgmt/user-mgmt'
 import permissions from '@/components/content/systemMgmt/permissions'
 import software from '@/components/content/systemMgmt/software'

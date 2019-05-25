@@ -1,7 +1,10 @@
 <template>
     <div slot="label">
         <el-collapse v-model="activeName" accordion>
-            <el-collapse-item :title="langMap['add_task']">
+            <el-collapse-item>
+                <template slot="title">
+                    <el-button type="primary" style="width: 120px;" size="small">{{ langMap['add_task'] }}</el-button>
+                </template>
                 <el-form
                     :model="addTask"
                     :rules="rules"
@@ -132,7 +135,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import { pageSizes } from "@/utils/common-data";
 import { validatorName, validatorDesc } from "@/utils/validator";
 import store from "@/vuex/store";

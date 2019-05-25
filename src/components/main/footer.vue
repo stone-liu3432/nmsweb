@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations } from "Vuex";
 import { formatDate } from '@/utils/common';
 export default {
     name: 'commonFooter',

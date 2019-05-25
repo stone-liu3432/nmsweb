@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import { validatorName } from '@/utils/validator'
 var validFile = (rules, value, callback) =>{
     if(!value){

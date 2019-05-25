@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import validator from "@/utils/validator";
 export default {
     name: "discover-node",

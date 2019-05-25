@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations } from "Vuex";
 import { validatorName, validatorPassword } from "@/utils/validator";
 import md5 from "md5";
 export default {

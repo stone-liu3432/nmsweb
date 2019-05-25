@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import discoverNode from "./devDiscover/discover-node";
 import discoverNet from "./devDiscover/discover-network";
 import logSearch from "./devDiscover/log-search";

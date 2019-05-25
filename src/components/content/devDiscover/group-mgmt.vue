@@ -1,7 +1,10 @@
 <template>
     <div>
         <el-collapse v-model="activeName">
-            <el-collapse-item :title="langMap['add']" name="add">
+            <el-collapse-item name="add">
+                <template slot="title">
+                    <el-button type="primary" style="width: 120px;" size="small">{{ langMap['add'] }}</el-button>
+                </template>
                 <el-form
                     size="small"
                     :model="addGroup"
@@ -56,7 +59,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import validator from "@/utils/validator";
 export default {
     name: "groupMgmt",
@@ -141,7 +144,7 @@ export default {
                     var data = {
                         method: "delete",
                         param: {
-                            groupname: val.name
+                            groupname: val.groupname
                         }
                     };
                     this.$http

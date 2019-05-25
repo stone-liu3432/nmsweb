@@ -2,6 +2,9 @@
     <div slot="label">
         <el-collapse>
             <el-collapse-item :title="langMap['add_task_temp']">
+                <template slot="title">
+                    <el-button type="primary" style="width: 120px;" size="small">{{ langMap['add_task_temp'] }}</el-button>
+                </template>
                 <el-form
                     label-width="100px"
                     size="small"
@@ -73,7 +76,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import { pageSizes } from "@/utils/common-data";
 import { validatorName, validatorDesc } from "@/utils/validator";
 export default {
@@ -221,6 +224,9 @@ export default {
                     this.$http.post('/api/server/tasktemplate', data).then(res =>{
                         if(res.data.code === 1){
                             this.$message.success(this.langMap[data.method + '_success']);
+                            this.$refs[formName].resetFields();
+                            this.taskData.upgradefile = this.swName[0];
+                            this.taskData.type = this.taskType[0];
                             this.getData();
                         }else{
                             this.$message.error(res.data.message);

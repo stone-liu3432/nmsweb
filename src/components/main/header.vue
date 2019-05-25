@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations } from "Vuex";
 export default {
     name: "navHeader",
     computed: {

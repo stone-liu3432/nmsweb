@@ -11,6 +11,7 @@ export default {
             olt: {}
         };
     },
+    created(){},
     methods: {
         getData() {
             this.$http

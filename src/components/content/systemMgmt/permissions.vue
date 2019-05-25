@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import { pageSizes } from "@/utils/common-data";
 export default {
     name: "permissions",

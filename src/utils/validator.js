@@ -51,7 +51,7 @@ export function validatorName(rule, value, callback) {
 //  地址
 export function validatorAddr(rule, value, callback) {
     // < 4-128 >  address
-    // var reg = /^[a-zA-Z0-9,\-\(\)\u4e00-\u9fa5\（\）\《\》\—\；\，\。\“\”\<\>\！]{4, 128}$/;
+    // var reg = /^[a-zA-Z0-9,\-\(\)\u4e00-\u9fa5\（\）\《\》\—\；\，\。\“\”\<\>\！]{4,128}$/;
     var reg = /^.{4,128}$/;
     if (!reg.test(value)) {
         return callback(new Error(store.state.langMap['validator_addr_tips']));

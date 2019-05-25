@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations } from "Vuex";
 import zh from "@/locale/zh-cn";
 import en from "@/locale/en";
 const lang = {

@@ -115,7 +115,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import store from "@/vuex/store";
 import validator from "@/utils/validator";
 let validRegion = (rule, value, callback) => {

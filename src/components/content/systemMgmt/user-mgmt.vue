@@ -170,7 +170,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import { pageSizes } from "@/utils/common-data";
 import validator from "@/utils/validator";
 import md5 from "md5";

@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import { pageSizes } from "@/utils/common-data";
 import { ALARM_TYPE, ALARM_LEVEL } from "@/utils/common-data";
 import { formatDate } from "@/utils/common";
@@ -112,7 +112,7 @@ export default {
             return ALARM_LEVEL[row[column.property]];
         },
         formatTime(row, column) {
-            return formatDate(Number(row[column.property]));
+            return formatDate(row[column.property] * 1000);
         },
         formatHex(row, column) {
             var id = row[column.property].toString(16);

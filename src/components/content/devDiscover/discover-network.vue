@@ -149,7 +149,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import validator from "@/utils/validator";
 function validatorPort(rule, value, callback) {
     var val = ~~value;

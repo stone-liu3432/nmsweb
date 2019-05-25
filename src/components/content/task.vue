@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import taskMgmt from './taskMgmt/taskMgmt'
 import taskTempMgmt from './taskMgmt/taskTempMgmt'
 export default {

@@ -6,9 +6,8 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
     background: #ebeef5;
 }
 
-.el-collapse-item__header {
-    background: #e4e7ed;
-    padding-left: 16px;
+.el-collapse{
+    border: none;
 }
 
 .collapse-margin {
@@ -25,6 +24,14 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
 
 .el-dropdown{
     cursor: pointer;
+}
+
+.el-message{
+    top: 75px;
+}
+
+.el-select{
+    width: 100%;
 }
 /* table row 告警级别背景色 */
 .el-table .critical-row {

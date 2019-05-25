@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from "Vuex";
 import { validatorName, validatorDesc } from '@/utils/validator'
 export default {
     name: 'addType',

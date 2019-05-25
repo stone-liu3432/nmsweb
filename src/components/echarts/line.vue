@@ -11,7 +11,7 @@ import 'echarts/lib/chart/line'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/title'
 import 'echarts/lib/component/legend'
-import { mapState,mapMutations } from 'vuex'
+import { mapState,mapMutations } from 'Vuex'
 export default {
     name: 'lineCharts',
     props: ['lineData', 'id'],

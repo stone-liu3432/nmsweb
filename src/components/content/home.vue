@@ -26,7 +26,7 @@
 import pieCharts from "../echarts/pie";
 import lineCharts from "../echarts/line";
 import { initPieData, initLineData } from "@/utils/common";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations } from "Vuex";
 export default {
     name: "home",
     computed: mapState(["charts", "langMap"]),
