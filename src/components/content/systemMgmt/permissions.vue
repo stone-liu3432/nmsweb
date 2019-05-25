@@ -72,7 +72,7 @@ export default {
                     var data = {
                         method: "delete",
                         param: {
-                            name: val.rolename
+                            rolename: val.rolename
                         }
                     };
                     this.$http
@@ -121,7 +121,7 @@ export default {
             if (start + this.pageSize > this.roles.length) {
                 this.userRoles = this.roles.slice(start);
             } else {
-                this.userRoles = this.roles.slice(start, this.pageSize);
+                this.userRoles = this.roles.slice(start, start + this.pageSize);
             }
         }
     }
