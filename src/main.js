@@ -13,6 +13,7 @@ import zhLocale from "element-ui/lib/locale/lang/zh-CN";
 import { removeUnderline } from '@/utils/common'
 import "element-ui/lib/theme-chalk/index.css";
 import "@/custom-css/custom.css";
+import Message from '@/components/common/message';
 
 Vue.use(VueI18n)
 const i18n = new VueI18n({
@@ -26,6 +27,8 @@ locale.i18n((key, value) => i18n.t(key, value));
 
 Vue.use(Vuex);
 Vue.use(ElementUI);
+//  MessageBox 添加默认显示close按钮
+Vue.prototype.$message = Message;
 
 Vue.filter('removeUnderline', removeUnderline);
 Vue.config.productionTip = false;
@@ -34,7 +37,7 @@ axios.defaults.timeout = 5000;
 
 if (process.env.NODE_ENV === "development") {
     //  开发模式
-    axios.defaults.baseURL = "http://localhost:8200";
+    axios.defaults.baseURL = "http://192.168.5.58:8200";
 } else if (process.env.NODE_ENV == "production") {
     //  生产模式
     axios.defaults.baseURL = "";
