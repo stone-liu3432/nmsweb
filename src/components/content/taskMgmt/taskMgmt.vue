@@ -3,7 +3,11 @@
         <el-collapse v-model="activeName" accordion>
             <el-collapse-item>
                 <template slot="title">
-                    <el-button type="primary" style="width: 120px;" size="small">{{ langMap['add_task'] }}</el-button>
+                    <el-button
+                        type="primary"
+                        style="width: 120px;"
+                        size="small"
+                    >{{ langMap['add_task'] }}</el-button>
                 </template>
                 <el-form
                     :model="addTask"
@@ -139,18 +143,6 @@ import { mapState } from "Vuex";
 import { pageSizes } from "@/utils/common-data";
 import { validatorName, validatorDesc } from "@/utils/validator";
 import store from "@/vuex/store";
-const validsTime = (rule, value, callback) => {
-    if (!value) {
-        return callback(new Error(store.state.langMap["no_stime_tips"]));
-    }
-    callback();
-};
-const valideTime = (rule, value, callback) => {
-    if (!value) {
-        return callback(new Error(store.state.langMap["no_etime_tips"]));
-    }
-    callback();
-};
 const validDevList = (rule, value, callback) => {
     if (!value.length) {
         return callback(new Error(store.state.langMap["no_devlist_tips"]));
@@ -167,6 +159,27 @@ export default {
     name: "taskMgmt",
     computed: mapState(["langMap"]),
     data() {
+        const validsTime = (rule, value, callback) => {
+            if (!value) {
+                return callback(
+                    new Error(store.state.langMap["no_stime_tips"])
+                );
+            }
+            callback();
+        };
+        const valideTime = (rule, value, callback) => {
+            if (!value) {
+                return callback(
+                    new Error(store.state.langMap["no_etime_tips"])
+                );
+            }
+            if (this.addTask.etime <= this.addTask.stime) {
+                return callback(
+                    new Error(store.state.langMap["time_err_tips"])
+                );
+            }
+            callback();
+        };
         return {
             activeName: "",
             task: {},
@@ -276,8 +289,8 @@ export default {
                             template: this.addTask.template,
                             mode: this.addTask.mode,
                             concurrent: this.addTask.concurrent,
-                            stime: stime < etime ? stime : etime,
-                            etime: stime > etime ? stime : etime,
+                            stime: stime,
+                            etime: etime,
                             description: this.addTask.description,
                             user: sessionStorage.getItem("user")
                         }
