@@ -17,6 +17,10 @@ const mutations = {
     },
     changeLangMap(state, data){
         state.langMap = data;
+    },
+    setWsState(state, data){
+        state.wsState = data;
+        sessionStorage.setItem('ws', data);
     }
 }
 

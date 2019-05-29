@@ -10,7 +10,8 @@ let state = {
     //  面包屑导航数据
     breadcrumb: 'home',
     language: '',
-    langMap: {}
+    langMap: {},
+    wsState: true
 }
 
 export default state
