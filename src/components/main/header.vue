@@ -1,10 +1,16 @@
 <template>
     <el-header>
         <div class="layout-logo"></div>
-        <div @click="logout">
-            <span>{{ username }}</span>
-            <span>{{ langMap['logout'] }}</span>
-        </div>
+        <el-dropdown @command="handleCommand" class="layout-user">
+            <span class="el-dropdown-link">
+                {{ username }}
+                <i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="realtimealarm">{{ wsState ? langMap['close_rt_alarm'] : langMap['open_rt_alarm'] }}</el-dropdown-item>
+                <el-dropdown-item command="logout">{{ langMap['logout'] }}</el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
         <el-menu :default-active="activeIndex" mode="horizontal" router>
             <template v-for="(item, index) in menu" v-if="menu">
                 <el-menu-item :index="item.name" v-if="!item.children">{{ langMap[item.name] }}</el-menu-item>
@@ -26,7 +32,7 @@ import { mapState, mapMutations } from "Vuex";
 export default {
     name: "navHeader",
     computed: {
-        ...mapState(["menu", "theme", "langMap"]),
+        ...mapState(["menu", "theme", "langMap", 'wsState']),
         username() {
             return sessionStorage.getItem("user");
         }
@@ -39,7 +45,8 @@ export default {
     created() {},
     methods: {
         ...mapMutations({
-            updateBreadcrumb: "updateBreadcrumb"
+            updateBreadcrumb: "updateBreadcrumb",
+            setwsState: 'setWsState'
         }),
         logout() {
             this.$confirm(this.langMap["logout_tips"], this.langMap["tips"], {
@@ -66,6 +73,14 @@ export default {
                         .catch(err => {});
                 })
                 .catch(_ => {});
+        },
+        handleCommand(command){
+            if(command === 'logout'){
+                this.logout();
+            }
+            if(command === 'realtimealarm'){
+                this.setwsState(!this.wsState);
+            }
         }
     },
     mounted() {
@@ -91,32 +106,11 @@ export default {
     width: 200px;
     background: #aaa;
     float: left;
-    & + div {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding: 0 10px;
-        text-align: center;
-        float: right;
-        width: 100px;
-        height: inherit;
-        line-height: 60px;
-        color: #67aef7;
-        cursor: pointer;
-        span {
-            overflow: hidden;
-        }
-        span:last-child {
-            display: none;
-        }
-        &:hover {
-            span:first-child {
-                display: none;
-            }
-            span:last-child {
-                display: inline;
-            }
-        }
-    }
+}
+.layout-user{
+    float: right;
+    height: inherit;
+    line-height: 60px;
 }
 header {
     border-bottom: 1px solid #e6e6e6;
