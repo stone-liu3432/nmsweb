@@ -7,15 +7,17 @@
 </template>
 
 <script>
+import { mapState } from "Vuex";
 import navHeader from "../main/header";
 import contentArea from "../main/content";
 import commonFooter from "../main/footer";
 export default {
     name: "nmsMain",
     components: { navHeader, contentArea, commonFooter },
+    computed: mapState(['wsState']),
     data() {
         return {
-            ws: {}
+            ws: null
         };
     },
     created() {
@@ -73,53 +75,67 @@ export default {
             hidden = "webkitHidden";
             visibilityChange = "webkitvisibilitychange";
         }
-        // 添加监听器
+        //  添加监听器
         //  IE9不支持此事件  IE9下页面最小化时JS不会暂停，无需停止socket
         document.addEventListener(
             visibilityChange,
             function(e) {
                 document[hidden] && console.log("当前页面被隐藏");
-                if (document[hidden]) {
-                    if (_this.ws) {
-                        _this.ws.close();
+                if(_this.wsState){
+                    if (document[hidden]) {
+                        if (_this.ws) {
+                            _this.ws.close();
+                        }
+                    } else {
+                        _this.initSocket();
                     }
-                } else {
-                    initSocket();
                 }
             },
             false
         );
-        var initSocket = (function(context) {
-            return _ => {
-                if ("WebSocket" in window) {
-                    let ws = new WebSocket(`ws://${window.location.host}/ws`);
-                    ws.onopen = function() {
-                        console.log("ws open success");
-                    };
-                    ws.onmessage = function(evt) {
-                        var message = evt.data;
-                        context.$notify({
-                            message,
-                            position: "bottom-right",
-                            customClass: "custom-shadow"
-                        });
-                    };
-                    ws.onclose = function(e) {
-                        console.log("ws close");
-                    };
-                    ws.onerror = function(e) {
-                        console.log("ws error");
-                    };
-                    context.ws = ws;
-                }
-            };
-        })(this);
-        initSocket();
+        this.initSocket();
     },
-    methods: {},
+    methods: {
+        initSocket(){
+            var _this = this;
+            if ("WebSocket" in window) {
+                let ws = new WebSocket(`ws://${window.location.host}/ws`);
+                ws.onopen = function() {
+                    console.log("ws open success");
+                };
+                ws.onmessage = function(evt) {
+                    var message = evt.data;
+                    _this.$notify({
+                        message,
+                        position: "bottom-right",
+                        customClass: "custom-shadow"
+                    });
+                };
+                ws.onclose = function(e) {
+                    console.log("ws close");
+                };
+                ws.onerror = function(e) {
+                    console.log("ws error");
+                };
+                _this.ws = ws;
+            }
+        }
+    },
+    watch: {
+        wsState(){
+            if(this.ws && (typeof this.ws.close === 'function')){
+                this.ws.close();
+                this.ws = null;
+            }
+            if(this.wsState){
+                this.initSocket();
+            }
+        }
+    },
     beforeDestroy() {
         if (this.ws) {
             this.ws.close();
+            this.ws = null;
         }
     }
 };
