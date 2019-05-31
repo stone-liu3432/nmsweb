@@ -7,13 +7,13 @@ const home = () => import(/* webpackChunkName: "main-page" */ '@/components/cont
 
 //  sub page
 const alert = () => import(/* webpackChunkName: "alert" */ '@/components/content/alert')
-const system = () => import(/* webpackChunkName: "system" */ '@/components/content/system')
-const task = () => import(/* webpackChunkName: "task" */ '@/components/content/task')
+const system = () => import(/* webpackChunkName: "system" */ '@/components/content/systemMgmt/system')
+const task = () => import(/* webpackChunkName: "task" */ '@/components/content/taskMgmt/task')
 const performance = () => import(/* webpackChunkName: "perf" */ '@/components/content/perf')
-const configMgmt = () => import(/* webpackChunkName: "config" */ '@/components/content/configMgmt')
-const topo = () => import(/* webpackChunkName: "device" */ '@/components/content/topo')
-const device = () => import(/* webpackChunkName: "device" */ '@/components/content/device')
-const devDiscover = () => import(/* webpackChunkName: "device" */ '@/components/content/devDiscover')
+const configMgmt = () => import(/* webpackChunkName: "config" */ '@/components/content/configMgmt/configMgmt')
+const topo = () => import(/* webpackChunkName: "device" */ '@/components/content/device/topo')
+const device = () => import(/* webpackChunkName: "device" */ '@/components/content/device/device')
+const devDiscover = () => import(/* webpackChunkName: "device" */ '@/components/content/device/devDiscover/devDiscover')
 
 const routes = [
     {
