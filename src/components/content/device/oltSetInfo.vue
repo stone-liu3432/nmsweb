@@ -161,7 +161,7 @@ let validBtype = (rule, value, callback) => {
 export default {
     name: "oltSetInfo",
     computed: mapState(["langMap"]),
-    props: ["data", "dev", "groups"],
+    props: ["data", "dev", "groups", "updateData"],
     data() {
         return {
             ip_pool: [],
@@ -250,7 +250,9 @@ export default {
             }
         };
     },
-    created() {},
+    created() {
+        this.getData();
+    },
     methods: {
         validForm() {
             var flag = false;
@@ -305,6 +307,13 @@ export default {
                     }
                 })
                 .catch(err => {});
+        }
+    },
+    watch: {
+        updateData(){
+            if(this.updateData){
+                this.getData();
+            }
         }
     }
 };
