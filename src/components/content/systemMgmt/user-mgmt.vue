@@ -86,7 +86,7 @@
             :total="user.length"
             v-if="user.length > pageSize"
         ></el-pagination>
-        <el-dialog :title="title" :visible.sync="userCfgModal" center :before-close="clearData">
+        <el-dialog :title="title" :visible.sync="userCfgModal" center @closed="clearData">
             <el-form
                 :model="form"
                 :rules="addRules"
@@ -494,25 +494,19 @@ export default {
         },
         closeModal() {
             this.userCfgModal = false;
-            this.modalType = "";
-            Object.keys(this.form).forEach(item => {
-                this.form[item] = "";
-            });
-            if (this.roles.length) {
-                this.form.rolename = this.roles[0];
-            }
-        },
-        clearData(done) {
-            Object.keys(this.form).forEach(item => {
-                this.form[item] = "";
-            });
-            if (this.roles.length) {
-                this.form.rolename = this.roles[0];
-            }
-            done();
         },
         formatStatus(row, column){
             return row[column.property] ? this.langMap['online'] : this.langMap['offline'];
+        },
+        clearData(){
+            //  不建议使用$refs来重置form
+            Object.keys(this.form).forEach(item => {
+                this.form[item] = "";
+            });
+            if (this.roles.length) {
+                this.form.rolename = this.roles[0];
+            }
+            this.modalType = '';
         }
     }
 };
