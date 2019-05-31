@@ -103,9 +103,8 @@
             width="40%"
             ref="swModal"
             center
-            :visible="!!modalType"
-            :before-close="closeModal"
-            v-if="!!modalType"
+            :visible.sync="visibilityFlag"
+            @closed="clearData"
         >
             <sw-update-file ref="swUpdateFile" v-if="modalType === 'updateFile'" :types="softwareTypes"></sw-update-file>
             <add-type ref="addType" v-if="modalType === 'addType'"></add-type>
@@ -133,7 +132,9 @@ import { mapState, mapMutations } from "Vuex";
 export default {
     name: "software",
     components: { swUpdateFile, addType },
-    computed: mapState(["langMap"]),
+    computed: {
+        ...mapState(["langMap"]),
+    },
     data() {
         return {
             sw: [],
@@ -146,7 +147,8 @@ export default {
             currentPageStorage: 1,
             pageSize: 10,
             softwareStorage: [],
-            modalType: ""
+            modalType: "",
+            visibilityFlag: false,
         };
     },
     created() {
@@ -250,13 +252,14 @@ export default {
             }
         },
         openModal(str) {
+            this.visibilityFlag = true;
             this.modalType = str;
         },
-        closeModal(done) {
-            if (typeof done === "function") {
-                done();
-            }
-            this.modalType = "";
+        closeModal() {
+            this.visibilityFlag = false;
+        },
+        clearData(){
+            this.modalType = '';
         },
         submitAddType() {
             var node = this.$refs.addType;
