@@ -26,15 +26,15 @@ export default [
             { name: "pon_optical" }
         ]
     },
-    {
-        name: "onu_mgmt",
-        children: [
-            { name: "onu_basic_info" },
-            { name: "onu_port_cfg" },
-            { name: "onu_multicast" },
-            { name: "onu_perf_info" }
-        ]
-    },
+    // {
+    //     name: "onu_mgmt",
+    //     children: [
+    //         { name: "onu_basic_info" },
+    //         { name: "onu_port_cfg" },
+    //         { name: "onu_multicast" },
+    //         { name: "onu_perf_info" }
+    //     ]
+    // },
     {
         name: "swport_mgmt",
         children: [

@@ -48,7 +48,7 @@ export default {
 <style lang="less" scoped>
 div.pie{
     border: 1px solid #ddd;
-    margin: 20px 0 0 0;
+    margin: 10px 0 0 0;
     >div{
         &:first-child{
             height: 30px;
