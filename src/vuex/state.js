@@ -11,7 +11,9 @@ let state = {
     breadcrumb: 'home',
     language: '',
     langMap: {},
-    wsState: true
+    wsState: true,
+    //  olt 配置时，缓存olt端口名称和id的映射
+    port_name: {}
 }
 
 export default state

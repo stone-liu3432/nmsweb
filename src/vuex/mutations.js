@@ -21,6 +21,9 @@ const mutations = {
     setWsState(state, data){
         state.wsState = data;
         sessionStorage.setItem('ws', data);
+    },
+    updatePortName(state, data){
+        state.port_name = data;
     }
 }
 
