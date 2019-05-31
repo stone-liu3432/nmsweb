@@ -11,14 +11,14 @@
 
 <script>
 import { mapState, mapMutations } from "Vuex";
-import devAside from "../devMgmt/devAside";
-import devContent from "../devMgmt/devContent";
+import devAside from "./oltMgmt/devAside";
+import devContent from "./oltMgmt/devContent";
 export default {
     name: "oltDetail",
     props: ["oltInfo", "dev", "updateData"],
     components: { devAside, devContent },
     computed: {
-        ...mapState(["langMap", "port_name"])
+        ...mapState(["langMap", "port_name"]),
     },
     data() {
         return {
