@@ -4,7 +4,7 @@
             <dev-aside @menu-change="menuChange" v-if="updateData"></dev-aside>
         </el-col>
         <el-col :span="20">
-            <dev-content :show-content="contentFlag" v-if="updateData"></dev-content>
+            <dev-content :show-content="contentFlag" v-if="updateData && dev_ip"></dev-content>
         </el-col>
     </el-row>
 </template>
@@ -18,13 +18,13 @@ export default {
     props: ["oltInfo", "dev", "updateData"],
     components: { devAside, devContent },
     computed: {
-        ...mapState(["langMap", "port_name"]),
+        ...mapState(["langMap", "port_name"])
     },
     data() {
         return {
             olt: "",
             dev_ip: "",
-            oltBasicInfo: "",
+            oltBasicInfo: {},
             contentFlag: "running_status"
         };
     },
@@ -33,7 +33,9 @@ export default {
     },
     methods: {
         ...mapMutations({
-            updateProtName: "updatePortName"
+            updateProtName: "updatePortName",
+            updateDevIP: "updateDevIP",
+            updateBasicInfo: 'updateBasicInfo'
         }),
         getData() {
             this.$http
@@ -46,6 +48,7 @@ export default {
                         if (res.data.data) {
                             this.olt = res.data.data;
                             this.dev_ip = this.olt.current_ipaddr;
+                            this.updateDevIP(this.dev_ip);
                             this.$emit("set-title", {
                                 name: this.olt.name,
                                 ipaddr: this.olt.current_ipaddr,
@@ -66,13 +69,14 @@ export default {
                 method: "get"
             })
                 .then(res => {
-                    this.oltBasicInfo = "";
+                    this.oltBasicInfo = {};
                     if (res.data.code === 1) {
                         if (res.data.data) {
                             this.oltBasicInfo = res.data.data;
                             this.updateProtName(
                                 this.formatPortName(res.data.data)
                             );
+                            this.updateBasicInfo(res.data.data);
                         }
                     }
                 })
@@ -108,7 +112,7 @@ export default {
                 this.getData();
             } else {
                 this.$emit("set-title", null);
-                this.contentFlag = 'running_status';
+                this.contentFlag = "running_status";
             }
         }
     },

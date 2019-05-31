@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "Vuex";
+import { mapState } from "Vuex";
 import devMenu from "@/config/devMenu";
 export default {
     name: "devAside",
@@ -29,6 +29,9 @@ export default {
     methods: {
         handleMenuClick(index, indexPath) {
             this.$emit("menu-change", index);
+            if(indexPath.length === 1){
+                this.$refs['dev_menu'].openedMenus = [];
+            }
         }
     },
     watch: {}
