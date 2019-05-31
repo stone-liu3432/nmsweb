@@ -10,17 +10,18 @@ import VueI18n from "vue-i18n";
 import locale from "element-ui/lib/locale";
 import enLocale from "element-ui/lib/locale/lang/en";
 import zhLocale from "element-ui/lib/locale/lang/zh-CN";
-import { removeUnderline } from '@/utils/common'
+import { removeUnderline } from "@/utils/common";
 import "element-ui/lib/theme-chalk/index.css";
 import "@/custom-css/custom.css";
-import Message from '@/components/common/message';
+import Message from "@/components/common/message";
+import qs from "qs";
 
-Vue.use(VueI18n)
+Vue.use(VueI18n);
 const i18n = new VueI18n({
-    locale: sessionStorage.getItem('lang') || 'en',
+    locale: sessionStorage.getItem("lang") || "en",
     messages: {
-        "en": enLocale,
-        "zh": zhLocale
+        en: enLocale,
+        zh: zhLocale
     }
 });
 locale.i18n((key, value) => i18n.t(key, value));
@@ -30,7 +31,7 @@ Vue.use(ElementUI);
 //  MessageBox 添加默认显示close按钮
 Vue.prototype.$message = Message;
 
-Vue.filter('removeUnderline', removeUnderline);
+Vue.filter("removeUnderline", removeUnderline);
 Vue.config.productionTip = false;
 
 axios.defaults.timeout = 5000;
@@ -46,9 +47,9 @@ if (process.env.NODE_ENV === "development") {
 axios.interceptors.request.use(
     config => {
         //  to do
-        var token = sessionStorage.getItem('x-token');
-        if(token){
-            config.headers['x-token'] = token;
+        var token = sessionStorage.getItem("x-token");
+        if (token) {
+            config.headers["x-token"] = token;
         }
         return config;
     },
@@ -69,6 +70,31 @@ axios.interceptors.response.use(
         return Promise.reject(err);
     }
 );
+
+Vue.prototype.$qs = ({ url, params }) => {
+    if (!url || typeof url !== "string") {
+        return "";
+    }
+    //  url第一个字符不为 / 时，添加
+    if (url.charCodeAt(0) !== 47) {
+        url = `/${url}`;
+    }
+    if (!params) {
+        return url;
+    }
+    return url.indexOf("?") === -1
+        ? `${url}?${qs.stringify(params)}`
+        : `${url}&${qs.stringify(params)}`;
+};
+
+Vue.prototype.$devProxy = ({ devicelist, url, method, param }) => {
+    return axios.post("/api/proxy", {
+        devicelist,
+        url,
+        method,
+        param
+    });
+};
 
 Vue.prototype.$http = axios;
 
