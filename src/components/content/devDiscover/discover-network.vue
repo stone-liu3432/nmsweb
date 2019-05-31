@@ -126,13 +126,18 @@
                 :formatter="formatItem"
             ></el-table-column>
             <el-table-column :formatter="formatPort" :label="langMap['port']"></el-table-column>
-            <el-table-column fixed="right" :label="langMap['discovery_network']" width="100">
+            <el-table-column fixed="right" :label="langMap['config']">
                 <template slot-scope="scope">
                     <el-button
                         @click="discoverDev(scope.row)"
                         type="text"
                         size="small"
                     >{{ langMap['discovery'] }}</el-button>
+                    <el-button
+                        @click="delDev(scope.row)"
+                        type="text"
+                        size="small"
+                    >{{ langMap['delete'] }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -354,6 +359,44 @@ export default {
                                 this.$message.success(
                                     this.langMap[data.method + "_success"]
                                 );
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        })
+                        .catch(err => {});
+                })
+                .catch(_ => {});
+        },
+        delDev(node){
+            this.$confirm(
+                this.langMap["cfm_del_tips"],
+                this.langMap["tips"],
+                {
+                    type: "warning"
+                }
+            )
+                .then(_ => {
+                    var data = {
+                        method: "delete",
+                        param: {
+                            protocol: node.protocol,
+                            sipaddr: node.sipaddr,
+                            eipaddr: node.eipaddr,
+                            ipmask: node.ipmask,
+                            groupname: node.groupname,
+                            snmpversion: node.snmpversion,
+                            snmpcommunity: node.snmpcommunity,
+                            httpport: node.httpport
+                        }
+                    };
+                    this.$http
+                        .post("/api/device/discovery", data)
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap[data.method + "_success"]
+                                );
+                                this.getDiscoveryList();
                             } else {
                                 this.$message.error(res.data.message);
                             }
