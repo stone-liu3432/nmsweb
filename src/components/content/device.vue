@@ -76,9 +76,9 @@
                                             :command="composeData('olt', 'onu_sync', scope.row)"
                                         >{{ langMap['onu_sync'] }}</el-dropdown-item>
                                         <el-dropdown-item
-                                            :command="composeData('olt', 'mgmt', scope.row)"
+                                            :command="composeData('olt', 'info', scope.row)"
                                             divided
-                                        >{{ langMap['deviceMgmt'] }}</el-dropdown-item>
+                                        >{{ langMap['dev_detail'] }}</el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
                             </template>
@@ -106,7 +106,13 @@
                             :formatter="showStatus"
                             :label="langMap['status']"
                             width="100"
-                        ></el-table-column>
+                        >
+                            <template slot-scope="scope">
+                                <el-tag
+                                    :type="scope.row.status === 'online' ? '' : 'danger'"
+                                >{{ showStatus(scope.row) }}</el-tag>
+                            </template>
+                        </el-table-column>
                         <el-table-column
                             prop="mclass"
                             :formatter="formatClass"
@@ -135,9 +141,9 @@
                                             :command="composeData('onu', 'delete', scope.row)"
                                         >{{ langMap['delete'] }}</el-dropdown-item>
                                         <el-dropdown-item
-                                            :command="composeData('onu', 'mgmt', scope.row)"
+                                            :command="composeData('onu', 'info', scope.row)"
                                             divided
-                                        >{{ langMap['deviceMgmt'] }}</el-dropdown-item>
+                                        >{{ langMap['dev_detail'] }}</el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
                             </template>
@@ -162,6 +168,7 @@
             <dev-set-info
                 :data="cacheData"
                 :dev="devFlag"
+                :update-data="showConfigDialog"
                 :groups="groups"
                 v-if="handleFlag === 'config'"
                 ref="oltSetInfo"
@@ -174,18 +181,31 @@
         <el-dialog
             :visible.sync="showMgmtDialog"
             key="devMgmt"
-            @opened="dialogOpen"
+            fullscreen
+            :close-on-press-escape="false"
         >
-            <olt-mgmt
-                v-if="handleFlag === 'mgmt' && devFlag === 'olt'"
+            <div slot="title" v-if="devMgmtTitle">
+                <span>{{ langMap['name'] }} : {{ devMgmtTitle.name }}</span>
+                <el-divider direction="vertical"></el-divider>
+                <span>{{ langMap['ipaddr'] }} : {{ devMgmtTitle.ipaddr }}</span>
+                <el-divider direction="vertical"></el-divider>
+                <span>{{ langMap['macaddr'] }} : {{ devMgmtTitle.macaddr }}</span>
+            </div>
+            <olt-detail
+                :dev="devFlag"
+                :update-data="showMgmtDialog"
+                v-if="handleFlag === 'info' && devFlag === 'olt'"
                 :olt-info="cacheData"
                 ref="olt-mgmt-dialog"
-            ></olt-mgmt>
-            <onu-mgmt
-                v-if="handleFlag === 'mgmt' && devFlag === 'onu'"
+                @set-title="devTitle"
+            ></olt-detail>
+            <onu-detail
+                :dev="devFlag"
+                :update-data="showMgmtDialog"
+                v-if="handleFlag === 'info' && devFlag === 'onu'"
                 :onu-info="cacheData"
                 ref="onu-mgmt-dialog"
-            ></onu-mgmt>
+            ></onu-detail>
         </el-dialog>
     </div>
 </template>
@@ -194,12 +214,12 @@
 import { mapState } from "Vuex";
 import { pageSizes, STATUS, MCLASS } from "@/utils/common-data";
 import { removeUnderline } from "@/utils/common";
-import devSetInfo from "./device/oltSetInfo";
-import oltMgmt from "./device/oltMgmt";
-import onuMgmt from "./device/onuMgmt";
+const devSetInfo = () => import(/* webpackChunkName: "configMgmt" */ "./device/oltSetInfo");
+const oltDetail = () => import(/* webpackChunkName: "configMgmt" */ "./device/oltDetail");
+const onuDetail = () => import(/* webpackChunkName: "configMgmt" */ "./device/onuDetail");
 export default {
     name: "deviceMgmt",
-    components: { devSetInfo, oltMgmt, onuMgmt },
+    components: { devSetInfo, oltDetail, onuDetail },
     computed: mapState(["langMap"]),
     data() {
         return {
@@ -226,7 +246,8 @@ export default {
             groups: [],
             cacheTree: "",
             currentTreeData: {},
-            showMgmtDialog: false
+            showMgmtDialog: false,
+            devMgmtTitle: ""
         };
     },
     created() {
@@ -292,10 +313,8 @@ export default {
             data.forEach(item => {
                 if (!obj[item.groupname]) {
                     obj[item.groupname] = [];
-                    obj[item.groupname].push(item);
-                } else {
-                    obj[item.groupname].push(item);
                 }
+                obj[item.groupname].push(item);
             });
             Object.keys(obj).forEach((item, index) => {
                 var children = [];
@@ -424,9 +443,9 @@ export default {
             //  设置
             if (flag === "config") {
                 this.showConfigDialog = true;
-                this.$nextTick(_ => {
-                    this.$refs["oltSetInfo"].getData();
-                });
+                // this.$nextTick(_ => {
+                //     this.$refs["oltSetInfo"].getData();
+                // });
             }
             //  删除设备
             if (flag === "delete") {
@@ -500,10 +519,10 @@ export default {
                             this.$message.success(
                                 this.langMap[data.method + "_success"]
                             );
-                            this.getData();
                         } else {
                             this.$message.error(res.data.message);
                         }
+                        this.getData();
                     })
                     .catch(err => {});
             }
@@ -529,7 +548,7 @@ export default {
                     })
                     .catch(err => {});
             }
-            if (flag === "mgmt") {
+            if (flag === "info") {
                 this.showMgmtDialog = true;
             }
         },
@@ -598,20 +617,38 @@ export default {
                             this.$message.error(res.data.message);
                         }
                         this.showConfigDialog = false;
+                        this.handleFlag = '';
                     })
                     .catch(err => {});
             }
         },
-        dialogOpen() {
-            if (this.devFlag === "olt") {
-                this.$refs["olt-mgmt-dialog"].getData();
-            }
-            if (this.devFlag === "onu") {
-                this.$refs["onu-mgmt-dialog"].getData();
-            }
+        devTitle(val) {
+            this.devMgmtTitle = val;
         }
     },
-    beforeDestroy() {}
+    beforeDestroy() {},
+    //  配置OLT ，模拟点击行为
+    mounted() {
+        this.dropdownClick({
+            dev: "olt",
+            flag: "info",
+            row: {
+                name: "HSGQ-E08",
+                devid: 12000,
+                ipaddr: "192.168.100.171",
+                macaddr: "38:3a:21:20:00:67",
+                subnet: "192.168.100.0",
+                groupname: "E01",
+                status: 1,
+                mclass: 1,
+                model: "HSGQ-E04",
+                description: "OLT 123",
+                ponports: 4,
+                geports: 4,
+                xgeports: 4
+            }
+        });
+    }
 };
 </script>
 
