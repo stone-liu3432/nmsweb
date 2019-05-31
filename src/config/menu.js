@@ -11,6 +11,9 @@ export default [
         ]
     },
     {
+        name: "configMgmt"
+    },
+    {
         name: "alert"
     },
     {
