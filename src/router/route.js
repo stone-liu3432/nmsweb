@@ -10,7 +10,7 @@ const alert = () => import(/* webpackChunkName: "alert" */ '@/components/content
 const system = () => import(/* webpackChunkName: "system" */ '@/components/content/system')
 const task = () => import(/* webpackChunkName: "task" */ '@/components/content/task')
 const performance = () => import(/* webpackChunkName: "perf" */ '@/components/content/perf')
-
+const configMgmt = () => import(/* webpackChunkName: "config" */ '@/components/content/configMgmt')
 const topo = () => import(/* webpackChunkName: "device" */ '@/components/content/topo')
 const device = () => import(/* webpackChunkName: "device" */ '@/components/content/device')
 const devDiscover = () => import(/* webpackChunkName: "device" */ '@/components/content/devDiscover')
@@ -65,6 +65,13 @@ const routes = [
                     requireAuth: true
                 },
                 component: devDiscover,
+            },
+            {
+                path: '/configMgmt',
+                meta: {
+                    requireAuth: true
+                },
+                component: configMgmt
             },
             {
                 path: "/system",
