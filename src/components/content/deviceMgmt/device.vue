@@ -215,8 +215,8 @@ import { mapState } from "Vuex";
 import { pageSizes, STATUS, MCLASS } from "@/utils/common-data";
 import { removeUnderline } from "@/utils/common";
 const devSetInfo = () => import(/* webpackChunkName: "configMgmt" */ "./oltSetInfo");
-const oltDetail = () => import(/* webpackChunkName: "configMgmt" */ "./oltDetail");
-const onuDetail = () => import(/* webpackChunkName: "configMgmt" */ "./onuDetail");
+const oltDetail = () => import(/* webpackChunkName: "configMgmt" */ "./oltMgmt/oltDetail");
+const onuDetail = () => import(/* webpackChunkName: "configMgmt" */ "./onuMgmt/onuDetail");
 export default {
     name: "deviceMgmt",
     components: { devSetInfo, oltDetail, onuDetail },
