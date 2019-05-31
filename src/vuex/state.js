@@ -13,7 +13,9 @@ let state = {
     langMap: {},
     wsState: true,
     //  olt 配置时，缓存olt端口名称和id的映射
-    port_name: {}
+    port_name: {},
+    dev_ip: '',
+    basicInfo: {}
 }
 
 export default state

@@ -24,6 +24,12 @@ const mutations = {
     },
     updatePortName(state, data){
         state.port_name = data;
+    },
+    updateDevIP(state, data){
+        state.dev_ip = data;
+    },
+    updateBasicInfo(state, data){
+        state.basicInfo = data;
     }
 }
 
