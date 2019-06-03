@@ -76,6 +76,13 @@ export function validatorPassword(rule, value, callback) {
     }
     callback();
 }
+
+export function validatorVlan(rule, value, callback){
+    if(value < 1 || value > 4094 || isNaN(value)){
+        return callback(new Error(store.state.langMap['vlanid_range_hit']));
+    }
+    callback();
+}
 export default {
     validatorMac,
     validatorIpAddr,
@@ -84,5 +91,6 @@ export default {
     validatorName,
     validatorAddr,
     validatorAccount,
-    validatorPassword
+    validatorPassword,
+    validatorVlan
 };
