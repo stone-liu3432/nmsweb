@@ -1,5 +1,5 @@
 <template>
-    <el-row>
+    <el-row :gutter="20">
         <el-col :span="4">
             <dev-aside @menu-change="menuChange" v-if="updateData"></dev-aside>
         </el-col>
