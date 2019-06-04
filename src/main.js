@@ -14,6 +14,7 @@ import { removeUnderline } from "@/utils/common";
 import "element-ui/lib/theme-chalk/index.css";
 import "@/custom-css/custom.css";
 import Message from "@/components/common/message";
+import throttleButton from '@/components/common/debounceButton';
 import qs from "qs";
 
 Vue.use(VueI18n);
@@ -30,6 +31,9 @@ Vue.use(Vuex);
 Vue.use(ElementUI);
 //  MessageBox 添加默认显示close按钮
 Vue.prototype.$message = Message;
+
+// 添加了throttle 的 el-button，用于表单提交
+Vue.component('tButton', throttleButton);
 
 Vue.filter("removeUnderline", removeUnderline);
 Vue.config.productionTip = false;
