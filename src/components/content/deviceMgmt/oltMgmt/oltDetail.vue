@@ -1,10 +1,10 @@
 <template>
-    <el-row :gutter="20">
+    <el-row>
         <el-col :span="4">
             <dev-aside @menu-change="menuChange" v-if="updateData"></dev-aside>
         </el-col>
         <el-col :span="20">
-            <dev-content :show-content="contentFlag" v-if="updateData && dev_ip"></dev-content>
+            <dev-content :show-content="contentFlag" v-if="updateData && dev_ip" style="margin-left: 20px;"></dev-content>
         </el-col>
     </el-row>
 </template>
