@@ -465,7 +465,7 @@ export default {
                                 param: {
                                     type: "devid",
                                     name: "",
-                                    groupname: "",
+                                    groupname: node.groupname,
                                     ipaddr: "",
                                     macaddr: "",
                                     devid: node.devid
@@ -479,7 +479,7 @@ export default {
                                 param: {
                                     type: "macaddr",
                                     name: "",
-                                    groupname: "",
+                                    groupname: node.groupname,
                                     macaddr: node.macaddr
                                 }
                             };
