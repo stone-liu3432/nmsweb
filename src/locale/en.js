@@ -45,7 +45,7 @@ export default {
     apply: "Apply",
     commit: "Commit",
     cancel: "Cancel",
-    config: "Config",
+    config: " Config ",
     enable: " Enable",
     disable: " Disable",
     full: " Full",

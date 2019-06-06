@@ -231,22 +231,22 @@ export default {
                 ],
                 pass2: [
                     {
-                        validator: validator.validatorPassword,
+                        validator: this.validEnterPass,
                         trigger: ["change", "blur"]
                     }
                 ],
                 label: [
                     {
-                        validator: validator.validatorName,
+                        validator: this.validLabel,
                         trigger: ["change", "blur"]
                     }
                 ],
                 phone: [
-                    { validator: validatorPhone, trigger: ["change", "blur"] }
+                    { validator: this.validPhone, trigger: ["change", "blur"] }
                 ],
                 description: [
                     {
-                        validator: validator.validatorDesc,
+                        validator: this.validDesc,
                         trigger: ["change", "blur"]
                     }
                 ]
@@ -283,7 +283,7 @@ export default {
                 ],
                 pass2: [
                     {
-                        validator: validator.validatorPassword,
+                        validator: this.validEnterPass,
                         trigger: ["change", "blur"]
                     }
                 ]
@@ -429,10 +429,6 @@ export default {
                 if (valid) {
                     var data;
                     if (this.modalType === "add") {
-                        if (this.form.pass1 !== this.form.pass2) {
-                            this.$message.error(this.langMap["invalid_pass"]);
-                            return;
-                        }
                         data = {
                             method: "add",
                             param: {
@@ -459,10 +455,6 @@ export default {
                         };
                     }
                     if (this.modalType === "modifyPass") {
-                        if (this.form.pass1 !== this.form.pass2) {
-                            this.$message.error(this.langMap["invalid_pass"]);
-                            return;
-                        }
                         data = {
                             method: "modify",
                             param: {
@@ -499,7 +491,6 @@ export default {
             return row[column.property] ? this.langMap['online'] : this.langMap['offline'];
         },
         clearData(){
-            //  不建议使用$refs来重置form
             Object.keys(this.form).forEach(item => {
                 this.form[item] = "";
             });
@@ -507,6 +498,37 @@ export default {
                 this.form.rolename = this.roles[0];
             }
             this.modalType = '';
+        },
+        validPhone(rule, value, callback){
+            var reg = /^.{6,24}$/;
+            if(value !== '' && !reg.test(value)){
+                return callback(new Error(this.langMap['validatorPhone']));
+            }
+            callback();
+        },
+        validLabel(rule, value, callback){
+            var reg = /^.{4,33}$/;
+            if (value !== '' && !reg.test(value)) {
+                return callback(new Error(this.langMap['validator_name_tips']));
+            }
+            callback();
+        },
+        validDesc(rule, value, callback){
+            var reg = /^.{4,256}$/;
+            if (value !== '' && !reg.test(value)) {
+                return callback(new Error(this.langMap['validator_desc_tips']));
+            }
+            callback();
+        },
+        validEnterPass(rule, value, callback){
+            var reg = /^.{4,33}$/;
+            if (!reg.test(value)) {
+                return callback(new Error(this.langMap['validator_pass_tips']));
+            }
+            if(value !== this.form.pass1){
+                return callback(new Error(this.langMap['pwd_not_match']));
+            }
+            callback();
         }
     }
 };

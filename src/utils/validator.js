@@ -58,7 +58,7 @@ export function validatorAddr(rule, value, callback) {
     }
     callback();
 }
-//  用户排号帐号
+//  用户拔号帐号
 export function validatorAccount(rule, value, callback) {
     //  < 4-65 >  account -> 客户拔号帐号
     var reg = /^.{4, 65}$/;
