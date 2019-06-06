@@ -252,49 +252,51 @@ export default {
         },
         submitUserForm(formName) {
             this.$refs[formName].validate(valid =>{
-                var data;
-                if (this.dialogFlag === "add") {
-                    data = {
-                        devicelist: [this.dev_ip],
-                        url: this.$qs({
-                            url: "/usermgmt",
-                            params: { form: "userlist" }
-                        }),
-                        method: "add",
-                        param: {
-                            name: this.userForm.username,
-                            key: md5(`${this.userForm.username}:${this.userForm.pwd1}`),
-                            level: this.userForm.level,
-                            reenter: this.userForm.reenter,
-                            info: this.userForm.info.length > 33 ? this.userForm.info.substring(0, 33) : this.userForm.info
-                        }
-                    };
-                }
-                if (this.dialogFlag === "modify") {
-                    data = {
-                        devicelist: [this.dev_ip],
-                        url: this.$qs({
-                            url: "/usermgmt",
-                            params: { form: "modifyps" }
-                        }),
-                        method: "set",
-                        param: {
-                            name: this.userForm.name,
-                            key: md5(`${this.userForm.username}:${this.userForm.o_pwd}`), // 原密码  md5("uName:password")
-                            key1: md5(`${this.userForm.username}:${this.userForm.pwd1}`)  // 新密码
-                        }
-                    };
-                }
-                this.$devProxy(data).then(res =>{
-                    if(res.data.code === 1){
-                        this.$message.success(this.langMap[this.dialogFlag + '_success']);
-                        this.getData();
-                    }else{
-                        this.$message.error(res.data.message);
+                if(valid){
+                    var data;
+                    if (this.dialogFlag === "add") {
+                        data = {
+                            devicelist: [this.dev_ip],
+                            url: this.$qs({
+                                url: "/usermgmt",
+                                params: { form: "userlist" }
+                            }),
+                            method: "add",
+                            param: {
+                                name: this.userForm.username,
+                                key: md5(`${this.userForm.username}:${this.userForm.pwd1}`),
+                                level: this.userForm.level,
+                                reenter: this.userForm.reenter,
+                                info: this.userForm.info.length > 33 ? this.userForm.info.substring(0, 33) : this.userForm.info
+                            }
+                        };
                     }
-                }).catch(err =>{})
+                    if (this.dialogFlag === "modify") {
+                        data = {
+                            devicelist: [this.dev_ip],
+                            url: this.$qs({
+                                url: "/usermgmt",
+                                params: { form: "modifyps" }
+                            }),
+                            method: "set",
+                            param: {
+                                name: this.userForm.name,
+                                key: md5(`${this.userForm.username}:${this.userForm.o_pwd}`), // 原密码  md5("uName:password")
+                                key1: md5(`${this.userForm.username}:${this.userForm.pwd1}`)  // 新密码
+                            }
+                        };
+                    }
+                    this.$devProxy(data).then(res =>{
+                        if(res.data.code === 1){
+                            this.$message.success(this.langMap[this.dialogFlag + '_success']);
+                            this.getData();
+                        }else{
+                            this.$message.error(res.data.message);
+                        }
+                    }).catch(err =>{})
+                    this.dialogVisible = false;
+                }
             })
-            this.dialogVisible = false;
         },
         validPass(rule, value, callback) {
             var reg = /^.{4,33}$/;

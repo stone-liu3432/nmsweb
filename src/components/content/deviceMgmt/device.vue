@@ -109,7 +109,7 @@
                         >
                             <template slot-scope="scope">
                                 <el-tag
-                                    :type="scope.row.status === 'online' ? '' : 'danger'"
+                                    :type="scope.row.status.toLowerCase() === 'online' ? '' : 'danger'"
                                 >{{ showStatus(scope.row) }}</el-tag>
                             </template>
                         </el-table-column>
