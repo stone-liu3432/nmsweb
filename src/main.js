@@ -16,6 +16,7 @@ import "@/custom-css/custom.css";
 import Message from "@/components/common/message";
 import throttleButton from '@/components/common/debounceButton';
 import qs from "qs";
+import portNav from '@/components/common/portNav';
 
 Vue.use(VueI18n);
 const i18n = new VueI18n({
@@ -29,6 +30,7 @@ locale.i18n((key, value) => i18n.t(key, value));
 
 Vue.use(Vuex);
 Vue.use(ElementUI);
+Vue.use(portNav);
 //  MessageBox 添加默认显示close按钮
 Vue.prototype.$message = Message;
 
