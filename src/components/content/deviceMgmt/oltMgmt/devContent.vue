@@ -6,25 +6,55 @@
         <olt-alarm v-if="showContent === 'alarm'"></olt-alarm>
         <olt-user-mgmt v-if="showContent === 'user_mgmt'"></olt-user-mgmt>
         <olt-time-set v-if="showContent === 'time'"></olt-time-set>
+        <onu-deny v-if="showContent === 'onu_deny'"></onu-deny>
+        <sla-cfg v-if="showContent === 'sla_cfg'"></sla-cfg>
+        <pon-setting v-if="showContent === 'pon_setting'"></pon-setting>
+        <loid-mgmt v-if="showContent === 'loid_mgmt'"></loid-mgmt>
+        <pon-optical v-if="showContent === 'pon_optical'"></pon-optical>
     </div>
 </template>
 
 <script>
-const runningStatus = () => import(/* webpackChunkName: 'olt-system' */ './system/running-status');
-const remoteMgmt = () => import(/* webpackChunkName: 'olt-system' */ './system/remoteMgmt');
-const serviceSsh = () => import(/* webpackChunkName: 'olt-system' */ './system/service');
-const oltAlarm = () => import(/* webpackChunkName: 'olt-system' */ './system/oltAlarm');
-const oltUserMgmt = () => import(/* webpackChunkName: 'olt-system'  */ './system/oltUserMgmt');
-const oltTimeSet = () => import(/* webpackChunkName: 'olt-system */ './system/oltTime');
+const runningStatus = () =>
+    import(/* webpackChunkName: 'olt-system' */ "./system/running-status");
+const remoteMgmt = () =>
+    import(/* webpackChunkName: 'olt-system' */ "./system/remoteMgmt");
+const serviceSsh = () =>
+    import(/* webpackChunkName: 'olt-system' */ "./system/service");
+const oltAlarm = () =>
+    import(/* webpackChunkName: 'olt-system' */ "./system/oltAlarm");
+const oltUserMgmt = () =>
+    import(/* webpackChunkName: 'olt-system'  */ "./system/oltUserMgmt");
+const oltTimeSet = () =>
+    import(/* webpackChunkName: 'olt-system' */ "./system/oltTime");
+const onuDeny = () => import(/* webpackChunkName: 'olt-pon' */ "./pon/onuDeny");
+const slaCfg = () => import(/* webpackChunkName: 'olt-pon' */ "./pon/slaCfg");
+const ponSetting = () =>
+    import(/* webpackChunkName: 'olt-pon' */ "./pon/ponSetting");
+const loidMgmt = () => import(/* webpackChunkName: 'olt-pon' */ "./pon/loid");
+const ponOptical = () =>
+    import(/* webpackChunkName: 'olt-pon' */ "./pon/ponOptical");
 export default {
-    name: 'devContent',
-    props: ['showContent'],
-    components: { runningStatus, remoteMgmt, serviceSsh, oltAlarm, oltUserMgmt, oltTimeSet },
-    data(){
-        return {}
+    name: "devContent",
+    props: ["showContent"],
+    components: {
+        runningStatus,
+        remoteMgmt,
+        serviceSsh,
+        oltAlarm,
+        oltUserMgmt,
+        oltTimeSet,
+        onuDeny,
+        slaCfg,
+        ponSetting,
+        loidMgmt,
+        ponOptical
+    },
+    data() {
+        return {};
     },
     methods: {}
-}
+};
 </script>
 
 <style lang="less" scoped>
