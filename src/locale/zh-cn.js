@@ -740,5 +740,21 @@ export default {
     configMgmt: "配置管理",
     time_err_tips: "结束时间必须大于开始时间",
     open_rt_alarm: "打开实时告警",
-    close_rt_alarm: "关闭实时告警"
+    close_rt_alarm: "关闭实时告警",
+
+    ld_status: "环路检测状态",
+    recover_mode: "环路检测恢复模式",
+    recover_manual: "手动恢复",
+    recover_time: "自动恢复时间",
+    detect_interval: "环路检测间隔",
+    onu_status: "ONU状态",
+    ld_port_id: "回环端口",
+    ld_onu_id: "回环ONU",
+    loop_detect: '环路检测',
+    pon_loop_detect: 'PON环路检测',
+    ge_loop_detect: '上联口环路检测',
+    ld_info: '环路检测信息',
+    loopback : '回环',
+    port_status: '端口状态',
+    port_isolation: '端口隔离',
 };

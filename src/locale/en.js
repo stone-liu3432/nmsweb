@@ -761,5 +761,22 @@ export default {
     configMgmt: "Config management",
     time_err_tips: "End time must be greater than start time",
     open_rt_alarm: "Open real-time alarm",
-    close_rt_alarm: "Turn off real-time alerts"
+    close_rt_alarm: "Turn off real-time alerts",
+
+    ld_status: "Loop detect status",
+    recover_mode: "Recover mode",
+    recover_manual: "Manual recover",
+    recover_time: "Auto recover time",
+    detect_interval: "Loop detect interval",
+    onu_status: "ONU status",
+    ld_port_id: "Loopback port",
+    ld_onu_id: "Loopback ONU",
+    loop_detect: ' Loop Detection ',
+    pon_loop_detect: 'PON Loop Detection ',
+    ge_loop_detect: ' Uplink Loop Detection ',
+    ld_info: ' Loop detection information ',
+    loopback : 'Loopback',
+    port_status: ' Port Status ',
+    port_isolation: ' Port isolation ',
+    pon_isolation_tips: 'Set PON port isolation only'
 };
