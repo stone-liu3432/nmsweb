@@ -11,7 +11,7 @@
                     </template>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="langMap['onu_id']" v-if="onu && onulist.length">
+            <el-form-item :label="langMap['onu_id']" v-if="onu && Object.keys(onulist).length">
                 <el-select v-model.number="onu_id">
                     <template v-for="(item, index) in onulist">
                         <el-option :value="Number(index)" :label="item"></el-option>
@@ -47,7 +47,7 @@ export default {
         };
     },
     created() {
-        this.getSrc(this.port_id);
+        this.onu && this.getSrc(this.port_id);
         this.$emit('port-change', this.port_id);
     },
     methods: {
@@ -58,6 +58,7 @@ export default {
         },
         //  获取当前PON口下的onu列表
         getSrc(port_id) {
+            var onu_flag = this.onu_id;
             this.$devProxy({
                 devicelist: [this.dev_ip],
                 url: this.$qs({
@@ -72,13 +73,16 @@ export default {
                         if (res.data.data) {
                             var onulist = this.analysis(res.data.data.resource);
                             onulist.length && (this.onu_id = onulist[0]);
-                            onulist.forEach((item, index, arr) => {
+                            onulist.forEach(item => {
                                 var name =
                                     item < 10
                                         ? `ONU${res.data.data.port_id}/0${item}`
                                         : `ONU${res.data.data.port_id}/${item}`;
                                 this.onulist[item] = name;
                             });
+                            if(onu_flag === this.onu_id){
+                                this.$emit('onu-change', this.port_id, this.onu_id);
+                            }
                         }
                     }
                 })
