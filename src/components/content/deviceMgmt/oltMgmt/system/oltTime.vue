@@ -143,6 +143,7 @@ export default {
                     this.$message.error(`${this.langMap['param_error']}: ${this.langMap['time_set']}`);
                     return
                 }
+                this.set_time = new Date(this.set_time);
                 data = {
                     devicelist: [this.dev_ip],
                     url: this.$qs({ url: "/time", params: { form: "info" } }),
