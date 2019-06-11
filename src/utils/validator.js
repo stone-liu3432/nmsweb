@@ -34,7 +34,7 @@ export function validatorModel(rule, value, callback) {
 export function validatorDesc(rule, value, callback) {
     //  < 4-256 >  description
     var reg = /^.{4,256}$/;
-    if (!reg.test(value)) {
+    if (value !== '' && !reg.test(value)) {
         return callback(new Error(store.state.langMap['validator_desc_tips']));
     }
     callback();
