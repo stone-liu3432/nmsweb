@@ -11,6 +11,9 @@
         <pon-setting v-if="showContent === 'pon_setting'"></pon-setting>
         <loid-mgmt v-if="showContent === 'loid_mgmt'"></loid-mgmt>
         <pon-optical v-if="showContent === 'pon_optical'"></pon-optical>
+        <port-info v-if="showContent === 'port_info'"></port-info>
+        <perf-info v-if="showContent === 'perf_info'"></perf-info>
+        <port-config v-if="showContent === 'port_cfg'"></port-config>
     </div>
 </template>
 
@@ -34,6 +37,10 @@ const ponSetting = () =>
 const loidMgmt = () => import(/* webpackChunkName: 'olt-pon' */ "./pon/loid");
 const ponOptical = () =>
     import(/* webpackChunkName: 'olt-pon' */ "./pon/ponOptical");
+const portInfo = () =>
+    import(/* webpackChunkName: 'olt-port' */ "./switchPort/portInfo");
+    const perfInfo = () => import(/* webpackChunkName: 'olt-port' */ './switchPort/perfInfo');
+    const portConfig = () => import(/* webpackChunkName: 'olt-port' */ './switchPort/portCfg')
 export default {
     name: "devContent",
     props: ["showContent"],
@@ -48,7 +55,10 @@ export default {
         slaCfg,
         ponSetting,
         loidMgmt,
-        ponOptical
+        ponOptical,
+        portInfo,
+        perfInfo,
+        portConfig
     },
     data() {
         return {};
