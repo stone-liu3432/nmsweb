@@ -4,73 +4,73 @@
             <span style="margin-left: 16px;">{{ port_name[info.port_id] }}</span>
         </el-form-item>
         <template v-if="flag === 'basic'">
-            <el-form-item :label="langMap['admin_status']">
-                <el-select v-model="formData.admin_status">
+            <el-form-item :label="langMap['admin_status']" key="admin_status">
+                <el-select v-model="formData.admin_status" :disabled="info.port_id <= ponports">
                     <el-option :value="0" :label="langMap['disable']"></el-option>
                     <el-option :value="1" :label="langMap['enable']"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="langMap['auto_neg']">
+            <el-form-item :label="langMap['auto_neg']" key="auto_neg">
                 <el-select v-model="formData.auto_neg">
                     <el-option :value="0" :label="langMap['disable']"></el-option>
                     <el-option :value="1" :label="langMap['enable']"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="langMap['speed']">
-                <el-select v-model="formData.speed">
+            <el-form-item :label="langMap['speed']" key="speed">
+                <el-select v-model="formData.speed" :disabled="info.port_id <= ponports">
                     <el-option value="Auto"></el-option>
-                    <el-option value="10M"></el-option>
-                    <el-option value="100M"></el-option>
+                    <el-option value="10M" v-if="info.port_id <= geports"></el-option>
+                    <el-option value="100M" v-if="info.port_id <= geports"></el-option>
                     <el-option value="1000M"></el-option>
-                    <el-option value="10000M"></el-option>
+                    <el-option value="10000M" v-if="info.port_id > geports"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="langMap['duplex']">
-                <el-select v-model="formData.duplex">
+            <el-form-item :label="langMap['duplex']" key="duplex">
+                <el-select v-model="formData.duplex" :disabled="info.port_id <= ponports">
                     <el-option :value="0" :label="langMap['half']"></el-option>
                     <el-option :value="1" :label="langMap['full']"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="langMap['flow_ctrl']">
+            <el-form-item :label="langMap['flow_ctrl']" key="flow_ctrl">
                 <el-select v-model="formData.flow_ctrl">
                     <el-option :value="0" :label="langMap['disable']"></el-option>
                     <el-option :value="1" :label="langMap['enable']"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="langMap['mtu']" prop="mtu">
+            <el-form-item :label="langMap['mtu']" prop="mtu" key="mtu">
                 <el-input v-model.number="formData.mtu"></el-input>
             </el-form-item>
-            <el-form-item :label="langMap['erate']" prop="erate">
+            <el-form-item :label="langMap['erate']" prop="erate" key="erate">
                 <el-input v-model.number="formData.erate"></el-input>
             </el-form-item>
-            <el-form-item :label="langMap['irate']" prop="irate">
+            <el-form-item :label="langMap['irate']" prop="irate" key="irate">
                 <el-input v-model.number="formData.irate"></el-input>
             </el-form-item>
-            <el-form-item :label="langMap['pvid']" prop="pvid">
+            <el-form-item :label="langMap['pvid']" prop="pvid" key="pvid">
                 <el-input v-model.number="formData.pvid"></el-input>
             </el-form-item>
         </template>
         <template v-if="flag === 'storm'">
-            <el-form-item :label="langMap['broadcast']" prop="broadcast">
+            <el-form-item :label="langMap['broadcast']" prop="broadcast" key="broadcast">
                 <el-input v-model.number="formData.broadcast"></el-input>
             </el-form-item>
-            <el-form-item :label="langMap['multicast']" prop="multicast">
+            <el-form-item :label="langMap['multicast']" prop="multicast" key="multicast">
                 <el-input v-model.number="formData.multicast"></el-input>
             </el-form-item>
-            <el-form-item :label="langMap['unicast']" prop="unicast">
+            <el-form-item :label="langMap['unicast']" prop="unicast" key="unicast">
                 <el-input v-model.number="formData.unicast"></el-input>
             </el-form-item>
         </template>
         <template v-if="flag === 'mirror'">
-            <el-form-item :label="langMap['dst_port']">
+            <el-form-item :label="langMap['dst_port']" key="dst_port">
                 <el-select v-model.number="formData.dst_port">
                     <el-option :value="0" label=" - "></el-option>
-                    <template v-for="(item, key) in port_name">
+                    <template v-for="(item, key) in port_name" v-if="key > ponports">
                         <el-option :value="key" :label="item"></el-option>
                     </template>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="langMap['type']">
+            <el-form-item :label="langMap['type']" key="type">
                 <el-select v-model="formData.type">
                     <el-option :value="0" label=" - "></el-option>
                     <el-option :value="1" label="ingress"></el-option>
@@ -100,7 +100,16 @@ export default {
         }
     },
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", 'basicInfo']),
+        ponports(){
+            return this.basicInfo.ponports;
+        },
+        geports(){
+            return this.basicInfo.ponports + this.basicInfo.geports;
+        },
+        xgeports(){
+            return this.basicInfo.xgeports ? (this.ponports + this.geports + this.basicInfo.xgeports) : 0;
+        }
     },
     data() {
         return {

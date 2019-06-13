@@ -14,6 +14,7 @@
         <port-info v-if="showContent === 'port_info'"></port-info>
         <perf-info v-if="showContent === 'perf_info'"></perf-info>
         <port-config v-if="showContent === 'port_cfg'"></port-config>
+        <port-vlan v-if="showContent === 'port_vlan'"></port-vlan>
     </div>
 </template>
 
@@ -39,8 +40,11 @@ const ponOptical = () =>
     import(/* webpackChunkName: 'olt-pon' */ "./pon/ponOptical");
 const portInfo = () =>
     import(/* webpackChunkName: 'olt-port' */ "./switchPort/portInfo");
-    const perfInfo = () => import(/* webpackChunkName: 'olt-port' */ './switchPort/perfInfo');
-    const portConfig = () => import(/* webpackChunkName: 'olt-port' */ './switchPort/portCfg')
+const perfInfo = () =>
+    import(/* webpackChunkName: 'olt-port' */ "./switchPort/perfInfo");
+const portConfig = () =>
+    import(/* webpackChunkName: 'olt-port' */ "./switchPort/portCfg");
+    const portVlan = () => import(/* webpackChunkName: 'olt-port' */ './switchPort/portVlan');
 export default {
     name: "devContent",
     props: ["showContent"],
@@ -58,7 +62,8 @@ export default {
         ponOptical,
         portInfo,
         perfInfo,
-        portConfig
+        portConfig,
+        portVlan
     },
     data() {
         return {};

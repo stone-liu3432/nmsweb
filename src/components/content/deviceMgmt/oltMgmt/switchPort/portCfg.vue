@@ -35,7 +35,7 @@
                     <template v-for="(item, key) in storm" v-if="key !== 'port_id'">
                         <el-row style="margin: 10px 0;">
                             <el-col :span="12">{{ langMap[key] }}</el-col>
-                            <el-col :span="12">{{ item }}</el-col>
+                            <el-col :span="12">{{ item }} pps</el-col>
                         </el-row>
                     </template>
                 </el-card>
@@ -61,7 +61,7 @@
         </el-row>
         <el-dialog :visible.sync="dialogVisible" append-to-body>
             <span slot="title">add</span>
-            <port-cfg-form :info="cacheData" :flag="dialogFlag" ref="port-config-dialog"></port-cfg-form>
+            <port-cfg-form :info="info" :flag="dialogFlag" ref="port-config-dialog"></port-cfg-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">{{ langMap['cancel'] }}</el-button>
                 <el-button type="primary" @click="submitForm">{{ langMap['apply'] }}</el-button>
@@ -86,9 +86,10 @@ export default {
             storm: {},
             mirror: {},
             mirrorType: { 1: "ingress", 2: "egress", 3: "all" },
-            dialogVisible: true,
+            dialogVisible: false,
             dialogFlag: "basic",
-            cacheData: {}
+            cacheData: {},
+            info: {}
         };
     },
     created() {},
@@ -177,17 +178,127 @@ export default {
             if (key === "type") {
                 return item ? this.mirrorType[item] : " - ";
             }
+            if (key === "erate" || key === "irate") {
+                return item + " Kbps";
+            }
             return item;
         },
         openDialog(data, flag) {
             this.dialogVisible = true;
-            this.cacheData = Object.assign({ port_id: this.port_id }, data);
+            this.$nextTick(_ => {
+                this.info = Object.assign({ port_id: this.port_id }, data);
+            });
+            this.cacheData = data;
             this.dialogFlag = flag;
         },
-        submitForm(){
-            var valid = this.$refs['port-config-dialog'].validForm();
-            if(valid){
-                
+        submitForm() {
+            var basicFlag = {
+                admin_status: 0x01,
+                auto_neg: 0x02,
+                speed: 0x40,
+                duplex: 0x04,
+                flow_ctrl: 0x18,
+                mtu: 0x80,
+                erate: 0x100,
+                irate: 0x200,
+                pvid: 0x400
+            };
+            var stormFlag = {
+                broadcast: 0x04,
+                multicast: 0x02,
+                unicast: 0x01
+            };
+            var valid = this.$refs["port-config-dialog"].validForm();
+            if (valid) {
+                var flags = 0,
+                    formData = this.$refs["port-config-dialog"].formData,
+                    data;
+                if (this.dialogFlag === "basic") {
+                    Object.keys(basicFlag).forEach(item => {
+                        if (this.cacheData[item] !== formData[item]) {
+                            flags |= basicFlag[item];
+                        }
+                    });
+                    if (!flags) {
+                        return this.$message.info(this.langMap["modify_tips"]);
+                    }
+                    data = {
+                        devicelist: [this.dev_ip],
+                        url: this.$qs({
+                            url: "/switch_port",
+                            params: { form: "port_info" }
+                        }),
+                        method: "set",
+                        param: {
+                            port_id: this.port_id,
+                            flags,
+                            admin_status: formData.admin_status,
+                            auto_neg: formData.auto_neg,
+                            speed: formData.speed,
+                            duplex: formData.duplex,
+                            flow_ctrl: formData.flow_ctrl,
+                            mtu: formData.mtu,
+                            erate: formData.erate,
+                            irate: formData.irate,
+                            pvid: formData.pvid
+                        }
+                    };
+                }
+                if (this.dialogFlag === "storm") {
+                    Object.keys(stormFlag).forEach(item => {
+                        if (this.cacheData[item] !== formData[item]) {
+                            flags |= stormFlag[item];
+                        }
+                    });
+                    if (!flags) {
+                        return this.$message.info(this.langMap["modify_tips"]);
+                    }
+                    data = {
+                        devicelist: [this.dev_ip],
+                        url: this.$qs({
+                            url: "/switch_port",
+                            params: { form: "stormctrl" }
+                        }),
+                        method: "set",
+                        param: {
+                            port_id: this.port_id,
+                            flags,
+                            broadcast: formData.broadcast,
+                            multicast: formData.multicast,
+                            unicast: formData.unicast
+                        }
+                    };
+                }
+                if (this.dialogFlag === "mirror") {
+                    if (!formData.dst_port || !formData.type) {
+                        this.dialogVisible = false;
+                        return;
+                    }
+                    data = {
+                        devicelist: [this.dev_ip],
+                        url: this.$qs({
+                            url: "/switch_port",
+                            params: { form: "mirror" }
+                        }),
+                        method: "set",
+                        param: {
+                            src_port: this.port_id,
+                            dst_port: formData.dst_port,
+                            type: formData.type
+                        }
+                    };
+                }
+                this.$devProxy(data).then(res =>{
+                    if(res.data.code === 1){
+                        this.$message.success(this.langMap[data.method + '_success']);
+                        this.dialogFlag === "basic" && this.getBasicInfo(this.port_id);
+                        this.dialogFlag === "storm" && this.getStormInfo(this.port_id);
+                        this.dialogFlag === "mirror" && this.getMirror(this.port_id);
+                    }else{
+                        this.$message.error(res.data.message);
+                    }
+                    this.dialogVisible = false;
+                }).catch(err =>{})
             }
         }
     }
