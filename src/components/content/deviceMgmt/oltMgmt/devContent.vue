@@ -15,6 +15,8 @@
         <perf-info v-if="showContent === 'perf_info'"></perf-info>
         <port-config v-if="showContent === 'port_cfg'"></port-config>
         <port-vlan v-if="showContent === 'port_vlan'"></port-vlan>
+        <mac-mgmt v-if="showContent === 'mac_mgmt'"></mac-mgmt>
+        <vlan-mgmt v-if="showContent === 'vlan_mgmt'"></vlan-mgmt>
     </div>
 </template>
 
@@ -44,7 +46,10 @@ const perfInfo = () =>
     import(/* webpackChunkName: 'olt-port' */ "./switchPort/perfInfo");
 const portConfig = () =>
     import(/* webpackChunkName: 'olt-port' */ "./switchPort/portCfg");
-    const portVlan = () => import(/* webpackChunkName: 'olt-port' */ './switchPort/portVlan');
+const portVlan = () =>
+    import(/* webpackChunkName: 'olt-port' */ "./switchPort/portVlan");
+    const macMgmt = () => import(/* webpackChunkName: 'olt-port' */ './layer2/macMgmt')
+    const vlanMgmt = () => import(/* webpackChunkName: 'olt-port' */ './layer2/vlanMgmt')
 export default {
     name: "devContent",
     props: ["showContent"],
@@ -63,7 +68,9 @@ export default {
         portInfo,
         perfInfo,
         portConfig,
-        portVlan
+        portVlan,
+        macMgmt,
+        vlanMgmt,
     },
     data() {
         return {};
