@@ -324,7 +324,7 @@ export default {
     reboot_onu: "重启ONU",
     lang: "语言",
     modify_tips: "未进行任何修改",
-    param_mac: "MAC地址格式不正确",
+    param_mac: "MAC地址格式错误",
     param_onuid: "非法ONU ID",
     param_error: "非法参数",
     ipaddr_error: "IP地址格式错误",
@@ -757,4 +757,6 @@ export default {
     loopback : '回环',
     port_status: '端口状态',
     port_isolation: '端口隔离',
+    pon_isolation_tips: '仅设置PON端口隔离',
+    illegal_mac: '非法MAC地址',
 };

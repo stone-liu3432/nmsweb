@@ -8,8 +8,12 @@ import store from "./../vuex/store";
 
 export function validatorMac(rule, value, callback) {
     var reg = /^([a-fA-F0-9]{2}\:){5}[a-fA-F0-9]{2}$/;
+    //   , , 
     if (!reg.test(value)) {
-        return callback(new Error("xx:xx:xx:xx:xx:xx"));
+        return callback(new Error(store.state.langMap['param_mac'] + " ex: xx:xx:xx:xx:xx:xx"));
+    }
+    if(value === 'ff:ff:ff:ff:ff:ff' || value === '00:00:00:00:00:00' || value === '01:00:5e:00:00:00'){
+        return callback(new Error(store.state.langMap['illegal_mac']));
     }
     callback();
 }

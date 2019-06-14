@@ -48,6 +48,9 @@ export default [
         name: "mac_mgmt"
     },
     {
+        name: 'vlan_mgmt'
+    },
+    {
         name: "protocol_mgmt",
         children: [{ name: "rstp" }, { name: "igmp" }]
     },

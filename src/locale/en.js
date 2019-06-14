@@ -336,7 +336,7 @@ export default {
     ipmask_error: " IP mask format error",
     lang: " Language",
     modify_tips: " There's none modify",
-    param_mac: " MAC address parameter error",
+    param_mac: " MAC address format error",
     param_onuid: " ONU ID illegal",
     param_error: " illegal parameter",
     time_set: " Time",
@@ -778,5 +778,6 @@ export default {
     loopback : 'Loopback',
     port_status: ' Port Status ',
     port_isolation: ' Port isolation ',
-    pon_isolation_tips: 'Set PON port isolation only'
+    pon_isolation_tips: 'Set PON port isolation only',
+    illegal_mac: ' Illegal MAC address'
 };
