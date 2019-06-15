@@ -2,8 +2,16 @@
     <div>
         <h3>{{ langMap['age'] }}</h3>
         <el-form inline size="small" ref="mac-mgmt-age-form" :rules="macAgeRules" :model="macAge">
-            <el-form-item label-width="80px" :label="langMap['age'] + ': '" prop="macAge" key="mac-mgmt-age">
-                <span v-if="!editAge" style="width: 200px; display: inline-block;">{{ macAgeData.age }}</span>
+            <el-form-item
+                label-width="80px"
+                :label="langMap['age'] + ': '"
+                prop="macAge"
+                key="mac-mgmt-age"
+            >
+                <span
+                    v-if="!editAge"
+                    style="width: 200px; display: inline-block;"
+                >{{ macAgeData.age }}</span>
                 <el-input v-model.number="macAge.macAge" v-else></el-input>
             </el-form-item>
             <el-form-item>
@@ -14,7 +22,24 @@
                 >{{ editAge ? langMap['apply'] : langMap['config'] }}</el-button>
             </el-form-item>
         </el-form>
-        <h3>{{ langMap['mac_mgmt'] }}</h3>
+        <el-row>
+            <el-col :span="4">
+                <h3>{{ langMap['mac_mgmt'] }}</h3>
+            </el-col>
+            <el-col :span="12" style="line-height: 49px; margin-left: 30px;">
+                <el-button
+                    size="small"
+                    type="primary"
+                    @click="openDialog('add')"
+                >{{ langMap['add_mac'] }}</el-button>
+                <el-button
+                    size="small"
+                    type="primary"
+                    @click="openDialog('flush')"
+                >{{ langMap['flush_mac'] }}</el-button>
+            </el-col>
+        </el-row>
+        <!-- mac地址查询 -->
         <el-form
             :model="query"
             inline
@@ -65,9 +90,15 @@
                     type="primary"
                     @click="queryMacTable('mac-mgmt-query-form')"
                 >{{ langMap['find'] }}</el-button>
-                <el-button type="primary" @click="getData" v-if="loadmore">{{ langMap['loadmore'] }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="loadMoreData"
+                    :loading="loadmoreLoading"
+                    v-if="loadmore"
+                >{{ langMap['loadmore'] }}</el-button>
             </el-form-item>
         </el-form>
+        <!-- mac地址查询结束 -->
         <el-table :data="macTable" border stripe>
             <el-table-column prop="macaddr" :label="langMap['macaddr']"></el-table-column>
             <el-table-column prop="vlan_id" :label="langMap['vlan_id']"></el-table-column>
@@ -94,6 +125,50 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="macList.length"
         ></el-pagination>
+        <el-dialog :visible.sync="dialogVisible" append-to-body @close="closeDialog">
+            <span slot="title">{{ langMap[dialogFlag + '_mac'] }}</span>
+            <el-form
+                :model="globalForm"
+                :rules="globalRules"
+                ref="mac-mgmt-global-set-form"
+                label-width="150px"
+            >
+                <!-- 
+                    flush mac:  
+                    flags定义， mac_type: 1, port_id: 2, vlan_id: 4, mac:8
+                    根据flags选择mac type, port, vlan三种
+                    首选flags为port时， mac_type包含all,dynamic, static
+                    首选flags为vlan时， mac_type 包含all,blackhole,dynamic, static
+                    首选flags为mac_type时， 不关注port和vlan两个参数
+                -->
+                <el-form-item :label="langMap['mac_type']">
+                    <el-select v-model.number="globalForm.mac_type">
+                        <el-option :value="1" label="static"></el-option>
+                        <el-option :value="2" label="blackhole"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item :label="langMap['macaddr']" prop="macaddr">
+                    <el-input v-model="globalForm.macaddr"></el-input>
+                </el-form-item>
+                <el-form-item :label="langMap['vlan_id']" prop="vlan_id">
+                    <el-input v-model="globalForm.vlan_id"></el-input>
+                </el-form-item>
+                <el-form-item
+                    :label="langMap['port_list']"
+                    v-if="globalForm.mac_type === 1"
+                    prop="portlist"
+                >
+                    <el-input v-model="globalForm.portlist"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">{{ langMap['cancel'] }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="submitForm('mac-mgmt-global-set-form')"
+                >{{ langMap['apply'] }}</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -107,9 +182,19 @@ export default {
         ...mapState(["langMap", "port_name", "dev_ip"])
     },
     data() {
-        const validMacAge = (rule, value, cb) =>{
-            if(value !== 0 && (value < 10 || value > 1000000 || isNaN(value))){
-                return cb(new Error('Range: 0, 10-1000000'));
+        const validMacAge = (rule, value, cb) => {
+            if (
+                value !== 0 &&
+                (value < 10 || value > 1000000 || isNaN(value))
+            ) {
+                return cb(new Error("Range: 0, 10-1000000"));
+            }
+            cb();
+        };
+        const validPortlist = (rule, value, cb) =>{
+            var reg = /^[\d-]{1,16}$/;
+            if(!reg.test(value)){
+                return cb(new Error('ex: 1,3-6,8'));
             }
             cb();
         }
@@ -146,6 +231,7 @@ export default {
                 ]
             },
             loadmore: false,
+            loadmoreLoading: false,
             macAgeData: {},
             macAge: {
                 macAge: 0
@@ -154,7 +240,27 @@ export default {
             isLoading: false,
             macAgeRules: {
                 macAge: [
-                    { validator: validMacAge, trigger: ['change', 'blur'] }
+                    { validator: validMacAge, trigger: ["change", "blur"] }
+                ]
+            },
+            dialogVisible: false,
+            dialogFlag: "",
+            //  全局添加和清除mac地址时的数据
+            globalForm: {
+                mac_type: 1,
+                macaddr: "",
+                vlan_id: "",
+                portlist: ""
+            },
+            globalRules: {
+                macaddr: [
+                    { validator: validatorMac, trigger: ["change", "blur"] }
+                ],
+                vlan_id: [
+                    { validator: validatorVlan, trigger: ["change", "blur"] }
+                ],
+                portlist: [
+                    { validator: validPortlist, trigger: ['change', 'blur'] }
                 ]
             }
         };
@@ -233,6 +339,9 @@ export default {
             }
         },
         currentChange(val) {
+            if (val > Math.ceil(this.macList.length / this.pageSize)) {
+                val = Math.ceil(this.macList.length / this.pageSize);
+            }
             this.currentPage = val;
             var start = this.pageSize * (val - 1);
             if (start + this.pageSize > this.macList.length) {
@@ -313,22 +422,27 @@ export default {
                 this.editAge = true;
                 this.macAge.macAge = this.macAgeData.age;
             } else {
-                this.$refs[formName].validateField('macAge', err =>{
-                    if(err){
-                        return
-                    }else{
+                this.$refs[formName].validateField("macAge", err => {
+                    if (err) {
+                        return;
+                    } else {
                         this.isLoading = true;
                         this.$devProxy({
                             devicelist: [this.dev_ip],
                             url: this.$qs({
                                 url: "/switch_mac",
-                                params: { form: "age", value: this.macAge.macAge }
+                                params: {
+                                    form: "age",
+                                    value: this.macAge.macAge
+                                }
                             }),
                             method: "get"
                         })
                             .then(res => {
                                 if (res.data.code === 1) {
-                                    this.$message.success(this.langMap["set_success"]);
+                                    this.$message.success(
+                                        this.langMap["set_success"]
+                                    );
                                     this.getAge();
                                 } else {
                                     this.$message.error(res.data.message);
@@ -340,8 +454,68 @@ export default {
                             })
                             .catch(err => {});
                     }
-                })
+                });
             }
+        },
+        loadMoreData() {
+            this.loadmoreLoading = true;
+            this.getData();
+            setTimeout(_ => {
+                this.loadmoreLoading = false;
+            }, 1000);
+        },
+        openDialog(flag) {
+            this.dialogVisible = true;
+            this.dialogFlag = flag;
+        },
+        submitForm(formName) {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    var data;
+                    if (this.dialogFlag === "add") {
+                        data = {
+                            devicelist: [this.dev_ip],
+                            url: this.$qs({
+                                url: "/switch_mac",
+                                params: { form: "table" }
+                            }),
+                            method: "add",
+                            param: {
+                                mac_type: this.globalForm.mac_type,
+                                macaddr: this.globalForm.macaddr,
+                                vlan_id: this.globalForm.vlan_id,
+                                port_id: this.globalForm.portlist
+                            }
+                        };
+                    }
+                    if (this.dialogFlag === "flush") {
+                        data = {
+                            devicelist: [this.dev_ip],
+                            url: this.$qs({
+                                url: "/switch_mac",
+                                params: { form: "table" }
+                            }),
+                            method: "clear",
+                            param: {
+                                mac_type: this.globalForm.mac_type,
+                                macaddr: this.globalForm.macaddr,
+                                vlan_id: this.globalForm.vlan_id,
+                                port_id: this.globalForm.portlist
+                            }
+                        };
+                    }
+                    this.$devProxy(data).then(res =>{
+                        if(res.data.code === 1){
+                            this.$message.success(this.langMap[data.method + '_success']);
+                        }else{
+                            this.$message.error(res.data.message);
+                        }
+                    })
+                }
+            });
+        },
+        closeDialog() {
+            this.$refs["mac-mgmt-global-set-form"].resetFields();
         }
     },
     watch: {
