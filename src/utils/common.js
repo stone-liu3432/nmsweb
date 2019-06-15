@@ -104,8 +104,39 @@ export function initLineData(opt) {
     };
 }
 
-export function removeUnderline(value){
-    if(!value) return '';
-    var str = value.replace(/_/g, ' ');
-    return str.substring(0,1).toUpperCase() + str.substring(1);
+export function removeUnderline(value) {
+    if (!value) return "";
+    var str = value.replace(/_/g, " ");
+    return str.substring(0, 1).toUpperCase() + str.substring(1);
+}
+
+export function analysisPortList(str) {
+    if (!str) return [];
+    var result = [];
+    var arr = str.split(",");
+    for (var i = 0, len = arr.length; i < len; i++) {
+        var substrs = arr[i];
+        if (substrs.indexOf("-") !== -1) {
+            var subArr = substrs.split("-");
+            var min = Number(subArr[0]),
+                max = Number(subArr[subArr.length - 1]);
+            if (isNaN(min) || isNaN(max)) return [];
+            for (var j = 0; j <= max - min; j++) {
+                result.push(min + j);
+            }
+        } else {
+            if (isNaN(Number(substrs))) return [];
+            result.push(Number(substrs));
+        }
+    }
+    return result;
+}
+
+export function generatorPortName(arr, baseObj) {
+    var result = "";
+    arr.forEach(item => {
+        result += baseObj[item];
+        result += ",";
+    });
+    return result.replace(/,$/, "");
 }
