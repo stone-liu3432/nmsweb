@@ -128,10 +128,49 @@
         <el-dialog :visible.sync="dialogVisible" append-to-body @close="closeDialog">
             <span slot="title">{{ langMap[dialogFlag + '_mac'] }}</span>
             <el-form
-                :model="globalForm"
-                :rules="globalRules"
-                ref="mac-mgmt-global-set-form"
+                :model="addMac"
+                :rules="addRules"
+                ref="mac-mgmt-add-form"
                 label-width="150px"
+                v-if="dialogFlag === 'add'"
+                key="mac-mgmt-add-form"
+            >
+                <!-- 
+                    add mac 
+                    mac地址黑洞：关注参数macaddr, vlan_id
+                    static 地址添加，关注参数多一个port_id
+                -->
+                <el-form-item :label="langMap['mac_type']" prop="mac_type">
+                    <el-select v-model.number="addMac.mac_type">
+                        <el-option :value="1" label="static"></el-option>
+                        <el-option :value="2" label="blackhole"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item :label="langMap['macaddr']" prop="macaddr" key="mac-mgmt-add-macaddr">
+                    <el-input v-model="addMac.macaddr"></el-input>
+                </el-form-item>
+                <el-form-item :label="langMap['vlan_id']" prop="vlan_id" key="mac-mgmt-add-vlanid">
+                    <el-input v-model.number="addMac.vlan_id"></el-input>
+                </el-form-item>
+                <el-form-item
+                    :label="langMap['port_id']"
+                    v-if="addMac.mac_type === 1"
+                    prop="port_id"
+                >
+                    <el-select v-model.number="addMac.port_id">
+                        <template v-for="(item, key) in port_name">
+                            <el-option :label="item" :value="Number(key)"></el-option>
+                        </template>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <el-form
+                :model="flushMac"
+                :rules="flushRules"
+                label-width="150px"
+                ref="mac-mgmt-flush-form"
+                v-if="dialogFlag === 'flush'"
+                key="mac-mgmt-flush-form"
             >
                 <!-- 
                     flush mac:  
@@ -141,31 +180,58 @@
                     首选flags为vlan时， mac_type 包含all,blackhole,dynamic, static
                     首选flags为mac_type时， 不关注port和vlan两个参数
                 -->
-                <el-form-item :label="langMap['mac_type']">
-                    <el-select v-model.number="globalForm.mac_type">
-                        <el-option :value="1" label="static"></el-option>
-                        <el-option :value="2" label="blackhole"></el-option>
+                <el-form-item :label="langMap['flush_way']" prop="flag">
+                    <el-select v-model.number="flushMac.flag">
+                        <template v-for="(item,key) in flags" v-if="key != 8">
+                            <el-option :label="langMap[item]" :value="Number(key)"></el-option>
+                        </template>
                     </el-select>
                 </el-form-item>
-                <el-form-item :label="langMap['macaddr']" prop="macaddr">
-                    <el-input v-model="globalForm.macaddr"></el-input>
+                <el-form-item :label="langMap['mac_type']" prop="mac_type">
+                    <el-select v-model.number="flushMac.mac_type">
+                        <template v-for="(item, index) in macTypes">
+                            <el-option
+                                :label="langMap[item] || 'All'"
+                                :value="index"
+                                :disabled="flushMac.flag == 2 && index === 2"
+                            ></el-option>
+                        </template>
+                    </el-select>
                 </el-form-item>
-                <el-form-item :label="langMap['vlan_id']" prop="vlan_id">
-                    <el-input v-model="globalForm.vlan_id"></el-input>
+                <el-form-item
+                    :label="langMap['vlan_id']"
+                    v-if="flushMac.flag == 4"
+                    prop="vlan_id"
+                    key="flush-mac-vlan-id"
+                >
+                    <el-input v-model.number="flushMac.vlan_id"></el-input>
                 </el-form-item>
                 <el-form-item
                     :label="langMap['port_list']"
-                    v-if="globalForm.mac_type === 1"
+                    v-if="flushMac.flag == 2"
+                    key="flush-mac-port-list"
                     prop="portlist"
                 >
-                    <el-input v-model="globalForm.portlist"></el-input>
+                    <el-checkbox-group v-model="flushMac.portlist">
+                        <el-checkbox
+                            v-for="(item, index) in port_name"
+                            :label="Number(index)"
+                            :key="index"
+                        >{{ item }}</el-checkbox>
+                    </el-checkbox-group>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">{{ langMap['cancel'] }}</el-button>
                 <el-button
                     type="primary"
-                    @click="submitForm('mac-mgmt-global-set-form')"
+                    v-if="dialogFlag === 'add'"
+                    @click="submitForm('mac-mgmt-add-form')"
+                >{{ langMap['apply'] }}</el-button>
+                <el-button
+                    type="primary"
+                    v-if="dialogFlag === 'flush'"
+                    @click="submitForm('mac-mgmt-flush-form')"
                 >{{ langMap['apply'] }}</el-button>
             </span>
         </el-dialog>
@@ -191,13 +257,6 @@ export default {
             }
             cb();
         };
-        const validPortlist = (rule, value, cb) =>{
-            var reg = /^[\d-]{1,16}$/;
-            if(!reg.test(value)){
-                return cb(new Error('ex: 1,3-6,8'));
-            }
-            cb();
-        }
         return {
             count: 0,
             query: {
@@ -246,21 +305,35 @@ export default {
             dialogVisible: false,
             dialogFlag: "",
             //  全局添加和清除mac地址时的数据
-            globalForm: {
+            addMac: {
                 mac_type: 1,
                 macaddr: "",
                 vlan_id: "",
-                portlist: ""
+                port_id: 1
             },
-            globalRules: {
+            addRules: {
                 macaddr: [
                     { validator: validatorMac, trigger: ["change", "blur"] }
                 ],
                 vlan_id: [
                     { validator: validatorVlan, trigger: ["change", "blur"] }
+                ]
+            },
+            flushMac: {
+                flag: 1,
+                mac_type: 3,
+                vlan_id: "",
+                portlist: []
+            },
+            flushRules: {
+                vlan_id: [
+                    { validator: validatorVlan, trigger: ["change", "blur"] }
                 ],
                 portlist: [
-                    { validator: validPortlist, trigger: ['change', 'blur'] }
+                    {
+                        validator: this.validPortlist,
+                        trigger: "blur"
+                    }
                 ]
             }
         };
@@ -481,10 +554,10 @@ export default {
                             }),
                             method: "add",
                             param: {
-                                mac_type: this.globalForm.mac_type,
-                                macaddr: this.globalForm.macaddr,
-                                vlan_id: this.globalForm.vlan_id,
-                                port_id: this.globalForm.portlist
+                                mac_type: this.addMac.mac_type,
+                                macaddr: this.addMac.macaddr,
+                                vlan_id: this.addMac.vlan_id,
+                                port_id: this.addMac.port_id
                             }
                         };
                     }
@@ -497,25 +570,41 @@ export default {
                             }),
                             method: "clear",
                             param: {
-                                mac_type: this.globalForm.mac_type,
-                                macaddr: this.globalForm.macaddr,
-                                vlan_id: this.globalForm.vlan_id,
-                                port_id: this.globalForm.portlist
+                                flags: this.flushMac.flag,
+                                mac_type: this.flushMac.mac_type,
+                                vlan_id: this.flushMac.vlan_id,
+                                portlist: this.flushMac.portlist.join(",")
                             }
                         };
                     }
-                    this.$devProxy(data).then(res =>{
-                        if(res.data.code === 1){
-                            this.$message.success(this.langMap[data.method + '_success']);
-                        }else{
+                    this.$devProxy(data).then(res => {
+                        if (res.data.code === 1) {
+                            this.$message.success(
+                                this.langMap[data.method + "_success"]
+                            );
+                        } else {
                             this.$message.error(res.data.message);
                         }
-                    })
+                        this.dialogVisible = false;
+                    }).catch(err =>{});
                 }
             });
         },
         closeDialog() {
-            this.$refs["mac-mgmt-global-set-form"].resetFields();
+            this.dialogFlag === "add" &&
+                this.$refs["mac-mgmt-add-form"].resetFields();
+            this.dialogFlag === "flush" &&
+                this.$refs["mac-mgmt-flush-form"].resetFields();
+        },
+        validPortlist(rule, value, cb) {
+            if (!value.length) {
+                return this.$message.error(
+                    `${this.langMap["param_error"]}: ${
+                        this.langMap["port_list"]
+                    }`
+                );
+            }
+            cb();
         }
     },
     watch: {

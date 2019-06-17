@@ -17,6 +17,7 @@
         <port-vlan v-if="showContent === 'port_vlan'"></port-vlan>
         <mac-mgmt v-if="showContent === 'mac_mgmt'"></mac-mgmt>
         <vlan-mgmt v-if="showContent === 'vlan_mgmt'"></vlan-mgmt>
+        <rstp v-if="showContent === 'rstp'"></rstp>
     </div>
 </template>
 
@@ -48,8 +49,12 @@ const portConfig = () =>
     import(/* webpackChunkName: 'olt-port' */ "./switchPort/portCfg");
 const portVlan = () =>
     import(/* webpackChunkName: 'olt-port' */ "./switchPort/portVlan");
-    const macMgmt = () => import(/* webpackChunkName: 'olt-port' */ './layer2/macMgmt')
-    const vlanMgmt = () => import(/* webpackChunkName: 'olt-port' */ './layer2/vlanMgmt')
+const macMgmt = () =>
+    import(/* webpackChunkName: 'olt-port' */ "./layer2/macMgmt");
+const vlanMgmt = () =>
+    import(/* webpackChunkName: 'olt-port' */ "./layer2/vlanMgmt");
+const rstp = () =>
+    import(/* webpackChunkName: 'olt-protocol' */ "./protocol/rstp");
 export default {
     name: "devContent",
     props: ["showContent"],
@@ -71,6 +76,7 @@ export default {
         portVlan,
         macMgmt,
         vlanMgmt,
+        rstp
     },
     data() {
         return {};
