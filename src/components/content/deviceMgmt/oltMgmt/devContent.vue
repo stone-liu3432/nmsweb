@@ -18,6 +18,7 @@
         <mac-mgmt v-if="showContent === 'mac_mgmt'"></mac-mgmt>
         <vlan-mgmt v-if="showContent === 'vlan_mgmt'"></vlan-mgmt>
         <rstp v-if="showContent === 'rstp'"></rstp>
+        <igmp v-if="showContent === 'igmp'"></igmp>
     </div>
 </template>
 
@@ -55,6 +56,7 @@ const vlanMgmt = () =>
     import(/* webpackChunkName: 'olt-port' */ "./layer2/vlanMgmt");
 const rstp = () =>
     import(/* webpackChunkName: 'olt-protocol' */ "./protocol/rstp");
+    const igmp = () => import(/* webpackChunkName: 'olt-protocol' */ './protocol/igmp');
 export default {
     name: "devContent",
     props: ["showContent"],
@@ -76,7 +78,8 @@ export default {
         portVlan,
         macMgmt,
         vlanMgmt,
-        rstp
+        rstp,
+        igmp
     },
     data() {
         return {};
