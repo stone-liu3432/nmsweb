@@ -13,8 +13,8 @@
             <el-table-column prop="multi_ip" :label="langMap['multi_ip']"></el-table-column>
             <el-table-column prop="vid" :label="langMap['vid']"></el-table-column>
             <el-table-column prop="action" :formatter="formatAction" :label="langMap['action']"></el-table-column>
-            <el-table-column prop="host_portlist" :label="langMap['host_portlist']"></el-table-column>
-            <el-table-column prop="router_portlist" :label="langMap['router_portlist']"></el-table-column>
+            <el-table-column prop="host_portlist" :formatter="formatPortlist" :label="langMap['host_portlist']"></el-table-column>
+            <el-table-column prop="router_portlist" :formatter="formatPortlist" :label="langMap['router_portlist']"></el-table-column>
         </el-table>
         <el-dialog :visible.sync="dialogVisible" append-to-body @close="closeDialog">
             <span slot="title">{{ langMap['add'] }}</span>
@@ -53,6 +53,7 @@
 <script>
 import { mapState, mapMutations } from "Vuex";
 import { validatorIpAddr, validatorVlan } from "@/utils/validator";
+import { analysisPortList, generatorPortName } from '@/utils/common';
 export default {
     name: "igmpMulticast",
     computed: {
@@ -137,6 +138,9 @@ export default {
         },
         closeDialog() {
             this.$refs["igmp-add-multicast-form"].resetFields();
+        },
+        formatPortlist(row, col){
+            return generatorPortName(analysisPortList(row[col.property]), this.port_name);
         }
     }
 };
