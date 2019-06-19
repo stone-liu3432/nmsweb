@@ -677,7 +677,7 @@ export default {
     validator_pass_tips: "4-33位字符",
     validator_ip_tips: "点分十进制: x.x.x.x",
     validatorPhone: "数字，“+”，“-”，4-24位字符",
-    validatorRegion: "最多65位字符",
+    validatorRegion: "最多4位字符",
     validUp16char: "最多16位字符",
     validUp256char: "最多256位字符",
     sipaddr: "起始IP",

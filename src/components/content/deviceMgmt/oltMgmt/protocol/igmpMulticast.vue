@@ -9,7 +9,7 @@
                 @click="openDialog"
             >{{ langMap['add'] + langMap['static_table'] }}</el-button>
         </h3>
-        <el-table :data="multicast" border strape>
+        <el-table :data="multicast" border stripe>
             <el-table-column prop="multi_ip" :label="langMap['multi_ip']"></el-table-column>
             <el-table-column prop="vid" :label="langMap['vid']"></el-table-column>
             <el-table-column prop="action" :formatter="formatAction" :label="langMap['action']"></el-table-column>

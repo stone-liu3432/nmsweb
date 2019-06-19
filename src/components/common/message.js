@@ -4,7 +4,7 @@ import { Message as msg } from "element-ui";
 var opt = { showClose: true };
 
 //  default options if options is null/undefined
-var Message = (opts = 'unkown error') => {
+var Message = (opts = 'unknown error') => {
     if (typeof opts === "string") {
         return msg({ message: opts, ...opt });
     }
@@ -15,7 +15,7 @@ var Message = (opts = 'unkown error') => {
 };
 
 ["success", "warning", "info", "error"].forEach(type => {
-    Message[type] = (options = 'unkown error') => {
+    Message[type] = (options = 'unknown error') => {
         if (typeof options === "string") {
             options = {
                 message: options

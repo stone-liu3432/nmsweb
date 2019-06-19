@@ -698,7 +698,7 @@ export default {
     validator_pass_tips: "4-33 character",
     validator_ip_tips: "Dotted decimal notation: x.x.x.x",
     validatorPhone: 'Number, "+", "-", 4-24 characters',
-    validatorRegion: "Up to 65 characters",
+    validatorRegion: "Up to 64 characters",
     validUp16char: "Up to 16 characters",
     validUp256char: "Up to 256 characters",
     sipaddr: "Start IP",
