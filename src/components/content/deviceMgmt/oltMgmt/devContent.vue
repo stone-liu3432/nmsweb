@@ -19,6 +19,8 @@
         <vlan-mgmt v-if="showContent === 'vlan_mgmt'"></vlan-mgmt>
         <rstp v-if="showContent === 'rstp'"></rstp>
         <igmp v-if="showContent === 'igmp'"></igmp>
+        <time-range v-if="showContent === 'time_range'"></time-range>
+        <acl-mgmt v-if="showContent === 'acl_mgmt'"></acl-mgmt>
     </div>
 </template>
 
@@ -56,7 +58,12 @@ const vlanMgmt = () =>
     import(/* webpackChunkName: 'olt-port' */ "./layer2/vlanMgmt");
 const rstp = () =>
     import(/* webpackChunkName: 'olt-protocol' */ "./protocol/rstp");
-    const igmp = () => import(/* webpackChunkName: 'olt-protocol' */ './protocol/igmp');
+const igmp = () =>
+    import(/* webpackChunkName: 'olt-protocol' */ "./protocol/igmp");
+const timeRange = () =>
+    import(/* webpackChunkName: 'olt-acl-qos' */ "./acl-qos/timerange");
+const aclMgmt = () =>
+    import(/* webpackChunkName: 'olt-acl-qos' */ "./acl-qos/aclMgmt");
 export default {
     name: "devContent",
     props: ["showContent"],
@@ -79,7 +86,9 @@ export default {
         macMgmt,
         vlanMgmt,
         rstp,
-        igmp
+        igmp,
+        timeRange,
+        aclMgmt
     },
     data() {
         return {};

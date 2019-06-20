@@ -759,4 +759,8 @@ export default {
     port_isolation: '端口隔离',
     pon_isolation_tips: '仅设置PON端口隔离',
     illegal_mac: '非法MAC地址',
+
+    composeRange(min, max){
+        return `${min} - ${max}位字符`;
+    }
 };

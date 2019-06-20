@@ -2,9 +2,9 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
     color: #409eff;
 }
 
-.el-table__expanded-cell[class*="cell"] {
+/* .el-table__expanded-cell[class*="cell"] {
     background: #ebeef5;
-}
+} */
 
 .el-collapse{
     border: none;

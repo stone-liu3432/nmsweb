@@ -779,5 +779,9 @@ export default {
     port_status: ' Port Status ',
     port_isolation: ' Port isolation ',
     pon_isolation_tips: 'Set PON port isolation only',
-    illegal_mac: ' Illegal MAC address'
+    illegal_mac: ' Illegal MAC address',
+
+    composeRange(min, max){
+        return `${min} - ${max} characters`;
+    }
 };
