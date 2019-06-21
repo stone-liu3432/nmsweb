@@ -110,6 +110,7 @@ export function removeUnderline(value) {
     return str.substring(0, 1).toUpperCase() + str.substring(1);
 }
 
+//  解析字符串为数组，范围类(1-5)展开
 export function analysisPortList(str) {
     if (!str) return [];
     var result = [];
@@ -139,4 +140,13 @@ export function generatorPortName(arr, baseObj) {
         result += ",";
     });
     return result.replace(/,$/, "");
+}
+
+//  移除数组中的某一项，返回被修改后的原数组  arr -> 原数组   item -> 要移除的项
+//  item 不存在于 arr 中时，返回原数组
+export function removeArrayItem(arr, item){
+    var index = arr.indexOf(item);
+    if(index > -1){
+        arr.splice(index, 1);
+    }
 }

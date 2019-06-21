@@ -494,7 +494,7 @@ export default {
     goback_devmgmt: "Back to device management",
     imagesize_tips: "The maximum image size is 200kb",
     acl_id_range_error:
-        "The ACL ID is incorrect. The basic ACL is 2000-2999, the advanced ACL is 3000-4999, and the link ACL is 5000-5999.",
+        "The ACL ID is incorrect. The range is 2000-5999.",
     src_ipaddr: " Source IP",
     src_ipmask: " Source IP mask",
     dst_ipaddr: " Destination IP",
