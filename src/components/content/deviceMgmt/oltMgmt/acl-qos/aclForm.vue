@@ -6,18 +6,18 @@
         ref="acl-mgmt-dialog-form"
         size="small"
     >
-        <el-form-item label="ACL ID" prop="acl_id" v-if="formFlag === 'add-acl'">
+        <el-form-item label="ACL ID" prop="acl_id" v-if="formFlag === 'add-acl'" key="add-acl-id">
             <el-input v-model.number="formData.acl_id"></el-input>
         </el-form-item>
         <template v-if="formFlag === 'delete-acl'">
             <el-col :span="14">
-                <el-form-item label="ACL ID" prop="acl_id">
+                <el-form-item label="ACL ID" prop="acl_id" key="del-rule-id">
                     <el-input v-model.number="formData.acl_id"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="1" style="line-height: 32px; text-align: center;">-</el-col>
             <el-col :span="9">
-                <el-form-item label-width="0" prop="acl_id_e">
+                <el-form-item label-width="0" prop="acl_id_e" key="del-acl-id-e">
                     <el-input v-model.number="formData.acl_id_e"></el-input>
                 </el-form-item>
             </el-col>
@@ -26,13 +26,13 @@
             <el-form-item label="ACL ID">
                 <span style="margin-left: 16px;">{{ formInfo.acl_id }}</span>
             </el-form-item>
-            <el-form-item label="Rule ID" prop="rule_id">
+            <el-form-item label="Rule ID" prop="rule_id" key="config-rule-id">
                 <el-select v-if="formFlag === 'config'" v-model="formData.rule_id">
                     <template v-for="item in formInfo.rule">
                         <el-option :value="item.rule_id"></el-option>
                     </template>
                 </el-select>
-                <el-input v-model="formData.rule_id" v-else></el-input>
+                <el-input v-model.number="formData.rule_id" v-else></el-input>
             </el-form-item>
             <el-form-item :label="langMap['action']" prop="action">
                 <el-select v-model="formData.action">
@@ -41,62 +41,62 @@
                 </el-select>
             </el-form-item>
             <template v-if="formType() === 1 || formType() === 2">
-                <el-form-item :label="langMap['protocol']" prop="protocol" v-if="formType() === 2">
+                <el-form-item :label="langMap['protocol']" prop="protocol" v-if="formType() === 2" key="acl-protocol">
                     <el-input v-model="formData.protocol"></el-input>
                 </el-form-item>
-                <el-form-item :label="langMap['src_ipaddr']" prop="src_ipaddr">
+                <el-form-item :label="langMap['src_ipaddr']" prop="src_ipaddr" key="acl-src_ipaddr">
                     <el-input v-model="formData.src_ipaddr"></el-input>
                 </el-form-item>
-                <el-form-item :label="langMap['src_ipmask']" prop="src_ipmask">
+                <el-form-item :label="langMap['src_ipmask']" prop="src_ipmask" key="acl-src_ipmask">
                     <el-input v-model="formData.src_ipmask"></el-input>
                 </el-form-item>
                 <template v-if="formType() === 2">
-                    <el-form-item :label="langMap['dst_ipaddr']" prop="dst_ipaddr">
+                    <el-form-item :label="langMap['dst_ipaddr']" prop="dst_ipaddr" key="acl-dst_ipaddr">
                         <el-input v-model="formData.dst_ipaddr"></el-input>
                     </el-form-item>
-                    <el-form-item :label="langMap['dst_ipmask']" prop="dst_ipmask">
+                    <el-form-item :label="langMap['dst_ipmask']" prop="dst_ipmask" key="acl-dst_ipmask">
                         <el-input v-model="formData.dst_ipmask"></el-input>
                     </el-form-item>
-                    <el-form-item :label="langMap['src_port']" prop="src_port">
+                    <el-form-item :label="langMap['src_port']" prop="src_port" key="acl-src_port">
                         <el-input v-model="formData.src_port"></el-input>
                     </el-form-item>
-                    <el-form-item :label="langMap['dst_port']" prop="dst_port">
+                    <el-form-item :label="langMap['dst_port']" prop="dst_port" key="acl-dst_port">
                         <el-input v-model="formData.dst_port"></el-input>
                     </el-form-item>
-                    <el-form-item :label="langMap['precedence']" prop="precedence">
-                        <el-input v-model="formData.precedence"></el-input>
+                    <el-form-item :label="langMap['precedence']" prop="precedence" key="acl-precedence">
+                        <el-input v-model="formData.precedence" :disabled="formData.dscp !== ''"></el-input>
                     </el-form-item>
-                    <el-form-item :label="langMap['dscp']" prop="dscp">
-                        <el-input v-model="formData.dscp"></el-input>
+                    <el-form-item :label="langMap['dscp']" prop="dscp" key="acl-dscp">
+                        <el-input v-model="formData.dscp" :disabled="formData.precedence !== ''"></el-input>
                     </el-form-item>
                 </template>
             </template>
             <template v-if="formType() === 3">
-                <el-form-item :label="langMap['eth_type']" prop="eth_type">
+                <el-form-item :label="langMap['eth_type']" prop="eth_type" key="acl-eth_type">
                     <el-input v-model="formData.eth_type"></el-input>
                 </el-form-item>
-                <el-form-item :label="langMap['cos']" prop="cos">
+                <el-form-item :label="langMap['cos']" prop="cos" key="acl-cos">
                     <el-input v-model="formData.cos"></el-input>
                 </el-form-item>
-                <el-form-item :label="langMap['inner_cos']" prop="inner_cos">
+                <el-form-item :label="langMap['inner_cos']" prop="inner_cos" key="acl-inner_cos">
                     <el-input v-model="formData.inner_cos"></el-input>
                 </el-form-item>
-                <el-form-item :label="langMap['vlan_id']" prop="vlan_id">
+                <el-form-item :label="langMap['vlan_id']" prop="vlan_id" key="acl-vlan_id">
                     <el-input v-model="formData.vlan_id"></el-input>
                 </el-form-item>
-                <el-form-item :label="langMap['inner_vlan_id']" prop="inner_vlan_id">
+                <el-form-item :label="langMap['inner_vlan_id']" prop="inner_vlan_id" key="acl-inner_vlan_id">
                     <el-input v-model="formData.inner_vlan_id"></el-input>
                 </el-form-item>
-                <el-form-item :label="langMap['src_mac']" prop="src_mac">
+                <el-form-item :label="langMap['src_mac']" prop="src_mac" key="acl-src_mac">
                     <el-input v-model="formData.src_mac"></el-input>
                 </el-form-item>
-                <el-form-item :label="langMap['src_mask']" prop="src_mask">
+                <el-form-item :label="langMap['src_mask']" prop="src_mask" key="acl-src_mask">
                     <el-input v-model="formData.src_mask"></el-input>
                 </el-form-item>
-                <el-form-item :label="langMap['dst_mac']" prop="dst_mac">
+                <el-form-item :label="langMap['dst_mac']" prop="dst_mac" key="acl-dst_mac">
                     <el-input v-model="formData.dst_mac"></el-input>
                 </el-form-item>
-                <el-form-item :label="langMap['dst_mask']" prop="dst_mask">
+                <el-form-item :label="langMap['dst_mask']" prop="dst_mask" key="acl-dst_mask">
                     <el-input v-model="formData.dst_mask"></el-input>
                 </el-form-item>
             </template>
@@ -139,7 +139,7 @@ export default {
             formData: {
                 acl_id: "",
                 acl_id_e: "",
-                rule_id: 1,
+                rule_id: 0,
                 action: 1,
                 src_ipaddr: "",
                 src_ipmask: "",
@@ -192,8 +192,18 @@ export default {
                 dst_ipmask: [
                     { validator: this.validIp, trigger: ["change", "blur"] }
                 ],
-                src_port: [{ validator: "", trigger: ["change", "blur"] }],
-                dst_port: [{ validator: "", trigger: ["change", "blur"] }],
+                src_port: [
+                    {
+                        validator: this.validRange(1, 65535),
+                        trigger: ["change", "blur"]
+                    }
+                ],
+                dst_port: [
+                    {
+                        validator: this.validRange(1, 65535),
+                        trigger: ["change", "blur"]
+                    }
+                ],
                 precedence: [
                     {
                         validator: this.validRange(0, 7),
@@ -309,6 +319,9 @@ export default {
         },
         validRange(min, max) {
             return (rule, value, cb) => {
+                if (value === "") {
+                    return cb();
+                }
                 if (value < min || value > max || isNaN(value)) {
                     return cb(new Error(`Range: ${min} - ${max}`));
                 }
@@ -346,14 +359,41 @@ export default {
             return validatorVlan(rule, value, cb);
         },
         validMacmask(rule, value, cb) {
-            var reg = /^(([\da-zA-Z]\-){4}){2}[\da-zA-Z]{4}$/;
+            var reg = /^(([0-9a-fA-F]{4}\-)){2}[0-9a-fA-F]{4}$/;
             if (value !== "" && !reg.test(value)) {
                 return cb(new Error("ex: xxxx-xxxx-xxxx"));
             }
             cb();
         }
     },
-    watch: {}
+    watch: {
+        formInfo() {
+            this.formData.acl_id = this.formInfo.acl_id;
+            if (this.formFlag === "config") {
+                this.formData.rule_id = this.formInfo.rule[0].rule_id;
+                this.formInfo.rule.forEach(item => {
+                    if (item.rule_id === this.formData.rule_id) {
+                        Object.keys(item).forEach(_item => {
+                            this.formData[_item] = item[_item];
+                        });
+                    }
+                });
+            }else{
+                this.resetForm();
+            }
+        },
+        "formData.rule_id"() {
+            if (this.formData.rule_id && this.formFlag === 'config') {
+                this.formInfo.rule.forEach(item => {
+                    if (item.rule_id === this.formData.rule_id) {
+                        Object.keys(item).forEach(_item => {
+                            this.formData[_item] = item[_item];
+                        });
+                    }
+                });
+            }
+        }
+    }
 };
 </script>
 
