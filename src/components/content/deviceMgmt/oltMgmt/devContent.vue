@@ -21,6 +21,7 @@
         <igmp v-if="showContent === 'igmp'"></igmp>
         <time-range v-if="showContent === 'time_range'"></time-range>
         <acl-mgmt v-if="showContent === 'acl_mgmt'"></acl-mgmt>
+        <packet-filter v-if="showContent === 'packet_filter'"></packet-filter>
     </div>
 </template>
 
@@ -64,6 +65,7 @@ const timeRange = () =>
     import(/* webpackChunkName: 'olt-acl-qos' */ "./acl-qos/timerange");
 const aclMgmt = () =>
     import(/* webpackChunkName: 'olt-acl-qos' */ "./acl-qos/aclMgmt");
+    const packetFilter = () => import(/* webpackChunkName: 'olt-acl-qos' */ './acl-qos/packetfilter');
 export default {
     name: "devContent",
     props: ["showContent"],
@@ -88,7 +90,8 @@ export default {
         rstp,
         igmp,
         timeRange,
-        aclMgmt
+        aclMgmt,
+        packetFilter
     },
     data() {
         return {};
