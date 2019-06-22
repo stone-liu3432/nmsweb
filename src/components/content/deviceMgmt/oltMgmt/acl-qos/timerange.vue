@@ -90,6 +90,7 @@
             :page-size="pageSize"
             layout="total, prev, pager, next, jumper"
             :total="timerange.length"
+            hide-on-single-page
         ></el-pagination>
         <el-dialog :visible.sync="dialogVisible" append-to-body @close="closeDialog">
             <span slot="title">{{ langMap['add'] }}</span>

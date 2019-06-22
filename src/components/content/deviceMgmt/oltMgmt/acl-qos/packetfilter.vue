@@ -115,32 +115,34 @@ export default {
                     url: "/switch_pkfilter"
                 }),
                 method: "get"
-            }).then(res => {
-                this.pkList = [];
-                this.pkTable = [];
-                if (res.data.code === 1) {
-                    if (res.data.data && res.data.data.length) {
-                        this.pkList = res.data.data;
-                        if (
-                            this.currentPage >
-                            Math.ceil(this.pkList.length / this.pageSize)
-                        ) {
-                            this.currentPage = Math.ceil(
-                                this.pkList.length / this.pageSize
-                            );
-                        }
-                        var start = (this.currentPage - 1) * this.pageSize;
-                        if (start + this.pageSize > this.pkList.length) {
-                            this.pkTable = this.pkList.slice(start);
-                        } else {
-                            this.pkTable = this.pkList.slice(
-                                start,
-                                start + this.pageSize
-                            );
+            })
+                .then(res => {
+                    this.pkList = [];
+                    this.pkTable = [];
+                    if (res.data.code === 1) {
+                        if (res.data.data && res.data.data.length) {
+                            this.pkList = res.data.data;
+                            if (
+                                this.currentPage >
+                                Math.ceil(this.pkList.length / this.pageSize)
+                            ) {
+                                this.currentPage = Math.ceil(
+                                    this.pkList.length / this.pageSize
+                                );
+                            }
+                            var start = (this.currentPage - 1) * this.pageSize;
+                            if (start + this.pageSize > this.pkList.length) {
+                                this.pkTable = this.pkList.slice(start);
+                            } else {
+                                this.pkTable = this.pkList.slice(
+                                    start,
+                                    start + this.pageSize
+                                );
+                            }
                         }
                     }
-                }
-            });
+                })
+                .catch(err => {});
         },
         currentChange(val) {
             this.currentPage = val;

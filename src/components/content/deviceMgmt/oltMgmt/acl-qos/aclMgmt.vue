@@ -119,7 +119,7 @@
             hide-on-single-page
         ></el-pagination>
         <el-dialog :visible.sync="dialogVisible" append-to-body @close="closeDialog">
-            <span slot="title">{{ langMap['add'] }}</span>
+            <span slot="title">{{ dialogTitle }}</span>
             <acl-form :form-info="cacheData" :form-flag="dialogFlag" ref="acl-mgmt-form"></acl-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">{{ langMap['cancel'] }}</el-button>
@@ -139,7 +139,21 @@ import aclForm from "./aclForm";
 export default {
     name: "aclMgmt",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip"]),
+        dialogTitle(){
+            if(this.dialogFlag === 'add-acl'){
+                return `${this.langMap['add']}ACL`;
+            }
+            if(this.dialogFlag === 'delete-acl'){
+                return `${this.langMap['delete']}ACL`;
+            }
+            if(this.dialogFlag === 'config'){
+                return `${this.langMap['config']}`;
+            }
+            if(this.dialogFlag === 'add-rule'){
+                return `${this.langMap['add']}Rule`;
+            }
+        }
     },
     components: { aclForm },
     data() {
@@ -534,16 +548,18 @@ export default {
                             acl_id,
                             rule_id
                         }
-                    }).then(res => {
-                        if (res.data.code === 1) {
-                            this.$message.success(
-                                this.langMap["delete_success"]
-                            );
-                            this.getData();
-                        } else {
-                            this.$message.error(res.data.message);
-                        }
-                    });
+                    })
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap["delete_success"]
+                                );
+                                this.getData();
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        })
+                        .catch(err => {});
                 })
                 .catch(_ => {});
         },
