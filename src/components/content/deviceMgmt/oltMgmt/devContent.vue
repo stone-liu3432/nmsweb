@@ -23,6 +23,7 @@
         <acl-mgmt v-if="showContent === 'acl_mgmt'"></acl-mgmt>
         <packet-filter v-if="showContent === 'packet_filter'"></packet-filter>
         <qos-mgmt v-if="showContent === 'QoS'"></qos-mgmt>
+        <static-route v-if="showContent === 'route_mgmt'"></static-route>
     </div>
 </template>
 
@@ -70,6 +71,7 @@ const packetFilter = () =>
     import(/* webpackChunkName: 'olt-acl-qos' */ "./acl-qos/packetfilter");
 const qosMgmt = () =>
     import(/* webpackChunkName: 'olt-acl-qos' */ "./acl-qos/qos");
+    const staticRoute = () => import(/* webpackChunkName: 'olt-route' */ './route/staticRoute');
 export default {
     name: "devContent",
     props: ["showContent"],
@@ -96,7 +98,8 @@ export default {
         timeRange,
         aclMgmt,
         packetFilter,
-        qosMgmt
+        qosMgmt,
+        staticRoute
     },
     data() {
         return {};
