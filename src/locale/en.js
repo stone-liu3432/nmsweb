@@ -780,6 +780,7 @@ export default {
     port_isolation: ' Port isolation ',
     pon_isolation_tips: 'Set PON port isolation only',
     illegal_mac: ' Illegal MAC address',
+    qos_weight_tips: 'The sum of weights cannot exceed 100',
 
     composeRange(min, max){
         return `${min} - ${max} characters`;
