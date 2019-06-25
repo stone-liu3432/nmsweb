@@ -1,27 +1,16 @@
 <template>
     <div>
         <h3>{{ langMap['age'] }}</h3>
-        <el-form inline size="small" ref="mac-mgmt-age-form" :rules="macAgeRules" :model="macAge">
-            <el-form-item
-                label-width="80px"
-                :label="langMap['age'] + ': '"
-                prop="macAge"
-                key="mac-mgmt-age"
-            >
-                <span
-                    v-if="!editAge"
-                    style="width: 200px; display: inline-block;"
-                >{{ macAgeData.age }}</span>
-                <el-input v-model.number="macAge.macAge" v-else></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button
-                    type="primary"
-                    @click="openEditAge('mac-mgmt-age-form')"
-                    :loading="isLoading"
-                >{{ editAge ? langMap['apply'] : langMap['config'] }}</el-button>
-            </el-form-item>
-        </el-form>
+        <div style="margin: 30px 0;">
+            <span>{{ langMap['age'] }}:</span>
+            <span style="width: 120px;">{{ macAgeData.age }}</span>
+            <el-button
+                type="primary"
+                size="small"
+                style="margin-left: 30px;"
+                @click="cfgMacAge"
+            >{{ langMap['config'] }}</el-button>
+        </div>
         <el-row>
             <el-col :span="4">
                 <h3>{{ langMap['mac_mgmt'] }}</h3>
@@ -135,11 +124,6 @@
                 v-if="dialogFlag === 'add'"
                 key="mac-mgmt-add-form"
             >
-                <!-- 
-                    add mac 
-                    mac地址黑洞：关注参数macaddr, vlan_id
-                    static 地址添加，关注参数多一个port_id
-                -->
                 <el-form-item :label="langMap['mac_type']" prop="mac_type">
                     <el-select v-model.number="addMac.mac_type">
                         <el-option :value="1" label="static"></el-option>
@@ -172,14 +156,6 @@
                 v-if="dialogFlag === 'flush'"
                 key="mac-mgmt-flush-form"
             >
-                <!-- 
-                    flush mac:  
-                    flags定义， mac_type: 1, port_id: 2, vlan_id: 4, mac:8
-                    根据flags选择mac type, port, vlan三种
-                    首选flags为port时， mac_type包含all,dynamic, static
-                    首选flags为vlan时， mac_type 包含all,blackhole,dynamic, static
-                    首选flags为mac_type时， 不关注port和vlan两个参数
-                -->
                 <el-form-item :label="langMap['flush_way']" prop="flag">
                     <el-select v-model.number="flushMac.flag">
                         <template v-for="(item,key) in flags" v-if="key != 8">
@@ -292,16 +268,6 @@ export default {
             loadmore: false,
             loadmoreLoading: false,
             macAgeData: {},
-            macAge: {
-                macAge: 0
-            },
-            editAge: false,
-            isLoading: false,
-            macAgeRules: {
-                macAge: [
-                    { validator: validMacAge, trigger: ["change", "blur"] }
-                ]
-            },
             dialogVisible: false,
             dialogFlag: "",
             //  全局添加和清除mac地址时的数据
@@ -490,46 +456,6 @@ export default {
                 })
                 .catch(err => {});
         },
-        openEditAge(formName) {
-            if (!this.editAge) {
-                this.editAge = true;
-                this.macAge.macAge = this.macAgeData.age;
-            } else {
-                this.$refs[formName].validateField("macAge", err => {
-                    if (err) {
-                        return;
-                    } else {
-                        this.isLoading = true;
-                        this.$devProxy({
-                            devicelist: [this.dev_ip],
-                            url: this.$qs({
-                                url: "/switch_mac",
-                                params: {
-                                    form: "age",
-                                    value: this.macAge.macAge
-                                }
-                            }),
-                            method: "get"
-                        })
-                            .then(res => {
-                                if (res.data.code === 1) {
-                                    this.$message.success(
-                                        this.langMap["set_success"]
-                                    );
-                                    this.getAge();
-                                } else {
-                                    this.$message.error(res.data.message);
-                                }
-                                setTimeout(_ => {
-                                    this.isLoading = false;
-                                    this.editAge = false;
-                                }, 1000);
-                            })
-                            .catch(err => {});
-                    }
-                });
-            }
-        },
         loadMoreData() {
             this.loadmoreLoading = true;
             this.getData();
@@ -577,16 +503,18 @@ export default {
                             }
                         };
                     }
-                    this.$devProxy(data).then(res => {
-                        if (res.data.code === 1) {
-                            this.$message.success(
-                                this.langMap[data.method + "_success"]
-                            );
-                        } else {
-                            this.$message.error(res.data.message);
-                        }
-                        this.dialogVisible = false;
-                    }).catch(err =>{});
+                    this.$devProxy(data)
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap[data.method + "_success"]
+                                );
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                            this.dialogVisible = false;
+                        })
+                        .catch(err => {});
                 }
             });
         },
@@ -605,6 +533,50 @@ export default {
                 );
             }
             cb();
+        },
+        cfgMacAge() {
+            this.$prompt(this.langMap["age"], {
+                confirmButtonText: this.langMap["apply"],
+                cancelButtonText: this.langMap["cancel"],
+                inputValidator: value => {
+                    if (
+                        Number(value) !== 0 &&
+                        (value < 10 || value > 1000000 || isNaN(value))
+                    ) {
+                        return "Range: 0, 10-1000000";
+                    }
+                },
+                inputValue: this.macAgeData.age
+            })
+                .then(({ value }) => {
+                    this.$devProxy({
+                        devicelist: [this.dev_ip],
+                        url: this.$qs({
+                            url: "/switch_mac",
+                            params: {
+                                form: "age",
+                                value: Number(value)
+                            }
+                        }),
+                        method: "get"
+                    })
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap["set_success"]
+                                );
+                                this.getAge();
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                            setTimeout(_ => {
+                                this.isLoading = false;
+                                this.editAge = false;
+                            }, 1000);
+                        })
+                        .catch(err => {});
+                })
+                .catch(_ => {});
         }
     },
     watch: {
