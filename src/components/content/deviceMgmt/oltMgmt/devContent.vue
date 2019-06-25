@@ -24,6 +24,7 @@
         <packet-filter v-if="showContent === 'packet_filter'"></packet-filter>
         <qos-mgmt v-if="showContent === 'QoS'"></qos-mgmt>
         <static-route v-if="showContent === 'route_mgmt'"></static-route>
+        <arp-table v-if="showContent === 'ARP'"></arp-table>
     </div>
 </template>
 
@@ -72,6 +73,7 @@ const packetFilter = () =>
 const qosMgmt = () =>
     import(/* webpackChunkName: 'olt-acl-qos' */ "./acl-qos/qos");
     const staticRoute = () => import(/* webpackChunkName: 'olt-route' */ './route/staticRoute');
+    const arpTable = () => import(/* webpackChunkName: 'olt-route' */ './route/arp');
 export default {
     name: "devContent",
     props: ["showContent"],
@@ -99,7 +101,8 @@ export default {
         aclMgmt,
         packetFilter,
         qosMgmt,
-        staticRoute
+        staticRoute,
+        arpTable
     },
     data() {
         return {};
