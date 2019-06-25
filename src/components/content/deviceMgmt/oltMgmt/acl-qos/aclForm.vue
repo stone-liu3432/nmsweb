@@ -41,7 +41,12 @@
                 </el-select>
             </el-form-item>
             <template v-if="formType() === 1 || formType() === 2">
-                <el-form-item :label="langMap['protocol']" prop="protocol" v-if="formType() === 2" key="acl-protocol">
+                <el-form-item
+                    :label="langMap['protocol']"
+                    prop="protocol"
+                    v-if="formType() === 2"
+                    key="acl-protocol"
+                >
                     <el-input v-model="formData.protocol"></el-input>
                 </el-form-item>
                 <el-form-item :label="langMap['src_ipaddr']" prop="src_ipaddr" key="acl-src_ipaddr">
@@ -51,10 +56,18 @@
                     <el-input v-model="formData.src_ipmask"></el-input>
                 </el-form-item>
                 <template v-if="formType() === 2">
-                    <el-form-item :label="langMap['dst_ipaddr']" prop="dst_ipaddr" key="acl-dst_ipaddr">
+                    <el-form-item
+                        :label="langMap['dst_ipaddr']"
+                        prop="dst_ipaddr"
+                        key="acl-dst_ipaddr"
+                    >
                         <el-input v-model="formData.dst_ipaddr"></el-input>
                     </el-form-item>
-                    <el-form-item :label="langMap['dst_ipmask']" prop="dst_ipmask" key="acl-dst_ipmask">
+                    <el-form-item
+                        :label="langMap['dst_ipmask']"
+                        prop="dst_ipmask"
+                        key="acl-dst_ipmask"
+                    >
                         <el-input v-model="formData.dst_ipmask"></el-input>
                     </el-form-item>
                     <el-form-item :label="langMap['src_port']" prop="src_port" key="acl-src_port">
@@ -63,7 +76,11 @@
                     <el-form-item :label="langMap['dst_port']" prop="dst_port" key="acl-dst_port">
                         <el-input v-model="formData.dst_port"></el-input>
                     </el-form-item>
-                    <el-form-item :label="langMap['precedence']" prop="precedence" key="acl-precedence">
+                    <el-form-item
+                        :label="langMap['precedence']"
+                        prop="precedence"
+                        key="acl-precedence"
+                    >
                         <el-input v-model="formData.precedence" :disabled="formData.dscp !== ''"></el-input>
                     </el-form-item>
                     <el-form-item :label="langMap['dscp']" prop="dscp" key="acl-dscp">
@@ -84,7 +101,11 @@
                 <el-form-item :label="langMap['vlan_id']" prop="vlan_id" key="acl-vlan_id">
                     <el-input v-model="formData.vlan_id"></el-input>
                 </el-form-item>
-                <el-form-item :label="langMap['inner_vlan_id']" prop="inner_vlan_id" key="acl-inner_vlan_id">
+                <el-form-item
+                    :label="langMap['inner_vlan_id']"
+                    prop="inner_vlan_id"
+                    key="acl-inner_vlan_id"
+                >
                     <el-input v-model="formData.inner_vlan_id"></el-input>
                 </el-form-item>
                 <el-form-item :label="langMap['src_mac']" prop="src_mac" key="acl-src_mac">
@@ -370,26 +391,34 @@ export default {
         formInfo() {
             this.formData.acl_id = this.formInfo.acl_id;
             if (this.formFlag === "config") {
-                this.formData.rule_id = this.formInfo.rule[0].rule_id;
-                this.formInfo.rule.forEach(item => {
-                    if (item.rule_id === this.formData.rule_id) {
-                        Object.keys(item).forEach(_item => {
-                            this.formData[_item] = item[_item];
-                        });
-                    }
+                this.$nextTick(_ => {
+                    this.formData.rule_id = this.formInfo.rule[0].rule_id;
+                    this.formInfo.rule.forEach(item => {
+                        if (item.rule_id === this.formData.rule_id) {
+                            Object.keys(item).forEach(_item => {
+                                this.formData[_item] = item[_item];
+                            });
+                        }
+                    });
                 });
-            }else{
+            } else {
                 this.resetForm();
             }
         },
         "formData.rule_id"() {
-            if (this.formData.rule_id && this.formFlag === 'config') {
-                this.formInfo.rule.forEach(item => {
-                    if (item.rule_id === this.formData.rule_id) {
-                        Object.keys(item).forEach(_item => {
-                            this.formData[_item] = item[_item];
-                        });
-                    }
+            if (this.formData.rule_id && this.formFlag === "config") {
+                this.$nextTick(_ => {
+                    this.formInfo.rule.forEach(item => {
+                        if (item.rule_id === this.formData.rule_id) {
+                            Object.keys(item).forEach(_item => {
+                                this.formData[_item] = item[_item];
+                            });
+                            this.formData.precedence &&
+                                (this.formData.dscp = "");
+                            this.formData.dscp &&
+                                (this.formData.precedence = "");
+                        }
+                    });
                 });
             }
         }

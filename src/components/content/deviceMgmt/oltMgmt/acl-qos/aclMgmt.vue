@@ -140,18 +140,18 @@ export default {
     name: "aclMgmt",
     computed: {
         ...mapState(["langMap", "port_name", "dev_ip"]),
-        dialogTitle(){
-            if(this.dialogFlag === 'add-acl'){
-                return `${this.langMap['add']}ACL`;
+        dialogTitle() {
+            if (this.dialogFlag === "add-acl") {
+                return `${this.langMap["add"]}ACL`;
             }
-            if(this.dialogFlag === 'delete-acl'){
-                return `${this.langMap['delete']}ACL`;
+            if (this.dialogFlag === "delete-acl") {
+                return `${this.langMap["delete"]}ACL`;
             }
-            if(this.dialogFlag === 'config'){
-                return `${this.langMap['config']}`;
+            if (this.dialogFlag === "config") {
+                return `${this.langMap["config"]}`;
             }
-            if(this.dialogFlag === 'add-rule'){
-                return `${this.langMap['add']}Rule`;
+            if (this.dialogFlag === "add-rule") {
+                return `${this.langMap["add"]}Rule`;
             }
         }
     },
