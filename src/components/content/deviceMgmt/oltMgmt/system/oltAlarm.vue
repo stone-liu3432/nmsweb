@@ -56,9 +56,12 @@ export default {
                     if (res.data.code === 1) {
                         if (res.data.data && res.data.data.length) {
                             this.alarm = res.data.data;
-                            if(this.alarm.length > this.pageSize){
-                                this.alarmTable = this.alarm.slice(0, this.pageSize);
-                            }else{
+                            if (this.alarm.length > this.pageSize) {
+                                this.alarmTable = this.alarm.slice(
+                                    0,
+                                    this.pageSize
+                                );
+                            } else {
                                 this.alarmTable = this.alarm;
                             }
                         }
@@ -68,11 +71,14 @@ export default {
         },
         handleCurrentChange(val) {
             this.currentPage = val;
-            var start = this.pageSize * (val -1);
-            if(start + this.pageSize > this.alarm.length){
+            var start = this.pageSize * (val - 1);
+            if (start + this.pageSize > this.alarm.length) {
                 this.alarmTable = this.alarm.slice(start);
-            }else{
-                this.alarmTable = this.alarm.slice(start, start + this.pageSize);
+            } else {
+                this.alarmTable = this.alarm.slice(
+                    start,
+                    start + this.pageSize
+                );
             }
         }
     }
