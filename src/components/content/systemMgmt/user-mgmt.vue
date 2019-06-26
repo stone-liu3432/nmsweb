@@ -86,7 +86,7 @@
             :total="user.length"
             v-if="user.length > pageSize"
         ></el-pagination>
-        <el-dialog :title="title" :visible.sync="userCfgModal" center @closed="clearData">
+        <el-dialog :title="title" :visible.sync="userCfgModal" @closed="clearData">
             <el-form
                 :model="form"
                 :rules="addRules"
@@ -161,7 +161,7 @@
                     <el-input v-model="form.pass2"></el-input>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer">
                 <el-button @click="closeModal">{{ langMap['cancel'] }}</el-button>
                 <el-button type="primary" @click="submitForm('userInfo')">{{ langMap['apply'] }}</el-button>
             </div>
@@ -371,8 +371,7 @@ export default {
             this.$confirm(this.langMap["cfm_del_tips"], this.langMap["tips"], {
                 confirmButtonText: this.langMap["apply"],
                 cancelButtonText: this.langMap["cancel"],
-                type: "warning",
-                center: true
+                type: "warning"
             })
                 .then(() => {
                     var data = {

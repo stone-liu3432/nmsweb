@@ -1,11 +1,11 @@
 <template>
     <div>
         <el-tabs v-model="activeName" type="card">
-            <el-tab-pane :label="langMap['task_mgmt']" name="taskMgmt">
-                <task-mgmt ref="taskMgmt" v-if="activeName === 'taskMgmt'"></task-mgmt>
-            </el-tab-pane>
             <el-tab-pane :label="langMap['task_temp_mgmt']" name="taskTempMgmt">
                 <task-temp-mgmt v-if="activeName === 'taskTempMgmt'"></task-temp-mgmt>
+            </el-tab-pane>
+            <el-tab-pane :label="langMap['task_mgmt']" name="taskMgmt">
+                <task-mgmt ref="taskMgmt" v-if="activeName === 'taskMgmt'"></task-mgmt>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -21,7 +21,7 @@ export default {
     components: { taskMgmt, taskTempMgmt },
     data() {
         return {
-            activeName: "taskMgmt"
+            activeName: "taskTempMgmt"
         };
     },
     methods: {},

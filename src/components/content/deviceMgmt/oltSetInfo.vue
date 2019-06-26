@@ -1,5 +1,5 @@
 <template>
-    <el-form :model="devInfo" status-icon :rules="rules" ref="devInfo" label-width="120px">
+    <el-form :model="devInfo" :rules="rules" ref="devInfo" label-width="120px" size="small">
         <el-row>
             <el-col :span="12">
                 <el-form-item :label="langMap['name']" prop="devname">

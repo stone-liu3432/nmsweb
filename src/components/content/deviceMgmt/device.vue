@@ -26,7 +26,7 @@
                 </el-row>-->
                 <template v-if="showFlag === 'olt'">
                     <!-- v-if 渲染时，相同元素会被复用，数据项不同时，需给控制的元素加上唯一的key，避免渲染空模板报错 -->
-                    <el-table :data="devTable" style="width: 100%" key="olt">
+                    <el-table :data="devTable" style="width: 100%" key="olt" border>
                         <el-table-column prop="name" :label="langMap['name']"></el-table-column>
                         <el-table-column prop="macaddr" label="MAC" width="180"></el-table-column>
                         <el-table-column prop="ipaddr" :label="langMap['ipaddr']" width="180"></el-table-column>
@@ -97,7 +97,7 @@
                     ></el-pagination>
                 </template>
                 <template v-if="showFlag === 'onu'">
-                    <el-table :data="onuTable" style="width: 100%" key="onu">
+                    <el-table :data="onuTable" style="width: 100%" key="onu" border :row-style="isOnuSync">
                         <el-table-column prop="devid" label="ID" width="140"></el-table-column>
                         <el-table-column prop="name" :label="langMap['name']"></el-table-column>
                         <el-table-column prop="macaddr" label="MAC" width="180"></el-table-column>
@@ -109,7 +109,7 @@
                         >
                             <template slot-scope="scope">
                                 <el-tag
-                                    :type="scope.row.status.toLowerCase() === 'online' ? '' : 'danger'"
+                                    :type="scope.row.sync === 0 ? 'info' : scope.row.status.toLowerCase() === 'online' ? '' : 'danger'"
                                 >{{ showStatus(scope.row) }}</el-tag>
                             </template>
                         </el-table-column>
@@ -151,6 +151,7 @@
                     </el-table>
                     <el-pagination
                         style="float: right;"
+                        hide-on-single-page
                         @size-change="onuSizeChange"
                         @current-change="onuCurrentChange"
                         :current-page="onuCurrentPage"
@@ -158,7 +159,6 @@
                         :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
                         :total="onuList.length"
-                        v-if="onuList.length > pageSize"
                     ></el-pagination>
                 </template>
             </el-col>
@@ -214,9 +214,12 @@
 import { mapState } from "Vuex";
 import { pageSizes, STATUS, MCLASS } from "@/utils/common-data";
 import { removeUnderline } from "@/utils/common";
-const devSetInfo = () => import(/* webpackChunkName: "configMgmt" */ "./oltSetInfo");
-const oltDetail = () => import(/* webpackChunkName: "configMgmt" */ "./oltMgmt/oltDetail");
-const onuDetail = () => import(/* webpackChunkName: "configMgmt" */ "./onuMgmt/onuDetail");
+const devSetInfo = () =>
+    import(/* webpackChunkName: "configMgmt" */ "./oltSetInfo");
+const oltDetail = () =>
+    import(/* webpackChunkName: "configMgmt" */ "./oltMgmt/oltDetail");
+const onuDetail = () =>
+    import(/* webpackChunkName: "configMgmt" */ "./onuMgmt/onuDetail");
 export default {
     name: "deviceMgmt",
     components: { devSetInfo, oltDetail, onuDetail },
@@ -293,6 +296,23 @@ export default {
         },
         devSizeChange(val) {
             this.pageSize = val;
+            if (
+                this.currentPage >
+                Math.ceil(this.devList.length / this.pageSize)
+            ) {
+                this.currentPage = Math.ceil(
+                    this.devList.length / this.pageSize
+                );
+            }
+            var start = (this.currentPage - 1) * this.pageSize;
+            if (start + this.pageSize > this.devList.length) {
+                this.devTable = this.devList.slice(start);
+            } else {
+                this.devTable = this.devList.slice(
+                    start,
+                    start + this.pageSize
+                );
+            }
         },
         devCurrentChange(val) {
             this.currentPage = val;
@@ -411,6 +431,23 @@ export default {
         },
         onuSizeChange(val) {
             this.pageSize = val;
+            if (
+                this.onuCurrentPage >
+                Math.ceil(this.onuList.length / this.pageSize)
+            ) {
+                this.onuCurrentPage = Math.ceil(
+                    this.onuList.length / this.pageSize
+                );
+            }
+            var start = (this.onuCurrentPage - 1) * this.pageSize;
+            if (start + this.pageSize > this.onuList.length) {
+                this.onuTable = this.onuList.slice(start);
+            } else {
+                this.onuTable = this.onuList.slice(
+                    start,
+                    start + this.pageSize
+                );
+            }
         },
         onuCurrentChange(val) {
             this.onuCurrentPage = val;
@@ -617,37 +654,40 @@ export default {
                             this.$message.error(res.data.message);
                         }
                         this.showConfigDialog = false;
-                        this.handleFlag = '';
+                        this.handleFlag = "";
                     })
                     .catch(err => {});
             }
         },
         devTitle(val) {
             this.devMgmtTitle = val;
+        },
+        isOnuSync({row}){
+            return row.sync === 0 ? 'background: #F5F7FA' : '';
         }
     },
     beforeDestroy() {},
     //  配置OLT ，模拟点击行为
     mounted() {
-        this.dropdownClick({
-            dev: "olt",
-            flag: "info",
-            row: {
-                name: "HSGQ-E08",
-                devid: 12000,
-                ipaddr: "192.168.100.171",
-                macaddr: "38:3a:21:20:00:67",
-                subnet: "192.168.100.0",
-                groupname: "E01",
-                status: 1,
-                mclass: 1,
-                model: "HSGQ-E04",
-                description: "OLT 123",
-                ponports: 4,
-                geports: 4,
-                xgeports: 4
-            }
-        });
+        // this.dropdownClick({
+        //     dev: "olt",
+        //     flag: "info",
+        //     row: {
+        //         name: "HSGQ-E08",
+        //         devid: 12000,
+        //         ipaddr: "192.168.100.171",
+        //         macaddr: "38:3a:21:20:00:67",
+        //         subnet: "192.168.100.0",
+        //         groupname: "E01",
+        //         status: 1,
+        //         mclass: 1,
+        //         model: "HSGQ-E04",
+        //         description: "OLT 123",
+        //         ponports: 4,
+        //         geports: 4,
+        //         xgeports: 4
+        //     }
+        // });
     }
 };
 </script>

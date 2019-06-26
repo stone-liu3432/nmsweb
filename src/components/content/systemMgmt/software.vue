@@ -102,7 +102,6 @@
             :title="langMap['tips']"
             width="40%"
             ref="swModal"
-            center
             :visible.sync="visibilityFlag"
             @closed="clearData"
         >

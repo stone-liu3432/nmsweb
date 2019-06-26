@@ -65,8 +65,7 @@ export default {
             this.$confirm(this.langMap["cfm_del_tips"], this.langMap["tips"], {
                 confirmButtonText: this.langMap["apply"],
                 cancelButtonText: this.langMap["cancel"],
-                type: "warning",
-                center: true
+                type: "warning"
             })
                 .then(_ => {
                     var data = {
