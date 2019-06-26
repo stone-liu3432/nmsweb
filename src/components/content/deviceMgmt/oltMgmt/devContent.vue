@@ -74,10 +74,14 @@ const packetFilter = () =>
     import(/* webpackChunkName: 'olt-acl-qos' */ "./acl-qos/packetfilter");
 const qosMgmt = () =>
     import(/* webpackChunkName: 'olt-acl-qos' */ "./acl-qos/qos");
-    const staticRoute = () => import(/* webpackChunkName: 'olt-route' */ './route/staticRoute');
-    const arpTable = () => import(/* webpackChunkName: 'olt-route' */ './route/arp');
-    const diagonose = () => import(/* webpackChunkName: 'olt-system' */ './system/diagonose');
-    const devMgmt = () => import(/* webpackChunkName: 'olt-system' */ './system/devMgmt');
+const staticRoute = () =>
+    import(/* webpackChunkName: 'olt-route' */ "./route/staticRoute");
+const arpTable = () =>
+    import(/* webpackChunkName: 'olt-route' */ "./route/arp");
+const diagonose = () =>
+    import(/* webpackChunkName: 'olt-system' */ "./system/diagonose");
+const devMgmt = () =>
+    import(/* webpackChunkName: 'olt-system' */ "./system/devMgmt");
 export default {
     name: "devContent",
     props: ["showContent"],
