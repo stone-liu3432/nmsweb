@@ -279,6 +279,8 @@ export default {
         "设备的部分配置修改需要重启设备才能生效，您可以通过点击重启按钮来重启设备。重启过程中请不要断电",
     view_cfg: "查看当前配置",
     view_cfg_tips: "点击下载当前所有配置(包含未保存的配置)",
+    backup_config_tips: '即将下载当前配置文件，请确认',
+    current_cfg_tips: '即将下载包含当前所有配置的文件(包含未保存的配置)，请确认',
     fullversion: "全版本升级",
     fv_upgrade_succ: "全版本升级成功",
     fv_upgrade_fail: "全版本升级失败",

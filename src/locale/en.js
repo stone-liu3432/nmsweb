@@ -288,6 +288,10 @@ export default {
     view_cfg: " View current config",
     view_cfg_tips:
         " Click to download all current configurations (including unsaved configurations)",
+    backup_config_tips:
+        "Will download the current configuration file, please confirm",
+    current_cfg_tips:
+        "The file containing all current configurations (including unsaved configuration) will be downloaded, please confirm",
     fullversion: " Full version upgrade",
     fv_upgrade_succ:
         " Full version upgrade success, take it effect as restart OLT",
@@ -493,8 +497,7 @@ export default {
     sysinfo_set: "Logo, model, company information settings",
     goback_devmgmt: "Back to device management",
     imagesize_tips: "The maximum image size is 200kb",
-    acl_id_range_error:
-        "The ACL ID is incorrect. The range is 2000-5999.",
+    acl_id_range_error: "The ACL ID is incorrect. The range is 2000-5999.",
     src_ipaddr: " Source IP",
     src_ipmask: " Source IP mask",
     dst_ipaddr: " Destination IP",
@@ -771,18 +774,18 @@ export default {
     onu_status: "ONU status",
     ld_port_id: "Loopback port",
     ld_onu_id: "Loopback ONU",
-    loop_detect: ' Loop Detection ',
-    pon_loop_detect: 'PON Loop Detection ',
-    ge_loop_detect: ' Uplink Loop Detection ',
-    ld_info: ' Loop detection information ',
-    loopback : 'Loopback',
-    port_status: ' Port Status ',
-    port_isolation: ' Port isolation ',
-    pon_isolation_tips: 'Set PON port isolation only',
-    illegal_mac: ' Illegal MAC address',
-    qos_weight_tips: 'The sum of weights cannot exceed 100',
+    loop_detect: " Loop Detection ",
+    pon_loop_detect: "PON Loop Detection ",
+    ge_loop_detect: " Uplink Loop Detection ",
+    ld_info: " Loop detection information ",
+    loopback: "Loopback",
+    port_status: " Port Status ",
+    port_isolation: " Port isolation ",
+    pon_isolation_tips: "Set PON port isolation only",
+    illegal_mac: " Illegal MAC address",
+    qos_weight_tips: "The sum of weights cannot exceed 100",
 
-    composeRange(min, max){
+    composeRange(min, max) {
         return `${min} - ${max} characters`;
     }
 };
