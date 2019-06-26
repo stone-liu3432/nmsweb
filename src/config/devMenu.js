@@ -8,7 +8,7 @@ export default [
             { name: "dev_mgmt" },
             { name: "diagonose" },
             { name: "remote_mgmt" },
-            { name: "upgrade" },
+            // { name: "upgrade" },
             { name: "time" },
             { name: "service" },
             { name: "alarm" },
@@ -22,7 +22,7 @@ export default [
             { name: "sla_cfg" },
             { name: "pon_setting" },
             { name: "loid_mgmt" },
-            { name: "onu_batch_upgrade" },
+            // { name: "onu_batch_upgrade" },
             { name: "pon_optical" }
         ]
     },
