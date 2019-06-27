@@ -58,10 +58,10 @@
         </el-table>
         <el-dialog :visible.sync="configModal" append-to-body @close="closeModal">
             <span slot="title">
-                <span>{{ langMap['config'] }}</span>
+                <span>{{ modalFlag === 'add' ? langMap['add'] : langMap['config'] }}</span>
             </span>
             <el-form label-width="100px" :model="remoteForm" :rules="rules" ref="remote-mgmt-form">
-                <el-form-item :label="langMap['interface']" prop="interface">
+                <el-form-item :label="langMap['name']" prop="interface">
                     <el-input v-if="modalFlag === 'add'" v-model="remoteForm.interface"></el-input>
                     <span v-else>{{ remoteForm.interface }}</span>
                 </el-form-item>
@@ -75,11 +75,10 @@
                     <el-input v-model="remoteForm.vlan_id"></el-input>
                 </el-form-item>
             </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="closeModal">{{ langMap['cancel'] }}</el-button>
+            <span slot="footer">
+                <el-button @click="closeModal">{{ langMap['cancel'] }}</el-button>
                 <el-button
                     type="primary"
-                    size="small"
                     @click="submitForm('remote-mgmt-form')"
                 >{{ langMap['apply'] }}</el-button>
             </span>
@@ -205,14 +204,18 @@ export default {
                             interface: data.interface,
                             vlan_id: data.vlan_id
                         }
-                    }).then(res =>{
-                        if(res.data.code === 1){
-                            this.$message.success(this.langMap['delete_success']);
-                            this.getInbound();
-                        }else{
-                            this.$message.error(res.data.message);
-                        }
-                    }).catch(err => {})
+                    })
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap["delete_success"]
+                                );
+                                this.getInbound();
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        })
+                        .catch(err => {});
                 })
                 .catch(_ => {});
         },
@@ -278,7 +281,7 @@ export default {
                                 this.remoteForm.interface === "outbound"
                                     ? this.getOutbound()
                                     : this.getInbound();
-                            }else{
+                            } else {
                                 this.$message.error(res.data.message);
                             }
                             this.closeModal();
