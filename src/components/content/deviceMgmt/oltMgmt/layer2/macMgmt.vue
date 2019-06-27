@@ -393,7 +393,7 @@ export default {
             }
         },
         formatPort(row, col) {
-            return this.port_name[row.port_id];
+            return row.port_id ? this.port_name[row.port_id] : 'CPU';
         },
         formatMacType(row, col) {
             return this.macTypes[row.mac_type];

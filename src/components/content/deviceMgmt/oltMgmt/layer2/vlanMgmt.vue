@@ -17,7 +17,13 @@
                 size="small"
                 @click="openDialog(null, 'batch_cfg_vlan')"
             >{{ langMap['batch_cfg_vlan'] }}</el-button>
-            <el-button type="primary" size="small" @click="loadmoreData" :loading="loading" v-if="loadmore">{{ langMap['loadmore'] }}</el-button>
+            <el-button
+                type="primary"
+                size="small"
+                @click="loadmoreData"
+                :loading="loading"
+                v-if="loadmore"
+            >{{ langMap['loadmore'] }}</el-button>
         </div>
         <h3>{{ langMap['vlan_list'] }}</h3>
         <el-table :data="vlanTable" border stripe>
@@ -127,8 +133,13 @@ export default {
                                     res.data.data
                                 );
                             }
-                            if(this.currentPage > Math.ceil(this.vlanList.length/this.pageSize)){
-                                this.currentPage = Math.ceil(this.vlanList.length/this.pageSize);
+                            if (
+                                this.currentPage >
+                                Math.ceil(this.vlanList.length / this.pageSize)
+                            ) {
+                                this.currentPage = Math.ceil(
+                                    this.vlanList.length / this.pageSize
+                                );
                             }
                             if (this.vlanList.length > this.pageSize) {
                                 this.vlanTable = this.vlanList.slice(
@@ -157,9 +168,11 @@ export default {
                 .catch(err => {});
         },
         formatPortList(row, col) {
-            return generatorPortName(
-                analysisPortList(row[col.property]),
-                this.port_name
+            return (
+                generatorPortName(
+                    analysisPortList(row[col.property]),
+                    this.port_name
+                ) || " - "
             );
         },
         sizeChange(val) {
@@ -179,8 +192,8 @@ export default {
             }
         },
         currentChange(val) {
-            if(val > Math.ceil(this.vlanList.length/this.pageSize)){
-                val = Math.ceil(this.vlanList.length/this.pageSize);
+            if (val > Math.ceil(this.vlanList.length / this.pageSize)) {
+                val = Math.ceil(this.vlanList.length / this.pageSize);
             }
             this.currentPage = val;
             var start = this.pageSize * (val - 1);
@@ -239,7 +252,7 @@ export default {
             var tagged = this.$refs[formName].taggedList.sort().join(",");
             var untagged = this.$refs[formName].untaggedList.sort().join(",");
             if (valid) {
-                var data,createAndSet;
+                var data, createAndSet;
                 if (this.dialogFlag === "create") {
                     data = {
                         devicelist: [this.dev_ip],
@@ -310,41 +323,57 @@ export default {
                         }
                     };
                 }
-                this.$devProxy(data).then(res =>{
-                    if(res.data.code === 1){
-                        if(this.dialogFlag === "create" && (!!tagged || !!untagged) && !!createAndSet){
-                            this.$devProxy(createAndSet).then(res =>{
-                                if(res.data.code === 1){
-                                    this.$message.success(this.langMap[data.method + '_success']);
-                                    this.count && this.count--;
-                                    this.getData();
-                                }else{
-                                    this.$message.error(res.data.message);
-                                }
-                                this.dialogVisible = false;
-                            }).catch(err =>{})
-                        }else{
-                            this.$message.success(this.langMap[data.method + '_success']);
-                            this.count && this.count--;
-                            this.getData();
+                this.$devProxy(data)
+                    .then(res => {
+                        if (res.data.code === 1) {
+                            if (
+                                this.dialogFlag === "create" &&
+                                (!!tagged || !!untagged) &&
+                                !!createAndSet
+                            ) {
+                                //  创建vlan 并配置了端口
+                                this.$devProxy(createAndSet)
+                                    .then(res => {
+                                        if (res.data.code === 1) {
+                                            this.$message.success(
+                                                this.langMap[
+                                                    data.method + "_success"
+                                                ]
+                                            );
+                                            this.count && this.count--;
+                                            this.getData();
+                                        } else {
+                                            this.$message.error(
+                                                res.data.message
+                                            );
+                                        }
+                                    })
+                                    .catch(err => {});
+                            } else {
+                                //  只创建vlan，未配置端口
+                                this.$message.success(
+                                    this.langMap[data.method + "_success"]
+                                );
+                                this.count && this.count--;
+                                this.getData();
+                            }
+                        } else {
+                            this.$message.error(res.data.message);
                         }
-                        return;
-                    }else{
-                        this.$message.error(res.data.message);
-                    }
-                    this.dialogVisible = false;
-                }).catch(err =>{})
+                        this.dialogVisible = false;
+                    })
+                    .catch(err => {});
             }
         },
         closeDialog() {
             this.$refs["vlan-mgmt-form"].resetForm();
         },
-        loadmoreData(){
+        loadmoreData() {
             this.loading = true;
             this.getData();
-            setTimeout(_ =>{
+            setTimeout(_ => {
                 this.loading = false;
-            }, 1000)
+            }, 1000);
         }
     }
 };
