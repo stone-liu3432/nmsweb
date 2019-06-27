@@ -170,7 +170,7 @@ export default {
                 method: "get"
             })
                 .then(res => {
-                    this.bindwidth = [];
+                    this.bandwidth = [];
                     if (res.data.code === 1) {
                         if (res.data.data && res.data.data.length) {
                             this.bandwidth = res.data.data;

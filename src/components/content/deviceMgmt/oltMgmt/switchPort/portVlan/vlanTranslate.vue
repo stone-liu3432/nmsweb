@@ -30,13 +30,13 @@
                 ref="port-vlan-translate-form"
             >
                 <el-form-item label="old vlan" prop="old_vlan">
-                    <el-input v-model="translateForm.old_vlan"></el-input>
+                    <el-input v-model.number="translateForm.old_vlan"></el-input>
                 </el-form-item>
                 <el-form-item label="new vlan" prop="new_vlan">
-                    <el-input v-model="translateForm.new_vlan"></el-input>
+                    <el-input v-model.number="translateForm.new_vlan"></el-input>
                 </el-form-item>
                 <el-form-item :label="langMap['new_vlan_pri']">
-                    <el-select v-model="translateForm.new_vlan_pri">
+                    <el-select v-model.number="translateForm.new_vlan_pri">
                         <el-option :value="255" label=" - "></el-option>
                         <el-option :value="0"></el-option>
                         <template v-for="item in 7">

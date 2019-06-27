@@ -66,7 +66,7 @@
                 <el-select v-model.number="formData.dst_port">
                     <el-option :value="0" label=" - "></el-option>
                     <template v-for="(item, key) in port_name" v-if="key > ponports">
-                        <el-option :value="key" :label="item"></el-option>
+                        <el-option :value="Number(key)" :label="item"></el-option>
                     </template>
                 </el-select>
             </el-form-item>

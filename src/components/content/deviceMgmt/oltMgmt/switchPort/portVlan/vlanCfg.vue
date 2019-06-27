@@ -93,7 +93,7 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item :label="langMap['vlan_mode']" key="port-vlan-mode">
-                        <el-select v-model.number="formData.vlan_mode">
+                        <el-select v-model.number="formData.vlan_mode" :disabled="pvSet.port_type === 2">
                             <el-option :value="1" :label="langMap['tagged']"></el-option>
                             <el-option :value="2" :label="langMap['untagged']"></el-option>
                         </el-select>

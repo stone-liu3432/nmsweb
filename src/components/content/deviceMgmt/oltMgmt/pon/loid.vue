@@ -148,6 +148,7 @@ export default {
                         }else{
                             this.$message.error(res.data.message);
                         }
+                        this.dialogVisible = false;
                     }).catch(err =>{})
                 }
             });
@@ -163,9 +164,9 @@ export default {
             callback();
         },
         validPass(rule, value, callback) {
-            var reg = /^\w{1,12}$/;
+            var reg = /^\w{0,12}$/;
             if (!reg.test(value)) {
-                return callback(new Error("Range: 1-12 characters"));
+                return callback(new Error("Range: 0-12 characters"));
             }
             callback();
         }

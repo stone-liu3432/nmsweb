@@ -19,11 +19,44 @@
                 ></el-tree>
             </el-col>
             <el-col :span="20">
-                <!-- 功能按钮，待添加 -->
-                <!-- <el-row>
-                    <el-col :span="12">111</el-col>
-                    <el-col :span="12">222</el-col>
-                </el-row>-->
+                <!-- 功能按钮，数据过滤 -->
+                <!-- <div style="height: 30px; line-height: 30px;">
+                    <span style="padding: 0 16px;">显示类型:</span>
+                    <el-select v-model="dataFilterType"></el-select>
+                    <span>
+                        <el-radio-group
+                            v-model="dataFilterType"
+                            v-if="showFlag === 'olt'"
+                            key="olt-data-filter"
+                        >
+                            <el-radio :label="1">pon port 4</el-radio>
+                            <el-radio :label="2">pon port 8</el-radio>
+                            <el-radio :label="3">EPON</el-radio>
+                            <el-radio :label="4">GPON</el-radio>
+                        </el-radio-group>
+                        <el-radio-group
+                            v-model="dataFilterType"
+                            v-if="showFlag === 'onu'"
+                            key="onu-data-filter"
+                        >
+                            <el-radio :label="1">PON1</el-radio>
+                            <el-radio :label="2">PON2</el-radio>
+                            <el-radio :label="3">PON3</el-radio>
+                            <el-radio :label="4">PON4</el-radio>
+                            <template>
+                                <el-radio :label="5">PON5</el-radio>
+                                <el-radio :label="6">PON6</el-radio>
+                                <el-radio :label="7">PON7</el-radio>
+                                <el-radio :label="8">PON8</el-radio>
+                            </template>
+                        </el-radio-group>
+                    </span>
+                </div> -->
+                <el-form label-width="auto" size="small" style="margin-left: 16px;">
+                    <el-form-item label="显示类型:">
+                        <el-select v-model="dataFilterType" style="width: 200px;"></el-select>
+                    </el-form-item>
+                </el-form>
                 <template v-if="showFlag === 'olt'">
                     <!-- v-if 渲染时，相同元素会被复用，数据项不同时，需给控制的元素加上唯一的key，避免渲染空模板报错 -->
                     <el-table :data="devTable" style="width: 100%" key="olt" border>
@@ -97,7 +130,13 @@
                     ></el-pagination>
                 </template>
                 <template v-if="showFlag === 'onu'">
-                    <el-table :data="onuTable" style="width: 100%" key="onu" border :row-style="isOnuSync">
+                    <el-table
+                        :data="onuTable"
+                        style="width: 100%"
+                        key="onu"
+                        border
+                        :row-style="isOnuSync"
+                    >
                         <el-table-column prop="devid" label="ID" width="140"></el-table-column>
                         <el-table-column prop="name" :label="langMap['name']"></el-table-column>
                         <el-table-column prop="macaddr" label="MAC" width="180"></el-table-column>
@@ -250,7 +289,8 @@ export default {
             cacheTree: "",
             currentTreeData: {},
             showMgmtDialog: false,
-            devMgmtTitle: ""
+            devMgmtTitle: "",
+            dataFilterType: ""
         };
     },
     created() {
@@ -662,8 +702,8 @@ export default {
         devTitle(val) {
             this.devMgmtTitle = val;
         },
-        isOnuSync({row}){
-            return row.sync === 0 ? 'background: #F5F7FA' : '';
+        isOnuSync({ row }) {
+            return row.sync === 0 ? "background: #F5F7FA" : "";
         }
     },
     beforeDestroy() {},

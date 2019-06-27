@@ -82,7 +82,7 @@
                 v-if="dialogFlag === 'modify'"
             >
                 <el-form-item :label="langMap['user_name']">
-                    <span>{{ userForm.name }}</span>
+                    <span>{{ userForm.username }}</span>
                 </el-form-item>
                 <el-form-item :label="langMap['current_pwd']" prop="o_pwd">
                     <el-input v-model="userForm.o_pwd" type="password"></el-input>
@@ -240,7 +240,7 @@ export default {
             this.dialogVisible = true;
             this.dialogFlag = flag;
             if (data) {
-                this.userForm["name"] = data["name"];
+                this.userForm["username"] = data["name"];
             }
         },
         closeModal() {
@@ -280,7 +280,7 @@ export default {
                             }),
                             method: "set",
                             param: {
-                                name: this.userForm.name,
+                                name: this.userForm.username,
                                 key: md5(`${this.userForm.username}:${this.userForm.o_pwd}`), // 原密码  md5("uName:password")
                                 key1: md5(`${this.userForm.username}:${this.userForm.pwd1}`)  // 新密码
                             }
