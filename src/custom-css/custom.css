@@ -71,3 +71,17 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
 .el-switch:focus{
     outline: none;
 }
+
+
+.tree-border {
+    min-height: 720px;
+    border: 1px solid #ddd;
+    max-height: 720px;
+    overflow-y: auto;
+}
+
+@media screen and (max-height: 769px){
+    .tree-border{
+        min-height: 420px;
+    }
+}
