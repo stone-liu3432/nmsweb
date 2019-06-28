@@ -37,6 +37,12 @@ export default {
         language() {
             this.changeLangMap(lang[this.language]);
             this.$i18n.locale = this.language;
+        },
+        '$route'(){
+            var path = this.$route.path.slice(this.$route.path.lastIndexOf('/') + 1);
+            (path === 'main') && (path = 'home');
+            (path === '') && (path = 'login');
+            document.title = this.langMap[path] || 'nmsweb';
         }
     }
 };
