@@ -70,12 +70,10 @@
                     </el-form-item>
                     <template v-for="item in basePri">
                         <el-form-item :label="String(item)">
-                            <el-select
-                                v-model.number="formData['pri' + item]"
-                                @change="changePri(item, formData['pri' + item])"
-                            >
-                                <template v-for="_item in basePri">
-                                    <el-option :value="_item" :label="String(_item)"></el-option>
+                            <el-select v-model.number="formData['pri' + item]">
+                                <el-option :value="0"></el-option>
+                                <template v-for="o in 7">
+                                    <el-option :value="o"></el-option>
                                 </template>
                             </el-select>
                         </el-form-item>
@@ -120,24 +118,35 @@ export default {
                 this.formData.cos6,
                 this.formData.cos7
             ];
+        },
+        pris() {
+            return [
+                this.formData.pri0,
+                this.formData.pri1,
+                this.formData.pri2,
+                this.formData.pri3,
+                this.formData.pri4,
+                this.formData.pri5,
+                this.formData.pri6,
+                this.formData.pri7
+            ];
         }
     },
     data() {
         return {
             qos: {},
-            dialogVisible: false,
             basePri: [0, 1, 2, 3, 4, 5, 6, 7],
-            cachePri: [0, 1, 2, 3, 4, 5, 6, 7],
+            dialogVisible: false,
             formData: {
                 mode: 1,
                 pri0: 0,
-                pri1: 1,
-                pri2: 2,
-                pri3: 3,
-                pri4: 4,
-                pri5: 5,
-                pri6: 6,
-                pri7: 7,
+                pri1: 0,
+                pri2: 0,
+                pri3: 0,
+                pri4: 0,
+                pri5: 0,
+                pri6: 0,
+                pri7: 0,
                 cos0: 0,
                 cos1: 0,
                 cos2: 0,
@@ -148,14 +157,30 @@ export default {
                 cos7: 0
             },
             formRules: {
-                cos0: [{ validator: this.validWeight, trigger: ["change", "blur"] }],
-                cos1: [{ validator: this.validWeight, trigger: ["change", "blur"] }],
-                cos2: [{ validator: this.validWeight, trigger: ["change", "blur"] }],
-                cos3: [{ validator: this.validWeight, trigger: ["change", "blur"] }],
-                cos4: [{ validator: this.validWeight, trigger: ["change", "blur"] }],
-                cos5: [{ validator: this.validWeight, trigger: ["change", "blur"] }],
-                cos6: [{ validator: this.validWeight, trigger: ["change", "blur"] }],
-                cos7: [{ validator: this.validWeight, trigger: ["change", "blur"] }]
+                cos0: [
+                    { validator: this.validWeight, trigger: ["change", "blur"] }
+                ],
+                cos1: [
+                    { validator: this.validWeight, trigger: ["change", "blur"] }
+                ],
+                cos2: [
+                    { validator: this.validWeight, trigger: ["change", "blur"] }
+                ],
+                cos3: [
+                    { validator: this.validWeight, trigger: ["change", "blur"] }
+                ],
+                cos4: [
+                    { validator: this.validWeight, trigger: ["change", "blur"] }
+                ],
+                cos5: [
+                    { validator: this.validWeight, trigger: ["change", "blur"] }
+                ],
+                cos6: [
+                    { validator: this.validWeight, trigger: ["change", "blur"] }
+                ],
+                cos7: [
+                    { validator: this.validWeight, trigger: ["change", "blur"] }
+                ]
             },
             dialogFlag: ""
         };
@@ -206,14 +231,16 @@ export default {
                             }),
                             method: "set",
                             param: {
-                                priority: this.cachePri
+                                priority: this.pris
                             }
                         };
                     }
                     if (this.dialogFlag === "weight") {
                         var weight = this.wrrs.reduce(
-                            (initVal, item) => initVal + item,
-                            0
+                            (initVal, item) => {
+                                !item && (item = 0);
+                                return initVal + item
+                            }, 0
                         );
                         if (this.formData.mode === 2 && weight > 100) {
                             this.$message.error(
@@ -231,14 +258,14 @@ export default {
                             param: {
                                 flag: this.formData.mode,
                                 wrr: [
-                                    this.formData.cos0,
-                                    this.formData.cos1,
-                                    this.formData.cos2,
-                                    this.formData.cos3,
-                                    this.formData.cos4,
-                                    this.formData.cos5,
-                                    this.formData.cos6,
-                                    this.formData.cos7
+                                    this.formData.cos0 || 0,
+                                    this.formData.cos1 || 0,
+                                    this.formData.cos2 || 0,
+                                    this.formData.cos3 || 0,
+                                    this.formData.cos4 || 0,
+                                    this.formData.cos5 || 0,
+                                    this.formData.cos6 || 0,
+                                    this.formData.cos7 || 0
                                 ]
                             }
                         };
@@ -259,27 +286,12 @@ export default {
                 }
             });
         },
-        changePri(pri, queue) {
-            this.formData["pri" + pri] = queue;
-            this.cachePri.forEach((item, index) => {
-                if (item === queue) {
-                    this.formData["pri" + index] = this.cachePri[pri];
-                }
-            });
-            this.cachePri = [
-                this.formData.pri0,
-                this.formData.pri1,
-                this.formData.pri2,
-                this.formData.pri3,
-                this.formData.pri4,
-                this.formData.pri5,
-                this.formData.pri6,
-                this.formData.pri7
-            ];
-        },
-        validWeight(rule, value, cb){
-            if(value > 100 || isNaN(value)){
-                return cb(new Error('Range: 0 - 100'));
+        validWeight(rule, value, cb) {
+            if(value === ''){
+                value = 0;
+            }
+            if (value > 100 || isNaN(value)) {
+                return cb(new Error("Range: 0 - 100"));
             }
             cb();
         }

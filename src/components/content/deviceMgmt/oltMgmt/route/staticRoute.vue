@@ -25,44 +25,47 @@
                 :disabled="isLoading"
             ></el-switch>
         </h3>
-        <h3 style="margin-top: 30px;">
-            {{ langMap['static_route'] }}
-            <el-button
-                size="small"
-                type="primary"
-                style="margin-left: 30px;"
-                @click="openDialog"
-            >{{ langMap['add'] }}</el-button>
-        </h3>
-        <el-table :data="routes" border stripe>
-            <el-table-column
-                prop="ipaddress"
-                :formatter="formatIp"
-                :label="`${langMap['dst_ipaddr']}/${langMap['mask']}`"
-                width="160px"
-            ></el-table-column>
-            <el-table-column prop="gateway" :label="langMap['gateway']"></el-table-column>
-            <el-table-column
-                prop="interface"
-                :formatter="formatInterface"
-                :label="langMap['interface']"
-            ></el-table-column>
-            <el-table-column
-                prop="protocol"
-                :formatter="formatProtocol"
-                :label="langMap['protocol']"
-            ></el-table-column>
-            <el-table-column prop="preference" :label="langMap['preference']"></el-table-column>
-            <el-table-column prop="status" :formatter="formatStatus" :label="langMap['status']"></el-table-column>
-            <el-table-column :label="langMap['config']">
-                <template slot-scope="scope">
-                    <el-button
-                        type="text"
-                        @click="delStaticRoute(scope.row)"
-                    >{{ langMap['delete'] }}</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+        <template v-if="!!this.status">
+            <h3 style="margin-top: 30px;">
+                {{ langMap['static_route'] }}
+                <el-button
+                    size="small"
+                    type="primary"
+                    style="margin-left: 30px;"
+                    @click="openDialog"
+                >{{ langMap['add'] }}</el-button>
+            </h3>
+            <el-table :data="routes" border stripe>
+                <el-table-column
+                    prop="ipaddress"
+                    :formatter="formatIp"
+                    :label="`${langMap['dst_ipaddr']}/${langMap['mask']}`"
+                    width="160px"
+                ></el-table-column>
+                <el-table-column prop="gateway" :label="langMap['gateway']"></el-table-column>
+                <el-table-column
+                    prop="interface"
+                    :formatter="formatInterface"
+                    :label="langMap['interface']"
+                ></el-table-column>
+                <el-table-column
+                    prop="protocol"
+                    :formatter="formatProtocol"
+                    :label="langMap['protocol']"
+                ></el-table-column>
+                <el-table-column prop="preference" :label="langMap['preference']"></el-table-column>
+                <el-table-column prop="status" :formatter="formatStatus" :label="langMap['status']"></el-table-column>
+                <el-table-column :label="langMap['config']">
+                    <template slot-scope="scope">
+                        <el-button
+                            type="text"
+                            v-if="scope.row.protocol !== 1"
+                            @click="delStaticRoute(scope.row)"
+                        >{{ langMap['delete'] }}</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </template>
         <el-dialog :visible.sync="dialogVisible" append-to-body @close="closeDialog">
             <span slot="title">{{ langMap['add'] }}</span>
             <el-form
@@ -239,7 +242,7 @@ export default {
                         }),
                         method: "delete",
                         param: {
-                            gateway: this.def_route
+                            gateway: '0.0.0.0'
                         }
                     })
                         .then(res => {

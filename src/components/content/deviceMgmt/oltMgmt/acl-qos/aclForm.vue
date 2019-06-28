@@ -6,18 +6,27 @@
         ref="acl-mgmt-dialog-form"
         size="small"
     >
-        <el-form-item label="ACL ID" prop="acl_id" v-if="formFlag === 'add-acl'" key="add-acl-id">
+        <el-form-item label="ACL ID" prop="acl_id" v-if="formFlag === 'add-acl'" key="add-acl-id" style="margin-bottom: 30px;">
             <el-input v-model.number="formData.acl_id"></el-input>
         </el-form-item>
+        <template v-if="formFlag === 'add-acl'">
+            <el-form-item :label="langMap['type']" prop="type">
+                <el-select v-model.number="formData.type">
+                    <el-option :label="langMap['basic'] + 'ACL' + langMap['rule']" :value="1"></el-option>
+                    <el-option :label="langMap['advanced'] + 'ACL' + langMap['rule']" :value="2"></el-option>
+                    <el-option :label="langMap['link'] + 'ACL' + langMap['rule']" :value="3"></el-option>
+                </el-select>
+            </el-form-item>
+        </template>
         <template v-if="formFlag === 'delete-acl'">
             <el-col :span="14">
-                <el-form-item label="ACL ID" prop="acl_id" key="del-rule-id">
+                <el-form-item label="ACL ID" prop="acl_id" key="del-rule-id" style="margin-bottom: 50px;">
                     <el-input v-model.number="formData.acl_id"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="1" style="line-height: 32px; text-align: center;">-</el-col>
             <el-col :span="9">
-                <el-form-item label-width="0" prop="acl_id_e" key="del-acl-id-e">
+                <el-form-item label-width="0" prop="acl_id_e" key="del-acl-id-e" style="margin-bottom: 50px;">
                     <el-input v-model.number="formData.acl_id_e"></el-input>
                 </el-form-item>
             </el-col>
@@ -160,6 +169,7 @@ export default {
             formData: {
                 acl_id: "",
                 acl_id_e: "",
+                type: 1,
                 rule_id: 0,
                 action: 1,
                 src_ipaddr: "",
@@ -311,7 +321,20 @@ export default {
             if (this.formData.acl_id !== "" && value === "") {
                 return cb();
             }
-            if (value < 2000 || value > 5999 || isNaN(value)) {
+            if(this.formFlag === 'delete-acl'){
+                if(value < 2000 || value > 5999 || isNaN(value)){
+                    return cb(new Error('Range: 2000-5999'));
+                }
+                return cb();
+            }
+            //  基础ACL为2000-2999，高级ACL为3000-4999，链路ACL为5000-5999
+            if (this.formData.type === 1 && (value < 2000 || value > 2999 || isNaN(value))) {
+                return cb(new Error(this.langMap["acl_id_range_error"]));
+            }
+            if (this.formData.type === 2 && (value < 3000 || value > 4999 || isNaN(value))) {
+                return cb(new Error(this.langMap["acl_id_range_error"]));
+            }
+            if (this.formData.type === 3 && (value < 5000 || value > 5999 || isNaN(value))) {
                 return cb(new Error(this.langMap["acl_id_range_error"]));
             }
             cb();
@@ -421,6 +444,9 @@ export default {
                     });
                 });
             }
+        },
+        "formData.type"(){
+            this.$refs['acl-mgmt-dialog-form'].validateField('acl_id');
         }
     }
 };

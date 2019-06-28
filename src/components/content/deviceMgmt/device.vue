@@ -20,42 +20,17 @@
             </el-col>
             <el-col :span="20">
                 <!-- 功能按钮，数据过滤 -->
-                <!-- <div style="height: 30px; line-height: 30px;">
-                    <span style="padding: 0 16px;">显示类型:</span>
-                    <el-select v-model="dataFilterType"></el-select>
-                    <span>
-                        <el-radio-group
-                            v-model="dataFilterType"
-                            v-if="showFlag === 'olt'"
-                            key="olt-data-filter"
-                        >
-                            <el-radio :label="1">pon port 4</el-radio>
-                            <el-radio :label="2">pon port 8</el-radio>
-                            <el-radio :label="3">EPON</el-radio>
-                            <el-radio :label="4">GPON</el-radio>
-                        </el-radio-group>
-                        <el-radio-group
-                            v-model="dataFilterType"
-                            v-if="showFlag === 'onu'"
-                            key="onu-data-filter"
-                        >
-                            <el-radio :label="1">PON1</el-radio>
-                            <el-radio :label="2">PON2</el-radio>
-                            <el-radio :label="3">PON3</el-radio>
-                            <el-radio :label="4">PON4</el-radio>
-                            <template>
-                                <el-radio :label="5">PON5</el-radio>
-                                <el-radio :label="6">PON6</el-radio>
-                                <el-radio :label="7">PON7</el-radio>
-                                <el-radio :label="8">PON8</el-radio>
-                            </template>
-                        </el-radio-group>
-                    </span>
-                </div> -->
                 <el-form label-width="auto" size="small" style="margin-left: 16px;">
-                    <el-form-item label="显示类型:">
-                        <el-select v-model="dataFilterType" style="width: 200px;"></el-select>
-                    </el-form-item>
+                    <!-- <el-form-item label="显示类型:">
+                        <el-select v-model="dataFilterType" style="width: 200px;">
+                            <template>
+                                <el-option></el-option>
+                            </template>
+                            <template>
+                                <el-option></el-option>
+                            </template>
+                        </el-select>
+                    </el-form-item> -->
                 </el-form>
                 <template v-if="showFlag === 'olt'">
                     <!-- v-if 渲染时，相同元素会被复用，数据项不同时，需给控制的元素加上唯一的key，避免渲染空模板报错 -->

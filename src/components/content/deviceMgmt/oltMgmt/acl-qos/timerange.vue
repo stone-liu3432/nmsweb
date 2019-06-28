@@ -183,7 +183,7 @@ export default {
             addForm: {
                 t_name: "",
                 type: 1,
-                time: "",
+                time: [new Date(), new Date()],
                 day: "Working-day"
             },
             addRules: {
@@ -272,7 +272,7 @@ export default {
                                 name: this.addForm.t_name,
                                 stime: `${this.addForm.time[0].getHours()}:${this.addForm.time[0].getMinutes()}`,
                                 etime: `${this.addForm.time[1].getHours()}:${this.addForm.time[1].getMinutes()}`,
-                                day: this.addForm.day
+                                day: this.addForm.day.toLowerCase()
                             }
                         };
                     }

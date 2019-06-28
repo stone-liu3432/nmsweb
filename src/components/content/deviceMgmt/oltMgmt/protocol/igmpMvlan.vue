@@ -9,75 +9,82 @@
                 @click="openDialog(mv_info, 'create')"
             >{{ langMap['create'] }}</el-button>
         </h3>
-        <el-divider content-position="right"></el-divider>
-        <div class="igmp-mvlan-items">
-            <span>{{ langMap['mvlan'] }}</span>
-            <span>
-                <el-select v-model.number="mvlan" size="small" style="width: 200px;">
-                    <template v-for="(item,key) in multi_vlan">
-                        <el-option :value="item.mvlan"></el-option>
-                    </template>
-                </el-select>
-            </span>
-            <span>
-                <el-button size="small" type="primary" @click="delMvlan">{{ langMap['delete'] }}</el-button>
-            </span>
-        </div>
-        <el-divider content-position="right"></el-divider>
-        <div class="igmp-mvlan-items">
-            <span>{{ langMap['mvlan_desc'] }}</span>
-            <span>{{ mv_info.mvlan_desc }}</span>
-            <span>
-                <el-button
-                    size="small"
-                    type="primary"
-                    @click="openDialog(mv_info, 'config-desc')"
-                >{{ langMap['config'] }}</el-button>
-            </span>
-        </div>
-        <el-divider content-position="right"></el-divider>
-        <div class="igmp-mvlan-items">
-            <span>{{ langMap['router_portlist'] }}</span>
-            <span>{{ formatPortlist(mv_info.router_portlist) }}</span>
-            <span>
-                <el-button
-                    size="small"
-                    type="primary"
-                    @click="openDialog(mv_info, 'config-router-list')"
-                >{{ langMap['add'] }}</el-button>
-                <el-button
-                    size="small"
-                    type="primary"
-                    @click="openDialog(mv_info, 'delete-router-port')"
-                >{{ langMap['delete'] }}</el-button>
-            </span>
-        </div>
-        <el-divider content-position="right"></el-divider>
-        <div class="igmp-mvlan-items">
-            <span>{{ langMap['mc_unknown_policy'] }}</span>
-            <span>{{ ['transparent', 'discard'][mc_unknown.mc_unknown_policy] }}</span>
-            <span>
-                <el-button
-                    size="small"
-                    type="primary"
-                    @click="openDialog(mc_unknown, 'config-mc-policy')"
-                >{{ langMap['config'] }}</el-button>
-            </span>
-        </div>
-        <h3 style="margin-top: 36px;">{{ langMap['program'] }}</h3>
-        <el-table :data="program" style="width: 100%" border stripe>
-            <el-table-column :formatter="formatIp" :label="langMap['ipaddr']" width="300px"></el-table-column>
-            <el-table-column prop="program_desc" :label="langMap['program_desc']"></el-table-column>
-            <el-table-column :label="langMap['config']" width="140px">
-                <template slot-scope="scope">
+        <template v-if="multi_vlan.length">
+            <el-divider content-position="right"></el-divider>
+            <div class="igmp-mvlan-items">
+                <span>{{ langMap['mvlan'] }}</span>
+                <span>
+                    <el-select v-model.number="mvlan" size="small" style="width: 200px;">
+                        <template v-for="(item,key) in multi_vlan">
+                            <el-option :value="item.mvlan"></el-option>
+                        </template>
+                    </el-select>
+                </span>
+                <span>
+                    <el-button size="small" type="primary" @click="delMvlan">{{ langMap['delete'] }}</el-button>
+                </span>
+            </div>
+            <el-divider content-position="right"></el-divider>
+            <div class="igmp-mvlan-items">
+                <span>{{ langMap['mvlan_desc'] }}</span>
+                <span>{{ mv_info.mvlan_desc }}</span>
+                <span>
                     <el-button
-                        type="text"
-                        @click="openDialog(scope.row, 'config-program')"
+                        size="small"
+                        type="primary"
+                        @click="openDialog(mv_info, 'config-desc')"
+                    >{{ langMap['config'] }}</el-button>
+                </span>
+            </div>
+            <el-divider content-position="right"></el-divider>
+            <div class="igmp-mvlan-items">
+                <span>{{ langMap['router_portlist'] }}</span>
+                <span>{{ formatPortlist(mv_info.router_portlist) }}</span>
+                <span>
+                    <el-button
+                        size="small"
+                        type="primary"
+                        @click="openDialog(mv_info, 'config-router-list')"
                     >{{ langMap['add'] }}</el-button>
-                    <el-button type="text" @click="delProgram(scope.row)">{{ langMap['delete'] }}</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+                    <el-button
+                        size="small"
+                        type="primary"
+                        @click="openDialog(mv_info, 'delete-router-port')"
+                    >{{ langMap['delete'] }}</el-button>
+                </span>
+            </div>
+            <el-divider content-position="right"></el-divider>
+            <div class="igmp-mvlan-items">
+                <span>{{ langMap['mc_unknown_policy'] }}</span>
+                <span>{{ ['transparent', 'discard'][mc_unknown.mc_unknown_policy] }}</span>
+                <span>
+                    <el-button
+                        size="small"
+                        type="primary"
+                        @click="openDialog(mc_unknown, 'config-mc-policy')"
+                    >{{ langMap['config'] }}</el-button>
+                </span>
+            </div>
+            <h3 style="margin-top: 36px;">{{ langMap['program'] }}</h3>
+            <el-table :data="program" style="width: 100%" border stripe>
+                <el-table-column :formatter="formatIp" :label="langMap['ipaddr']" width="300px"></el-table-column>
+                <el-table-column prop="program_desc" :label="langMap['program_desc']"></el-table-column>
+                <el-table-column :label="langMap['config']" width="140px">
+                    <template slot="header" slot-scope="scope">
+                        <el-button
+                            type="text"
+                            @click="openDialog(null, 'config-program')"
+                        >{{ langMap['add'] }}</el-button>
+                    </template>
+                    <template slot-scope="scope">
+                        <el-button
+                            type="text"
+                            @click="delProgram(scope.row)"
+                        >{{ langMap['delete'] }}</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </template>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="640px" @close="closeDialog">
             <span slot="title">{{ langMap['config'] }}</span>
             <igmp-mvlan-form
@@ -100,7 +107,7 @@
 <script>
 import { mapState, mapMutations } from "Vuex";
 import igmpMvlanForm from "./igmpMvlanForm";
-import { analysisPortList, generatorPortName } from '@/utils/common';
+import { analysisPortList, generatorPortName } from "@/utils/common";
 export default {
     name: "igmpMvlan",
     components: { igmpMvlanForm },
@@ -131,27 +138,35 @@ export default {
                     params: { form: "multicast_vlan" }
                 }),
                 method: "get"
-            }).then(res => {
-                this.multi_vlan = [];
-                if (res.data.code === 1) {
-                    if (res.data.data && res.data.data.length) {
-                        this.multi_vlan = res.data.data;
-                        if(!this.mvlan){
-                            this.mvlan = this.multi_vlan[0].mvlan;
-                        }
-                        //  删除mvlan时调用
-                        var flag = true;
-                        this.multi_vlan.forEach(item =>{
-                            if(item.mvlan === this.mvlan){
-                                flag = false;
+            })
+                .then(res => {
+                    this.multi_vlan = [];
+                    if (res.data.code === 1) {
+                        if (res.data.data && res.data.data.length) {
+                            this.multi_vlan = res.data.data;
+                            if (!this.mvlan) {
+                                this.mvlan = this.multi_vlan[0].mvlan;
+                                return
                             }
-                        })
-                        if(flag){
-                            this.mvlan = this.multi_vlan[0].mvlan;
+                            //  删除mvlan时调用
+                            var flag = true;
+                            this.multi_vlan.forEach(item => {
+                                if (item.mvlan === this.mvlan) {
+                                    flag = false;
+                                    this.mv_info = item;
+                                }
+                            });
+                            if (flag) {
+                                this.mvlan = this.multi_vlan[0].mvlan;
+                            }
+                        }else{
+                            this.mv_info = {};
+                            this.mc_unknown = {};
+                            this.program = [];
                         }
                     }
-                }
-            });
+                })
+                .catch(err => {});
         },
         getMcUnknown(mvlan) {
             this.$devProxy({
@@ -161,14 +176,16 @@ export default {
                     params: { form: "mc_unknown", mvlan }
                 }),
                 method: "get"
-            }).then(res => {
-                this.mc_unknown = {};
-                if (res.data.code === 1) {
-                    if (res.data.data) {
-                        this.mc_unknown = res.data.data;
+            })
+                .then(res => {
+                    this.mc_unknown = {};
+                    if (res.data.code === 1) {
+                        if (res.data.data) {
+                            this.mc_unknown = res.data.data;
+                        }
                     }
-                }
-            });
+                })
+                .catch(err => {});
         },
         getProgram(mvlan) {
             this.$devProxy({
@@ -178,14 +195,16 @@ export default {
                     params: { form: "program", mvlan }
                 }),
                 method: "get"
-            }).then(res => {
-                this.program = [];
-                if (res.data.code === 1 && res.data.data.length) {
-                    if (res.data.data) {
-                        this.program = res.data.data;
+            })
+                .then(res => {
+                    this.program = [];
+                    if (res.data.code === 1 && res.data.data.length) {
+                        if (res.data.data) {
+                            this.program = res.data.data;
+                        }
                     }
-                }
-            });
+                })
+                .catch(err => {});
         },
         formatIp(row, col) {
             return `${row.program_s} - ${row.program_e}`;
@@ -389,8 +408,11 @@ export default {
             }
             return data;
         },
-        formatPortlist(portlist){
-            return generatorPortName(analysisPortList(portlist), this.port_name);
+        formatPortlist(portlist) {
+            return generatorPortName(
+                analysisPortList(portlist),
+                this.port_name
+            );
         }
     },
     watch: {

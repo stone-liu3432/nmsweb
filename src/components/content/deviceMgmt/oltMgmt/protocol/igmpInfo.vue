@@ -138,6 +138,7 @@ export default {
                                 this.$refs[formName].infoForm.mode !==
                                 this.info.mode
                             ) {
+                                this.dialogVisible = false;
                                 return this.$message.success(
                                     this.langMap["set_success"]
                                 );
@@ -176,7 +177,8 @@ export default {
                             } else {
                                 this.$message.error(res.data.message);
                             }
-                        });
+                            this.dialogVisible = false;
+                        }).catch(err =>{});
                     }
                 })
                 .catch(_ => {});
@@ -194,15 +196,15 @@ export default {
                     }),
                     method: "set",
                     param: {
-                        mode: 1
+                        mode: this.$refs[formName].infoForm.mode
                     }
                 })
                     .then(res => {
                         if (res.data.code === 1) {
-                            resolve();
+                            return resolve();
                         } else {
                             this.$message.error(res.data.message);
-                            reject();
+                            return reject();
                         }
                     })
                     .catch(err => {});

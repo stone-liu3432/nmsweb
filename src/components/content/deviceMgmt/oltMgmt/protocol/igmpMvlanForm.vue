@@ -163,11 +163,11 @@ export default {
             if (this.formFlag === "config-mc-policy") {
                 this.mvForm.mc_unknown_policy = this.formInfo.mc_unknown_policy;
             }
-            if (this.formFlag === "config-program") {
-                this.mvForm.program_s = this.formInfo.program_s;
-                this.mvForm.program_e = this.formInfo.program_e;
-                this.mvForm.program_desc = this.formInfo.program_desc;
-            }
+            // if (this.formFlag === "config-program") {
+            //     this.mvForm.program_s = this.formInfo.program_s;
+            //     this.mvForm.program_e = this.formInfo.program_e;
+            //     this.mvForm.program_desc = this.formInfo.program_desc;
+            // }
         }
     }
 };
