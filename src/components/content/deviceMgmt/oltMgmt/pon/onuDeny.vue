@@ -4,8 +4,8 @@
             <template slot="title">{{ langMap['onu_deny'] }}</template>
         </port-nav>
         <el-table :data="onuTable" border style="width: 100%" stripe>
-            <el-table-column :formatter="formatName" :label="langMap['onu_id']" width="180"></el-table-column>
-            <el-table-column prop="macaddr" :label="langMap['macaddr']" width="180"></el-table-column>
+            <el-table-column :formatter="formatName" :label="langMap['onu_id']"></el-table-column>
+            <el-table-column prop="macaddr" :label="langMap['macaddr']"></el-table-column>
             <el-table-column prop="retry" :label="langMap['retry']"></el-table-column>
             <el-table-column fixed="right" width="100">
                 <template slot="header" slot-scope="scope">
