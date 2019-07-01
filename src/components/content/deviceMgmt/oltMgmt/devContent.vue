@@ -6,6 +6,7 @@
         <olt-alarm v-if="showContent === 'alarm'"></olt-alarm>
         <olt-user-mgmt v-if="showContent === 'user_mgmt'"></olt-user-mgmt>
         <olt-time-set v-if="showContent === 'time'"></olt-time-set>
+        <onu-allow v-if="showContent === 'onu_allow'"></onu-allow>
         <onu-deny v-if="showContent === 'onu_deny'"></onu-deny>
         <sla-cfg v-if="showContent === 'sla_cfg'"></sla-cfg>
         <pon-setting v-if="showContent === 'pon_setting'"></pon-setting>
@@ -82,6 +83,8 @@ const diagonose = () =>
     import(/* webpackChunkName: 'olt-system' */ "./system/diagonose");
 const devMgmt = () =>
     import(/* webpackChunkName: 'olt-system' */ "./system/devMgmt");
+const onuAllow = () =>
+    import(/* webpackChunkName: 'olt-pon' */ "./pon/onuAllow");
 export default {
     name: "devContent",
     props: ["showContent"],
@@ -92,6 +95,7 @@ export default {
         oltAlarm,
         oltUserMgmt,
         oltTimeSet,
+        onuAllow,
         onuDeny,
         slaCfg,
         ponSetting,

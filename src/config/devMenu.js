@@ -18,6 +18,7 @@ export default [
     {
         name: "pon_mgmt",
         children: [
+            { name: 'onu_allow' },
             { name: "onu_deny" },
             { name: "sla_cfg" },
             { name: "pon_setting" },
