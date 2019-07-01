@@ -259,13 +259,6 @@ export default {
                 .catch(_ => {});
         },
         downloadFile(filename) {
-            // var a = document.createElement("a");
-            // a.href = "/" + filename;
-            // a.setAttribute("download", filename);
-            // a.style.display = "none";
-            // document.body.appendChild(a);
-            // a.click();
-            // document.body.removeChild(a);
             this.$devProxy({
                 devicelist: [this.dev_ip],
                 url: `/${filename}`,
