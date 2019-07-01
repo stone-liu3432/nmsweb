@@ -122,10 +122,11 @@ export default {
         uploadConfig(item) {
             var formData = new FormData();
             formData.append("file", item.file);
+            formData.append('devicelist', this.dev_ip);
             formData.append("method", "post");
             formData.append("url", "/system_restore");
             this.$http
-                .post("/api/proxy", formData, {
+                .post("/api/fileproxy", formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                     timeout: 0
                 })
@@ -163,7 +164,9 @@ export default {
                     })
                         .then(res => {
                             if (res.data.code === 1) {
-                                this.$message.success(this.langMap["st_success"]);
+                                this.$message.success(
+                                    this.langMap["st_success"]
+                                );
                             } else {
                                 this.$message.error(res.data.message);
                             }
@@ -255,14 +258,32 @@ export default {
                 })
                 .catch(_ => {});
         },
-        downloadFile(fileName) {
-            var a = document.createElement("a");
-            a.href = "/" + filename;
-            a.setAttribute("download", filename);
-            a.style.display = "none";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+        downloadFile(filename) {
+            // var a = document.createElement("a");
+            // a.href = "/" + filename;
+            // a.setAttribute("download", filename);
+            // a.style.display = "none";
+            // document.body.appendChild(a);
+            // a.click();
+            // document.body.removeChild(a);
+            this.$devProxy({
+                devicelist: [this.dev_ip],
+                url: `/${filename}`,
+                method: "get"
+            })
+                .then(res => {
+                    var content = res.data;
+                    var data = new Blob([content], {
+                        type: "text/plain;charset=UTF-8"
+                    });
+                    var downloadUrl = window.URL.createObjectURL(data);
+                    var anchor = document.createElement("a");
+                    anchor.href = downloadUrl;
+                    anchor.download = `${filename}`;
+                    anchor.click();
+                    window.URL.revokeObjectURL(data);
+                })
+                .catch(err => {});
         },
         downloadCurrentConfig() {
             this.$confirm(
