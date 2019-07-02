@@ -98,7 +98,7 @@ export default {
     offline: "离线",
     admin_status: "管理状态",
     link_status: "链路状态",
-    link_up: "连接",
+    link_up: "已连接",
     link_down: "未连接",
     auto_neg: "自适应",
     speed: "速率",
