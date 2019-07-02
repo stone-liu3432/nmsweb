@@ -1,10 +1,14 @@
 <template>
     <el-row>
         <el-col :span="4">
-            <dev-aside @menu-change="menuChange" v-if="updateData"></dev-aside>
+            <dev-aside @menu-change="menuChange" v-if="updateData && dev_ip"></dev-aside>
         </el-col>
         <el-col :span="20">
-            <dev-content :show-content="contentFlag" v-if="updateData && dev_ip" style="margin-left: 20px;"></dev-content>
+            <dev-content
+                :show-content="contentFlag"
+                v-if="updateData && dev_ip"
+                style="margin-left: 20px;"
+            ></dev-content>
         </el-col>
     </el-row>
 </template>
@@ -15,7 +19,11 @@ import devAside from "./devAside";
 import devContent from "./devContent";
 export default {
     name: "oltDetail",
-    props: ["oltInfo", "dev", "updateData"],
+    props: {
+        oltInfo: { type: Object },
+        dev: { type: String },
+        updateData: { type: Boolean }
+    },
     components: { devAside, devContent },
     computed: {
         ...mapState(["langMap", "port_name"])
@@ -35,7 +43,7 @@ export default {
         ...mapMutations({
             updateProtName: "updatePortName",
             updateDevIP: "updateDevIP",
-            updateBasicInfo: 'updateBasicInfo'
+            updateBasicInfo: "updateBasicInfo"
         }),
         getData() {
             this.$http
@@ -113,6 +121,10 @@ export default {
             } else {
                 this.$emit("set-title", null);
                 this.contentFlag = "running_status";
+                this.dev_ip = "";
+                this.updateDevIP("");
+                this.updateBasicInfo({});
+                this.updateProtName({});
             }
         }
     },
