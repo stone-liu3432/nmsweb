@@ -89,6 +89,7 @@ export default {
     },
     created() {
         this.getData();
+        this.getPortData();
     },
     methods: {
         getData() {
@@ -105,9 +106,6 @@ export default {
                     if (res.data.code === 1) {
                         if (res.data.data) {
                             this.rstp = res.data.data;
-                            if (this.rstp.status) {
-                                this.getPortData();
-                            }
                         }
                     }
                 })
