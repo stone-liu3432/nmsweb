@@ -1,13 +1,13 @@
 <template>
     <el-tabs v-model="activeName" type="card">
-        <el-tab-pane :label="langMap['dev_group_mgmt']" name="group">
-            <group-mgmt v-if="activeName === 'group'"></group-mgmt>
+        <el-tab-pane :label="langMap['discovery_network']" name="network">
+            <discover-net v-if="activeName === 'network'"></discover-net>
         </el-tab-pane>
         <el-tab-pane :label="langMap['add_device']" name="node">
             <discover-node v-if="activeName === 'node'"></discover-node>
         </el-tab-pane>
-        <el-tab-pane :label="langMap['discovery_network']" name="network">
-            <discover-net v-if="activeName === 'network'"></discover-net>
+        <el-tab-pane :label="langMap['dev_group_mgmt']" name="group">
+            <group-mgmt v-if="activeName === 'group'"></group-mgmt>
         </el-tab-pane>
         <!-- <el-tab-pane label="日志搜索" name="third">
             <log-search></log-search>
@@ -27,7 +27,7 @@ export default {
     computed: mapState(["langMap"]),
     data() {
         return {
-            activeName: "group"
+            activeName: "network"
         };
     },
     methods: {}
