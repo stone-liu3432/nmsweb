@@ -85,3 +85,7 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
         min-height: 420px;
     }
 }
+
+.custom-loading-icon-size i.el-icon-loading{
+    font-size: 64px;
+}
