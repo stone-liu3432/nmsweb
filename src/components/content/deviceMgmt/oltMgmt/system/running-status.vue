@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { mapState } from "Vuex";
+import { mapState, mapMutations } from "Vuex";
 import pieCharts from "@/components/echarts/pie";
 import { initPieData, initLineData } from "@/utils/common";
 export default {
@@ -110,6 +110,9 @@ export default {
         this.getPort();
     },
     methods: {
+        ...mapMutations({
+            updateLoading: "changeLoadingState"
+        }),
         getCpu() {
             this.$devProxy({
                 devicelist: [this.dev_ip],
@@ -146,6 +149,9 @@ export default {
                                     }
                                 ]
                             });
+                            this.$nextTick(_ =>{
+                                this.updateLoading(false);
+                            })
                         }
                     }
                 })
@@ -162,6 +168,9 @@ export default {
                     if (res.data.code === 1) {
                         if (res.data.data && res.data.data.length) {
                             this.ponInfo = res.data.data;
+                            this.$nextTick(_ =>{
+                                this.updateLoading(false);
+                            })
                         }
                     }
                 })
@@ -181,10 +190,16 @@ export default {
                     if (res.data.code === 1) {
                         if (res.data.data && res.data.data.length) {
                             this.portInfo = res.data.data;
+                            this.$nextTick(_ =>{
+                                this.updateLoading(false);
+                            })
                         }
                     }
                 })
-                .catch(err => {});
+                .catch(err => {
+                    this.updateLoading(false);
+                    this.$message.error(this.langMap['get_data_fail']);
+                });
         },
         generateSrc(type, item) {
             if (type === "pon") {
