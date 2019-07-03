@@ -1,4 +1,6 @@
-div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+div.el-tree--highlight-current
+    .el-tree-node.is-current
+    > .el-tree-node__content {
     color: #409eff;
 }
 
@@ -6,11 +8,13 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
     background: #ebeef5;
 } */
 
-.el-collapse{
+.el-collapse {
     border: none;
 }
 
-.el-table__body, .el-table__footer, .el-table__header {
+.el-table__body,
+.el-table__footer,
+.el-table__header {
     border-collapse: separate !important;
 }
 
@@ -26,15 +30,15 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
     box-shadow: 0 0 5px 1px #333;
 }
 
-.el-dropdown{
+.el-dropdown {
     cursor: pointer;
 }
 
-.el-message{
+.el-message {
     top: 75px;
 }
 
-.el-select{
+.el-select {
     width: 100%;
 }
 /* table row 告警级别背景色 */
@@ -52,11 +56,11 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
     background: #e2b076;
 }
 
-.is-fullscreen .el-dialog__header{
+.is-fullscreen .el-dialog__header {
     border: none;
 }
 
-.el-dialog__header{
+.el-dialog__header {
     padding: 20px;
     border-bottom: 1px solid #ccc;
     font-size: 18px;
@@ -64,14 +68,13 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
     font-weight: 600;
 }
 
-.port-nav-title + .el-form .el-form-item--small .el-form-item__content{
+.port-nav-title + .el-form .el-form-item--small .el-form-item__content {
     line-height: 51px;
 }
 
-.el-switch:focus{
+.el-switch:focus {
     outline: none;
 }
-
 
 .tree-border {
     min-height: 720px;
@@ -80,12 +83,16 @@ div.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
     overflow-y: auto;
 }
 
-@media screen and (max-height: 769px){
-    .tree-border{
+@media screen and (max-height: 769px) {
+    .tree-border {
         min-height: 420px;
     }
 }
 
-.custom-loading-icon-size i.el-icon-loading{
+.custom-loading-icon-size i.el-icon-loading {
     font-size: 64px;
+}
+
+.row-expand-hidden .el-table__expand-icon {
+    visibility: hidden;
 }
