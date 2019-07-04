@@ -25,7 +25,7 @@ export default {
     },
     methods: {
         changeMenu(val){
-            this.$emit('menu-change', this.defMenuItem);
+            this.$emit('menu-change', val);
         }
     }
 };

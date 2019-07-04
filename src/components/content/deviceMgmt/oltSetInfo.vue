@@ -1,5 +1,5 @@
 <template>
-    <el-form :model="devInfo" :rules="rules" ref="devInfo" label-width="120px" size="small">
+    <el-form :model="devInfo" :rules="rules" ref="devInfo" label-width="140px" size="small">
         <el-row>
             <el-col :span="12">
                 <el-form-item :label="langMap['name']" prop="devname">
@@ -41,7 +41,7 @@
         <template v-if="dev === 'olt'">
             <el-row>
                 <el-col :span="12">
-                    <el-form-item :label="langMap['ipaddr']" prop="ipaddr">
+                    <el-form-item :label="langMap['current_ipaddr']" prop="ipaddr">
                         <el-select v-model="devInfo.ipaddr" style="width: 100%">
                             <el-option v-for="(item, index) in ip_pool" :key="index" :value="item">{{ item }}</el-option>
                         </el-select>

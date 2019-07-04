@@ -1,6 +1,7 @@
 <template>
     <div>
         <onu-basic-info v-if="showContent === 'onu_basic_info'"></onu-basic-info>
+        <onu-port-cfg v-if="showContent === 'onu_port_cfg'"></onu-port-cfg>
     </div>
 </template>
 
@@ -13,9 +14,12 @@ export default {
         showContent: { type: String }
     },
     components: {
-        onuBasicInfo: () => import(/* webpackChunkName: 'onu-config' */ './onuBasicInfo')
+        onuBasicInfo: () =>
+            import(/* webpackChunkName: 'onu-config' */ "./onuBasicInfo"),
+        onuPortCfg: () =>
+            import(/* webpackChunkName: 'onu-config' */ "./onuPortCfg")
     },
-    inject: ['dev_ip'],
+    inject: ["dev_ip"],
     data() {
         return {};
     },
