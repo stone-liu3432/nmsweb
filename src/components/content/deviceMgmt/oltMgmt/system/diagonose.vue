@@ -137,10 +137,10 @@ export default {
                         }),
                         method: "set",
                         param: {
-                            ipaddr: "192.168.1.30",
-                            interface: "outbound",
-                            count: 4,
-                            pktsize: 64
+                            ipaddr: this.formData.ipaddr,
+                            interface: this.formData.interface,
+                            count: this.formData.count,
+                            pktsize: this.formData.pktsize
                         }
                     })
                         .then(res => {
