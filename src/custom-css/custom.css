@@ -96,3 +96,12 @@ div.el-tree--highlight-current
 .row-expand-hidden .el-table__expand-icon {
     visibility: hidden;
 }
+
+ /* onu性能管理页，流式布局 */
+.op-perf-item{
+    height: 32px;
+    line-height: 32px;
+    padding-left: 8px;
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}

@@ -75,7 +75,7 @@
             </el-table>
         </template>
         <el-dialog :visible.sync="dialogVisible" append-to-body @close="closeDialog">
-            <span slot="title">{{ langMap['config'] }}</span>
+            <span slot="title">{{ dialogTitle }}</span>
             <onu-mvlan-form :form-flag="dialogFlag" ref="onu-multi-vlan-config"></onu-mvlan-form>
             <span slot="footer">
                 <el-button @click="dialogVisible = false">{{ langMap['cancel'] }}</el-button>
@@ -95,7 +95,16 @@ export default {
     name: "onuMvlan",
     components: { onuMvlanForm },
     computed: {
-        ...mapState(["langMap"])
+        ...mapState(["langMap"]),
+        dialogTitle() {
+            if (
+                this.dialogFlag === "add-mvlan" ||
+                this.dialogFlag === "add-mv-translate"
+            ) {
+                return this.langMap["add"];
+            }
+            return this.langMap["config"];
+        }
     },
     inject: ["dev_ip", "onuInfo", "port_id", "onu_id"],
     data() {
@@ -363,7 +372,7 @@ export default {
         delMvlan() {
             this.mvlan = this.mvInfo[0];
             this.$msgbox({
-                title: this.langMap["config"],
+                title: this.langMap["delete"],
                 message: (
                     <el-form label-width="140px" size="small">
                         <el-form-item label={this.langMap["mvlan"]}>
@@ -449,14 +458,18 @@ export default {
                             svlan: data.svlan,
                             cvlan: data.cvlan
                         }
-                    }).then(res =>{
-                        if(res.data.code === 1){
-                            this.$message.success(this.langMap['delete_success']);
-                            this.getMvTranslate(this.op_id);
-                        }else{
-                            this.$message.error(res.data.message);
-                        }
-                    }).catch(err =>{})
+                    })
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap["delete_success"]
+                                );
+                                this.getMvTranslate(this.op_id);
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        })
+                        .catch(err => {});
                 })
                 .catch(_ => {});
         }
