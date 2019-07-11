@@ -12,22 +12,24 @@
                 <el-col :span="8">
                     <el-form-item :label="langMap['protocol']" label-width="150px" prop="protocol">
                         <el-select
+                            style="width: 200px;"
                             v-model="networkData.protocol"
                             :placeholder="langMap['protocol']"
                         >
                             <el-option value="http"></el-option>
+                            <el-option value="https"></el-option>
                             <el-option value="snmp" disabled></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <!-- <el-col :span="8">
                     <el-form-item :label="langMap['port']" label-width="150px" prop="httpport">
                         <el-input
                             v-model.number="networkData.httpport"
                             :placeholder="langMap['port']"
                         ></el-input>
                     </el-form-item>
-                </el-col>
+                </el-col> -->
             </el-row>
             <el-row>
                 <el-col :span="8">
@@ -54,6 +56,7 @@
                         prop="groupname"
                     >
                         <el-select
+                            style="width: 200px;"
                             v-model="networkData.groupname"
                             :placeholder="langMap['groupname']"
                         >
@@ -125,7 +128,7 @@
                 :label="langMap['snmpcommunity']"
                 :formatter="formatItem"
             ></el-table-column>
-            <el-table-column :formatter="formatPort" :label="langMap['port']"></el-table-column>
+            <!-- <el-table-column :formatter="formatPort" :label="langMap['port']"></el-table-column> -->
             <el-table-column fixed="right" :label="langMap['config']">
                 <template slot-scope="scope">
                     <el-button
