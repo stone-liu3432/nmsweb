@@ -1,6 +1,6 @@
 <template>
     <el-header>
-        <div class="layout-logo"></div>
+        <div class="layout-logo">NMS</div>
         <el-dropdown @command="handleCommand" class="layout-user">
             <span class="el-dropdown-link">
                 {{ username }}
@@ -104,8 +104,13 @@ export default {
 .layout-logo {
     height: inherit;
     width: 200px;
-    background: #aaa;
     float: left;
+    font-size: 32px;
+    text-align: center;
+    line-height: 61px;
+    font-weight: 600;
+    font-style: italic;
+    color: #555;
 }
 .layout-user{
     float: right;
