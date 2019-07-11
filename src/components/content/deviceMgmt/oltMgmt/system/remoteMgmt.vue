@@ -72,7 +72,7 @@
                     <el-input v-model="remoteForm.ipmask"></el-input>
                 </el-form-item>
                 <el-form-item :label="langMap['vlan_id']" prop="vlan_id" v-if="modalFlag === 'add'">
-                    <el-input v-model="remoteForm.vlan_id"></el-input>
+                    <el-input v-model.number="remoteForm.vlan_id"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer">
