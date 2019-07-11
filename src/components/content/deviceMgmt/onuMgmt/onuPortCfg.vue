@@ -255,7 +255,11 @@ export default {
                             this.$message.success(
                                 this.langMap[data.method + "_success"]
                             );
-                            this.getPortCfg();
+                            if(this.dialogFlag === 'basic-info'){
+                                this.getPortCfg();
+                            }else{
+                                this.getPortVlan();
+                            }
                         } else {
                             this.$message.error(res.data.message);
                         }

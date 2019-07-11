@@ -20,17 +20,19 @@
                 </template>
             </el-select>
         </el-form-item>
-        <el-form-item :label="langMap['def_vlan_id']" prop="def_vlan_id">
-            <el-input v-model.number="formData.def_vlan_id"></el-input>
-        </el-form-item>
-        <el-form-item :label="langMap['def_vlan_pri']" prop="dev_vlan_pri">
-            <el-select v-model.number="formData.def_vlan_pri">
-                <el-option :value="0"></el-option>
-                <template v-for="item in 7">
-                    <el-option :value="item"></el-option>
-                </template>
-            </el-select>
-        </el-form-item>
+        <template v-if="formData.op_vlan_mode !== 0">
+            <el-form-item :label="langMap['def_vlan_id']" prop="def_vlan_id">
+                <el-input v-model.number="formData.def_vlan_id"></el-input>
+            </el-form-item>
+            <el-form-item :label="langMap['def_vlan_pri']" prop="dev_vlan_pri">
+                <el-select v-model.number="formData.def_vlan_pri">
+                    <el-option :value="0"></el-option>
+                    <template v-for="item in 7">
+                        <el-option :value="item"></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
+        </template>
     </el-form>
 </template>
 
