@@ -9,7 +9,11 @@
             <el-col :span="12">
                 <el-form-item :label="langMap['groupname']" prop="groupname">
                     <el-select v-model="devInfo.groupname" style="width: 100%;">
-                        <el-option v-for="(item, index) in groups" :key="index" :value="item">{{ item }}</el-option>
+                        <el-option
+                            v-for="(item, index) in groups"
+                            :key="index"
+                            :value="item"
+                        >{{ item }}</el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
@@ -43,13 +47,32 @@
                 <el-col :span="12">
                     <el-form-item :label="langMap['current_ipaddr']" prop="ipaddr">
                         <el-select v-model="devInfo.ipaddr" style="width: 100%">
-                            <el-option v-for="(item, index) in ip_pool" :key="index" :value="item">{{ item }}</el-option>
+                            <el-option
+                                v-for="(item, index) in ip_pool"
+                                :key="index"
+                                :value="item"
+                            >{{ item }}</el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
                     <el-form-item :label="langMap['contact']" prop="contact">
                         <el-input v-model="devInfo.contact"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item :label="langMap['protocol']" prop="protocol">
+                        <el-select v-model="devInfo.protocol" style="width: 100%">
+                            <el-option value="http"></el-option>
+                            <el-option value="https"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item :label="langMap['port']" prop="httpport">
+                        <el-input v-model.number="devInfo.httpport"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -166,10 +189,14 @@ export default {
         return {
             ip_pool: [],
             devInfo: {
+                port_id: '',
+                onu_id: '',
                 devname: "",
                 devid: "",
                 groupname: "",
                 ipaddr: "",
+                protocol: "http",
+                httpport: 80,
                 manufacturer: "",
                 contact: "",
                 location: {
@@ -246,6 +273,9 @@ export default {
                 ],
                 description: [
                     { validator: validDesc, trigger: ["change", "blur"] }
+                ],
+                httpport: [
+                    { validator: this.validRange, trigger: ["change", "blur"] }
                 ]
             }
         };
@@ -280,8 +310,9 @@ export default {
                         if (res.data.data) {
                             for (var key in this.devInfo) {
                                 if (key === "location") {
-                                    if(res.data.data.location){
-                                        for (var _key in this.devInfo.location) {
+                                    if (res.data.data.location) {
+                                        for (var _key in this.devInfo
+                                            .location) {
                                             this.devInfo[key][_key] =
                                                 res.data.data[key][_key] !==
                                                 undefined
@@ -297,21 +328,29 @@ export default {
                                 }
                             }
                             this.devInfo.devname = res.data.data["name"];
-                            (res.data.data.ipaddr) && this.ip_pool.push(res.data.data.ipaddr);
-                            if(res.data.data.inbound){
-                                res.data.data.inbound.forEach(item =>{
+                            this.devInfo.ipaddr = res.data.data['current_ipaddr'] || res.data.data['ipaddr'];
+                            res.data.data.ipaddr &&
+                                this.ip_pool.push(res.data.data.ipaddr);
+                            if (res.data.data.inbound) {
+                                res.data.data.inbound.forEach(item => {
                                     this.ip_pool.push(item.ipaddr);
-                                })
+                                });
                             }
                         }
                     }
                 })
                 .catch(err => {});
+        },
+        validRange(rule, value, cb) {
+            if (value < 80 || value > 50000 || isNaN(value)) {
+                return cb(new Error("Range: 80 - 50000"));
+            }
+            cb();
         }
     },
     watch: {
-        updateData(){
-            if(this.updateData){
+        updateData() {
+            if (this.updateData) {
                 this.getData();
             }
         }
