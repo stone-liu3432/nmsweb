@@ -91,8 +91,8 @@
                 </el-form-item>
                 <el-form-item :label="langMap['onu_perf_status']" prop="status">
                     <el-select v-model.number="statusForm.status">
-                        <el-option :value="0" :label="langMap['disable']"></el-option>
-                        <el-option :value="1" :label="langMap['enable']"></el-option>
+                        <el-option :value="1" :label="langMap['disable']"></el-option>
+                        <el-option :value="2" :label="langMap['enable']"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="langMap['onu_perf_period']" prop="period">

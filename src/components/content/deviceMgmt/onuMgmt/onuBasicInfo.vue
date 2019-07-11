@@ -21,15 +21,15 @@
                 <template v-for="(item, key) in baseInfo">
                     <el-row
                         v-if="key !== 'port_id' && key !== 'onu_id'"
-                        style="height: 32px; line-height: 32px; border-bottom: 1px solid #ddd;"
+                        style="padding: 8px 0; border-bottom: 1px solid #ddd;"
                     >
-                        <el-col :span="8">{{ langMap[key] }}</el-col>
-                        <el-col :span="8">{{ item }}</el-col>
+                        <el-col :span="8" style="padding-left: 10px;">{{ langMap[key] || key }}</el-col>
+                        <el-col :span="16" style="padding: 0 6px;">{{ item }}</el-col>
                     </el-row>
                 </template>
-                <el-row style="height: 32px; line-height: 32px; border-bottom: 1px solid #ddd;">
-                    <el-col :span="8">fec mode</el-col>
-                    <el-col :span="8">{{ fec_mode ? langMap['enable'] : langMap['disable'] }}</el-col>
+                <el-row style="padding: 8px 0; border-bottom: 1px solid #ddd;">
+                    <el-col :span="8" style="padding-left: 10px;">fec mode</el-col>
+                    <el-col :span="16" style="padding: 0 6px;">{{ fec_mode ? langMap['enable'] : langMap['disable'] }}</el-col>
                 </el-row>
             </el-col>
             <el-col :span="12">
