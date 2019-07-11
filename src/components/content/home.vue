@@ -143,6 +143,22 @@ export default {
                             name: "ONU",
                             data: [
                                 {
+                                    value: data.authlimit,
+                                    name: this.langMap["authlimit"]
+                                },
+                                {
+                                    value: data.authfail,
+                                    name: this.langMap["authfail"]
+                                },
+                                {
+                                    value: data.unauth,
+                                    name: this.langMap["unauth"]
+                                },
+                                {
+                                    value: data.authorized,
+                                    name: this.langMap["authorized"]
+                                },
+                                {
                                     value: data.offline,
                                     name: this.langMap["offline"]
                                 },
@@ -153,14 +169,6 @@ export default {
                                 {
                                     value: data.initial,
                                     name: this.langMap["initial"]
-                                },
-                                {
-                                    value: data.authorized,
-                                    name: this.langMap["authorized"]
-                                },
-                                {
-                                    value: data.unauth,
-                                    name: this.langMap["unauth"]
                                 }
                             ]
                         });
