@@ -19,6 +19,17 @@ export const STATUS = [
     "link_lost",
     "end"
 ];
+//  ONU 状态枚举
+export const ONU_STATUS = [
+    "Initial",
+    "Offline",
+    "Register",
+    "Auth-Fail",
+    "Unauth",
+    "Auth Limit",
+    "Online"
+];
+
 //  告警类型
 export const ALARM_TYPE = [
     "environ",
