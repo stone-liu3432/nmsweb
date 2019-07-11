@@ -46,6 +46,9 @@ div.el-tree--highlight-current
     background: #e94a1a;
     color: #fff;
 }
+.el-table .critical-row:hover{
+    color: #606266;
+}
 .el-table .major-row {
     background: #e69122;
 }
