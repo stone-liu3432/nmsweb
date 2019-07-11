@@ -15,6 +15,21 @@
             </el-row>
             <el-row>
                 <el-col :span="8">
+                    <el-form-item :label="langMap['protocol']" prop="protocol">
+                        <el-select v-model="addData.protocol">
+                            <el-option value="http"></el-option>
+                            <el-option value="https"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8" :offset="1">
+                    <el-form-item :label="langMap['port']" prop="port">
+                        <el-input v-model="addData.port"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="8">
                     <el-form-item :label="langMap['ipaddr']" prop="ipaddr">
                         <el-input v-model="addData.ipaddr" :placeholder="langMap['ipaddr']"></el-input>
                     </el-form-item>
@@ -72,7 +87,9 @@ export default {
                 model: "",
                 class: 1,
                 groupname: "",
-                name: ""
+                name: "",
+                port: 80,
+                protocol: 'http'
             },
             rules: {
                 name: [
@@ -104,6 +121,9 @@ export default {
                         validator: validator.validatorIpAddr,
                         trigger: ["change", "blur"]
                     }
+                ],
+                port: [
+                    { validator: this.validRange, trigger: ['change', 'blur'] }
                 ]
             },
             groups: [],
@@ -125,7 +145,9 @@ export default {
                             ipmask: this.addData.ipmask,
                             model: this.addData.model,
                             mclass: this.addData.class,
-                            groupname: this.addData.groupname
+                            groupname: this.addData.groupname,
+                            protocol: this.addData.protocol,
+                            httpport: this.addData.port
                         }
                     };
                     this.$http
@@ -163,17 +185,13 @@ export default {
                     }
                 })
                 .catch(err => {});
+        },
+        validRange(rule, value, cb){
+            if(value < 80 || value > 50000 || isNaN(value)){
+                return cb(new Error('Range: 80 - 50000'));
+            }
+            cb();
         }
-        //  暂未支持
-        // getDev(){
-        //     this.$http.get('/api/device/olt?type=list').then(res =>{
-        //         if(res.data.code === 1){
-
-        //         }else{
-
-        //         }
-        //     }).catch(err =>{})
-        // }
     }
 };
 </script>
