@@ -694,7 +694,7 @@ export default {
     unauth: "Unauthorized",
     validator_model_tips: 'Numbers, letters, and "-", 4-18 characters',
     validator_desc_tips: "4-256 character",
-    validator_name_tips: "Number, letter, underline, 4-33 characters",
+    validator_name_tips: "Number, letter, underline, 1-33 characters",
     validator_addr_tips: "4-128 character",
     validator_account_tips:
         'Numbers, letters, "_", "-", ".", "@", 4-33 characters',
@@ -784,6 +784,10 @@ export default {
     pon_isolation_tips: "Set PON port isolation only",
     illegal_mac: " Illegal MAC address",
     qos_weight_tips: "The sum of weights cannot exceed 100",
+    all: ' All ',
+    show_type: 'Show type',
+    authfail: 'Authentication failed',
+    authlimit : 'Authentication limit',
 
     composeRange(min, max) {
         return `${min} - ${max} characters`;

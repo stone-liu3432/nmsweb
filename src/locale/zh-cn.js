@@ -673,7 +673,7 @@ export default {
     unauth: "未授权",
     validator_model_tips: "数字，字母，和“-”，4-18位字符",
     validator_desc_tips: "4-256位字符",
-    validator_name_tips: "数字，字母，下划线，4-33位字符",
+    validator_name_tips: "数字，字母，下划线，1-33位字符",
     validator_addr_tips: "4-128位字符",
     validator_account_tips: "数字，字母，下划线，“-”，“.”，“@”，4-33位字符",
     validator_pass_tips: "4-33位字符",
@@ -762,6 +762,10 @@ export default {
     pon_isolation_tips: '仅设置PON端口隔离',
     illegal_mac: '非法MAC地址',
     qos_weight_tips: '权重总和最大值不能超过100',
+    all: '全部',
+    show_type: '显示类型',
+    authfail: '认证失败',
+    authlimit : '限制认证',
 
     composeRange(min, max){
         return `${min} - ${max}位字符`;
