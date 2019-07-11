@@ -51,7 +51,7 @@
                         <span>{{ langMap['onu_perf_status'] }}:</span>
                         <span
                             style="margin-left: 8px;"
-                        >{{ perfStatus.status ? langMap['enable'] : langMap['disable'] }}</span>
+                        >{{ perfStatus.status === 2 ? langMap['enable'] : langMap['disable'] }}</span>
                     </el-col>
                     <el-col :span="12">
                         <span>{{ langMap['onu_perf_period'] }}:</span>
