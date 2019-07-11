@@ -20,24 +20,63 @@
             </el-col>
             <el-col :span="20">
                 <!-- 功能按钮，数据过滤 -->
-                <el-form label-width="auto" size="small" style="margin-left: 16px;">
-                    <!-- <el-form-item label="显示类型:">
-                        <el-select v-model="dataFilterType" style="width: 200px;">
-                            <template>
-                                <el-option></el-option>
-                            </template>
-                            <template>
-                                <el-option></el-option>
+                <el-form
+                    label-width="auto"
+                    size="small"
+                    style="margin-left: 16px;"
+                    inline
+                    :model="dataFilter"
+                    :rules="filterRules"
+                >
+                    <el-form-item :label="`${langMap['show_type']}:`">
+                        <el-select v-model.number="dataFilter.type" style="width: 200px;">
+                            <el-option :value="0" :label="langMap['all']"></el-option>
+                            <template v-if="showFlag === 'onu'">
+                                <el-option :value="1" :label="langMap['port_id']"></el-option>
+                                <el-option :value="2" :label="langMap['status']"></el-option>
+                                <el-option
+                                    :value="3"
+                                    :label="`${langMap['onu_name']}/${langMap['macaddr']}`"
+                                ></el-option>
                             </template>
                         </el-select>
-                    </el-form-item> -->
+                    </el-form-item>
+                    <template v-if="showFlag === 'onu'">
+                        <el-form-item :label="langMap['port_id']" v-if="dataFilter.type === 1">
+                            <el-select v-model.number="dataFilter.port_id">
+                                <template v-for="item in ponports">
+                                    <el-option
+                                        :value="item"
+                                        :label="`PON${item < 10 ? '0' + item : item}`"
+                                    ></el-option>
+                                </template>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item :label="langMap['status']" v-if="dataFilter.type === 2">
+                            <el-select v-model="dataFilter.status">
+                                <template v-for="item in onuStatus">
+                                    <el-option :value="item"></el-option>
+                                </template>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item
+                            :label="`${langMap['onu_name']}/${langMap['macaddr']}`"
+                            v-if="dataFilter.type === 3"
+                        >
+                            <el-input v-model="dataFilter.custom"></el-input>
+                        </el-form-item>
+                    </template>
                 </el-form>
                 <template v-if="showFlag === 'olt'">
                     <!-- v-if 渲染时，相同元素会被复用，数据项不同时，需给控制的元素加上唯一的key，避免渲染空模板报错 -->
-                    <el-table :data="devTable" style="width: 100%" key="olt" border>
+                    <el-table :data="oltData" style="width: 100%" key="olt-list" border>
                         <el-table-column prop="name" :label="langMap['name']"></el-table-column>
                         <el-table-column prop="macaddr" label="MAC" width="180"></el-table-column>
-                        <el-table-column prop="ipaddr" :label="langMap['ipaddr']" width="180"></el-table-column>
+                        <el-table-column prop="ipaddr" :label="langMap['ipaddr']" width="180">
+                            <template
+                                slot-scope="scope"
+                            >{{ `${scope.row.ipaddr}/${scope.row.httpport}` }}</template>
+                        </el-table-column>
                         <el-table-column
                             prop="status"
                             :formatter="showStatus"
@@ -85,6 +124,7 @@
                                         >{{ langMap['onu_sync'] }}</el-dropdown-item>
                                         <el-dropdown-item
                                             :command="composeData('olt', 'info', scope.row)"
+                                            :disabled="!scope.row.status"
                                             divided
                                         >{{ langMap['dev_detail'] }}</el-dropdown-item>
                                     </el-dropdown-menu>
@@ -106,9 +146,9 @@
                 </template>
                 <template v-if="showFlag === 'onu'">
                     <el-table
-                        :data="onuTable"
+                        :data="onuData"
                         style="width: 100%"
-                        key="onu"
+                        key="onu-list"
                         border
                         :row-style="isOnuSync"
                     >
@@ -131,9 +171,11 @@
                             prop="mclass"
                             :formatter="formatClass"
                             :label="langMap['mclass']"
+                            width="100"
                         ></el-table-column>
-                        <el-table-column prop="model" :label="langMap['model']"></el-table-column>
-                        <el-table-column prop="groupname" :label="langMap['groupname']"></el-table-column>
+                        <!-- <el-table-column prop="model" :label="langMap['model']"></el-table-column>
+                        <el-table-column prop="groupname" :label="langMap['groupname']"></el-table-column> -->
+                        <el-table-column prop="register_time" :label="langMap['register_time']"></el-table-column>
                         <el-table-column :label="langMap['config']" width="100">
                             <template slot-scope="scope">
                                 <el-dropdown
@@ -172,7 +214,7 @@
                         :page-sizes="pageSizes"
                         :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="onuList.length"
+                        :total="onuTotal"
                     ></el-pagination>
                 </template>
             </el-col>
@@ -201,32 +243,36 @@
             <div slot="title" v-if="devMgmtTitle">
                 <span>{{ langMap['name'] }} : {{ devMgmtTitle.name }}</span>
                 <el-divider direction="vertical"></el-divider>
-                <span>{{ langMap['ipaddr'] }} : {{ devMgmtTitle.ipaddr }}</span>
-                <el-divider direction="vertical"></el-divider>
+                <template v-if="!!devMgmtTitle.ipaddr">
+                    <span>{{ langMap['ipaddr'] }} : {{ devMgmtTitle.ipaddr }}</span>
+                    <el-divider direction="vertical"></el-divider>
+                </template>
                 <span>{{ langMap['macaddr'] }} : {{ devMgmtTitle.macaddr }}</span>
             </div>
             <olt-detail
                 :dev="devFlag"
                 :update-data="showMgmtDialog"
-                v-if="handleFlag === 'info' && devFlag === 'olt'"
+                v-if="handleFlag === 'info' && devFlag === 'olt' && !loading"
                 :olt-info="cacheData"
                 ref="olt-mgmt-dialog"
                 @set-title="devTitle"
             ></olt-detail>
             <onu-detail
                 :dev="devFlag"
+                :dev_ip="olt_ip"
                 :update-data="showMgmtDialog"
-                v-if="handleFlag === 'info' && devFlag === 'onu'"
+                v-if="handleFlag === 'info' && devFlag === 'onu' && !loading"
                 :onu-info="cacheData"
                 ref="onu-mgmt-dialog"
+                @set-title="devTitle"
             ></onu-detail>
         </el-dialog>
     </div>
 </template>
 
 <script>
-import { mapState } from "Vuex";
-import { pageSizes, STATUS, MCLASS } from "@/utils/common-data";
+import { mapState, mapMutations } from "Vuex";
+import { pageSizes, MCLASS, ONU_STATUS } from "@/utils/common-data";
 import { removeUnderline } from "@/utils/common";
 const devSetInfo = () =>
     import(/* webpackChunkName: "configMgmt" */ "./oltSetInfo");
@@ -237,9 +283,54 @@ const onuDetail = () =>
 export default {
     name: "deviceMgmt",
     components: { devSetInfo, oltDetail, onuDetail },
-    computed: mapState(["langMap"]),
+    computed: {
+        ...mapState(["langMap", "loading"]),
+        onuData() {
+            let data = this.onuList.slice(0);
+            if (this.dataFilter.type) {
+                if (this.dataFilter.type === 1) {
+                    data = data.filter(
+                        item => item.port_id === this.dataFilter.port_id
+                    );
+                }
+                if (this.dataFilter.type === 2) {
+                    data = data.filter(
+                        item =>
+                            item.status.toLowerCase() ===
+                            this.dataFilter.status.toLowerCase()
+                    );
+                }
+                if (this.dataFilter.type === 3) {
+                    if (this.dataFilter.custom) {
+                        data = data.filter(
+                            item =>
+                                item.name.indexOf(this.dataFilter.custom) >
+                                    -1 ||
+                                item.macaddr.indexOf(this.dataFilter.custom) >
+                                    -1
+                        );
+                    }
+                }
+            }
+            this.onuTotal = data.length;
+            let start = this.pageSize * (this.onuCurrentPage - 1);
+            if (start + this.pageSize > data.length) {
+                return data.slice(start);
+            } else {
+                return data.slice(start, start + this.pageSize);
+            }
+        },
+        oltData() {
+            var start = this.pageSize * (this.currentPage - 1);
+            if (start + this.pageSize > this.devList.length) {
+                return this.devList.slice(start);
+            }
+            return this.devList.slice(start, start + this.pageSize);
+        }
+    },
     data() {
         return {
+            onuStatus: ONU_STATUS,
             showArea: true,
             areaData: [],
             defaultProps: {
@@ -265,7 +356,20 @@ export default {
             currentTreeData: {},
             showMgmtDialog: false,
             devMgmtTitle: "",
-            dataFilterType: ""
+            dataFilterType: 0,
+            //  显示onu列表时，缓存Olt IP
+            olt_ip: "",
+            dialogShow: false,
+            dataFilter: {
+                type: 0,
+                port_id: 1,
+                status: "Online",
+                custom: ""
+            },
+            filterRules: {},
+            ponports: 0,
+            onuTotal: 0,
+            oltTotal: 0
         };
     },
     created() {
@@ -273,6 +377,9 @@ export default {
         this.getGroups();
     },
     methods: {
+        ...mapMutations({
+            updateLoading: "changeLoadingState"
+        }),
         getGroups() {
             this.$http
                 .get("/api/device/group")
@@ -291,9 +398,12 @@ export default {
         nodeClick(item) {
             this.cacheTree = this.$refs["tree"].getCurrentKey();
             this.currentTreeData = Object.assign({}, item);
+            this.dataFilter.type = 0;
             if (!item.children) {
                 this.showFlag = "onu";
                 this.getOnu(item.data.devid);
+                this.olt_ip = item.data.ipaddr;
+                this.ponports = item.data.ponports;
             } else {
                 this.devList = item.data;
                 this.currentPage = 1;
@@ -330,8 +440,11 @@ export default {
             }
         },
         devCurrentChange(val) {
+            if(val > Math.ceil(this.devList.length / this.pageSize)){
+                val = Math.ceil(this.devList.length / this.pageSize);
+            }
             this.currentPage = val;
-            var start = this.pageSize * (val - 1);
+            var start = this.pageSize * (this.currentPage - 1);
             if (start + this.pageSize > this.devList.length) {
                 this.devTable = this.devList.slice(start);
             } else {
@@ -465,8 +578,11 @@ export default {
             }
         },
         onuCurrentChange(val) {
+            if(val > Math.ceil(this.onuList.length / this.pageSize)){
+                val = Math.ceil(this.onuList.length / this.pageSize);
+            }
             this.onuCurrentPage = val;
-            var start = this.pageSize * (val - 1);
+            var start = this.pageSize * (this.onuCurrentPage - 1);
             if (start + this.pageSize > this.onuList.length) {
                 this.onuTable = this.onuList.slice(start);
             } else {
@@ -602,6 +718,7 @@ export default {
             }
             if (flag === "info") {
                 this.showMgmtDialog = true;
+                this.updateLoading(true);
             }
         },
         composeData(dev, flag, row) {
@@ -622,6 +739,8 @@ export default {
                             groupname: data.groupname,
                             ipaddr: data.ipaddr,
                             contact: data.contact,
+                            protocol: data.protocol,
+                            httpport: data.httpport,
                             location: {
                                 region: data.location.region,
                                 address: data.location.address,
@@ -636,6 +755,9 @@ export default {
                     params = {
                         method: "set",
                         param: {
+                            devid: data.devid,
+                            port_id: data.port_id,
+                            onu_id: data.onu_id,
                             macaddr: data.macaddr,
                             name: data.devname,
                             groupname: data.groupname,
@@ -681,6 +803,13 @@ export default {
             return row.sync === 0 ? "background: #F5F7FA" : "";
         }
     },
+    watch: {
+        "dataFilter.type"() {
+            if (this.onuCurrentPage !== 1) {
+                this.onuCurrentPage = 1;
+            }
+        }
+    },
     beforeDestroy() {},
     //  配置OLT ，模拟点击行为
     mounted() {
@@ -703,6 +832,24 @@ export default {
         //         xgeports: 4
         //     }
         // });
+        // this.dropdownClick({
+        //     dev: "onu",
+        //     flag: "info",
+        //     row: {
+        //         devid: "383a21201234",
+        //         groupname: "asdfsf",
+        //         macaddr: "38:3a:21:20:12:34",
+        //         mclass: 1,
+        //         model: "1ge4fe",
+        //         name: "epon_onu",
+        //         onu_id: 1,
+        //         port_id: 1,
+        //         status: "online",
+        //         sync: 0,
+        //         termid: "383a21201234"
+        //     }
+        // });
+        // this.olt_ip = '192.168.100.171';
     }
 };
 </script>
@@ -724,11 +871,5 @@ export default {
             cursor: pointer;
         }
     }
-}
-.tree-border {
-    min-height: 740px;
-    border: 1px solid #ddd;
-    max-height: 740px;
-    overflow-y: auto;
 }
 </style>
