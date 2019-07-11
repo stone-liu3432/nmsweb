@@ -46,7 +46,7 @@ export function validatorDesc(rule, value, callback) {
 //  名称类验证
 export function validatorName(rule, value, callback) {
     //  < 4 - 33 >   name  label  groupname  creater  contact  username
-    var reg = /^.{4,33}$/;
+    var reg = /^.{1,33}$/;
     if (!reg.test(value)) {
         return callback(new Error(store.state.langMap['validator_name_tips']));
     }
