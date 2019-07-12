@@ -152,13 +152,13 @@
                     <el-input v-model="form.username" disabled></el-input>
                 </el-form-item>
                 <el-form-item :label="langMap['old_pass']" prop="pass">
-                    <el-input v-model="form.pass"></el-input>
+                    <el-input type="password" v-model="form.pass"></el-input>
                 </el-form-item>
                 <el-form-item :label="langMap['new_pass']" prop="pass1">
-                    <el-input v-model="form.pass1"></el-input>
+                    <el-input type="password" v-model="form.pass1"></el-input>
                 </el-form-item>
                 <el-form-item :label="langMap['re_enter_pass']" prop="pass2">
-                    <el-input v-model="form.pass2"></el-input>
+                    <el-input type="password" v-model="form.pass2"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer">
@@ -460,6 +460,9 @@ export default {
                                 username: this.form.username,
                                 key: md5(
                                     `${this.form.username}:${this.form.pass1}`
+                                ),
+                                key1: md5(
+                                    `${this.form.username}:${this.form.pass}`
                                 )
                             }
                         };
@@ -471,6 +474,15 @@ export default {
                                 this.$message.success(
                                     this.langMap[data.method + "_success"]
                                 );
+                                if (
+                                    this.form.username ===
+                                    sessionStorage.getItem("user")
+                                ) {
+                                    sessionStorage.removeItem("user");
+                                    sessionStorage.removeItem("x-token");
+                                    this.$router.push("/login");
+                                    return;
+                                }
                                 this.getData();
                                 this.closeModal();
                             } else {
@@ -486,46 +498,48 @@ export default {
         closeModal() {
             this.userCfgModal = false;
         },
-        formatStatus(row, column){
-            return row[column.property] ? this.langMap['online'] : this.langMap['offline'];
+        formatStatus(row, column) {
+            return row[column.property]
+                ? this.langMap["online"]
+                : this.langMap["offline"];
         },
-        clearData(){
+        clearData() {
             Object.keys(this.form).forEach(item => {
                 this.form[item] = "";
             });
             if (this.roles.length) {
                 this.form.rolename = this.roles[0];
             }
-            this.modalType = '';
+            this.modalType = "";
         },
-        validPhone(rule, value, callback){
+        validPhone(rule, value, callback) {
             var reg = /^.{6,24}$/;
-            if(value !== '' && !reg.test(value)){
-                return callback(new Error(this.langMap['validatorPhone']));
+            if (value !== "" && !reg.test(value)) {
+                return callback(new Error(this.langMap["validatorPhone"]));
             }
             callback();
         },
-        validLabel(rule, value, callback){
+        validLabel(rule, value, callback) {
             var reg = /^.{4,33}$/;
-            if (value !== '' && !reg.test(value)) {
-                return callback(new Error(this.langMap['validator_name_tips']));
+            if (value !== "" && !reg.test(value)) {
+                return callback(new Error(this.langMap["validator_name_tips"]));
             }
             callback();
         },
-        validDesc(rule, value, callback){
+        validDesc(rule, value, callback) {
             var reg = /^.{4,256}$/;
-            if (value !== '' && !reg.test(value)) {
-                return callback(new Error(this.langMap['validator_desc_tips']));
+            if (value !== "" && !reg.test(value)) {
+                return callback(new Error(this.langMap["validator_desc_tips"]));
             }
             callback();
         },
-        validEnterPass(rule, value, callback){
+        validEnterPass(rule, value, callback) {
             var reg = /^.{4,33}$/;
             if (!reg.test(value)) {
-                return callback(new Error(this.langMap['validator_pass_tips']));
+                return callback(new Error(this.langMap["validator_pass_tips"]));
             }
-            if(value !== this.form.pass1){
-                return callback(new Error(this.langMap['pwd_not_match']));
+            if (value !== this.form.pass1) {
+                return callback(new Error(this.langMap["pwd_not_match"]));
             }
             callback();
         }
