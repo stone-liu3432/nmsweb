@@ -1,14 +1,18 @@
-import { Button } from 'element-ui';
+import { Button } from "element-ui";
 // 节流函数
 function throttle(func, delay, context, event) {
-    if(func.timer){
-        return;
+    if (func.timer) {
+        clearTimeout(func.timer);
+        func.timer = setTimeout(_ => {
+            func.apply(context, event);
+            func.timer = null;
+        }, delay);
+    } else {
+        func.timer = setTimeout(_ => {
+            func.apply(context, event);
+            func.timer = null;
+        }, delay);
     }
-    func.timer = true;
-    func.call(context, event);
-    setTimeout(function() {
-        func.timer = false;
-    }, delay);
 }
 // element-ui 中click方法拷贝
 function _handleClick(event) {
@@ -20,6 +24,14 @@ export default {
         interval: {
             type: Number,
             default: 300
+        },
+        type: {
+            type: String,
+            default: 'primary'
+        },
+        size: {
+            type: String,
+            default: 'small'
         }
     },
     mixins: [Button],

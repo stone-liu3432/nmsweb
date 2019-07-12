@@ -18,6 +18,9 @@
                     </template>
                 </el-select>
             </el-form-item>
+            <el-form-item label-width="0">
+                <slot name="action"></slot>
+            </el-form-item>
         </el-form>
     </div>
 </template>

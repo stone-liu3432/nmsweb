@@ -14,7 +14,7 @@ import { removeUnderline } from "@/utils/common";
 import "element-ui/lib/theme-chalk/index.css";
 import "@/custom-css/custom.css";
 import Message from "@/components/common/message";
-import throttleButton from '@/components/common/debounceButton';
+import debounceButton from '@/components/common/debounceButton';
 import qs from "qs";
 import portNav from '@/components/common/portNav';
 
@@ -35,7 +35,7 @@ Vue.use(portNav);
 Vue.prototype.$message = Message;
 
 // 添加了throttle 的 el-button，用于表单提交
-Vue.component('tButton', throttleButton);
+Vue.component('dbcButton', debounceButton);
 
 Vue.filter("removeUnderline", removeUnderline);
 Vue.config.productionTip = false;
