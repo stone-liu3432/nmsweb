@@ -71,8 +71,8 @@
                     <!-- v-if 渲染时，相同元素会被复用，数据项不同时，需给控制的元素加上唯一的key，避免渲染空模板报错 -->
                     <el-table :data="oltData" style="width: 100%" key="olt-list" border>
                         <el-table-column prop="name" :label="langMap['name']"></el-table-column>
-                        <el-table-column prop="macaddr" label="MAC" width="180"></el-table-column>
-                        <el-table-column prop="ipaddr" :label="langMap['ipaddr']" width="180">
+                        <el-table-column prop="macaddr" label="MAC" min-width="140"></el-table-column>
+                        <el-table-column prop="ipaddr" :label="langMap['ipaddr']" min-width="140">
                             <template
                                 slot-scope="scope"
                             >{{ `${scope.row.ipaddr}/${scope.row.httpport}` }}</template>
@@ -81,7 +81,6 @@
                             prop="status"
                             :formatter="showStatus"
                             :label="langMap['status']"
-                            width="100"
                         >
                             <template slot-scope="scope">
                                 <el-tag
@@ -152,14 +151,18 @@
                         border
                         :row-style="isOnuSync"
                     >
-                        <el-table-column prop="devid" label="ID" width="140"></el-table-column>
+                        <el-table-column prop="devid" label="ID"></el-table-column>
+                        <el-table-column :label="`${langMap['port_id']}/${'onu_id'}`">
+                            <template slot-scope="scope">
+                                {{ `${scope.row.port_id} / ${scope.row.onu_id}` }}
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="name" :label="langMap['name']"></el-table-column>
-                        <el-table-column prop="macaddr" label="MAC" width="180"></el-table-column>
+                        <el-table-column prop="macaddr" label="MAC"></el-table-column>
                         <el-table-column
                             prop="status"
                             :formatter="showStatus"
                             :label="langMap['status']"
-                            width="100"
                         >
                             <template slot-scope="scope">
                                 <el-tag
@@ -171,10 +174,9 @@
                             prop="mclass"
                             :formatter="formatClass"
                             :label="langMap['mclass']"
-                            width="100"
                         ></el-table-column>
                         <!-- <el-table-column prop="model" :label="langMap['model']"></el-table-column>
-                        <el-table-column prop="groupname" :label="langMap['groupname']"></el-table-column> -->
+                        <el-table-column prop="groupname" :label="langMap['groupname']"></el-table-column>-->
                         <el-table-column prop="register_time" :label="langMap['register_time']"></el-table-column>
                         <el-table-column :label="langMap['config']" width="100">
                             <template slot-scope="scope">
@@ -239,6 +241,9 @@
             key="devMgmt"
             fullscreen
             :close-on-press-escape="false"
+            @close="closeDialog"
+            :before-close="isSavedCfg"
+            style="min-width: 1280px;"
         >
             <div slot="title" v-if="devMgmtTitle">
                 <span>{{ langMap['name'] }} : {{ devMgmtTitle.name }}</span>
@@ -284,7 +289,7 @@ export default {
     name: "deviceMgmt",
     components: { devSetInfo, oltDetail, onuDetail },
     computed: {
-        ...mapState(["langMap", "loading"]),
+        ...mapState(["langMap", "loading", "dev_ip"]),
         onuData() {
             let data = this.onuList.slice(0);
             if (this.dataFilter.type) {
@@ -440,7 +445,7 @@ export default {
             }
         },
         devCurrentChange(val) {
-            if(val > Math.ceil(this.devList.length / this.pageSize)){
+            if (val > Math.ceil(this.devList.length / this.pageSize)) {
                 val = Math.ceil(this.devList.length / this.pageSize);
             }
             this.currentPage = val;
@@ -578,7 +583,7 @@ export default {
             }
         },
         onuCurrentChange(val) {
-            if(val > Math.ceil(this.onuList.length / this.pageSize)){
+            if (val > Math.ceil(this.onuList.length / this.pageSize)) {
                 val = Math.ceil(this.onuList.length / this.pageSize);
             }
             this.onuCurrentPage = val;
@@ -801,6 +806,46 @@ export default {
         },
         isOnuSync({ row }) {
             return row.sync === 0 ? "background: #F5F7FA" : "";
+        },
+        closeDialog() {
+            this.devFlag = "";
+            this.handleFlag = "";
+        },
+        isSavedCfg(done) {
+            if (this.devFlag === "olt") {
+                this.$confirm(
+                    this.langMap["save_cfg_confirm"],
+                    this.langMap["tips"],
+                    {
+                        type: "warning"
+                    }
+                )
+                    .then(_ => {
+                        this.$devProxy({
+                            devicelist: [this.dev_ip],
+                            url: this.$qs({
+                                url: "/system_save"
+                            }),
+                            method: "get"
+                        })
+                            .then(res => {
+                                if (res.data.code === 1) {
+                                    this.$message.success(
+                                        this.langMap["save_succ"]
+                                    );
+                                } else {
+                                    this.$message.error(res.data.message);
+                                }
+                            })
+                            .catch(err => {});
+                        done();
+                    })
+                    .catch(_ => {
+                        done();
+                    });
+            } else {
+                done();
+            }
         }
     },
     watch: {

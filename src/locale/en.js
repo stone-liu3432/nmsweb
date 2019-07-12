@@ -788,6 +788,8 @@ export default {
     show_type: 'Show type',
     authfail: 'Authentication failed',
     authlimit : 'Authentication limit',
+    authenticate: 'Authentication',
+    unauthenticate: 'Unauthentication',
 
     composeRange(min, max) {
         return `${min} - ${max} characters`;

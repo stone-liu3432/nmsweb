@@ -10,15 +10,7 @@ export default {
     data(){
         return {}
     },
-    created(){
-        this.$message('test');
-        setTimeout(_ =>{
-            this.$message({
-                type: 'warning',
-                message: 'test options'
-            })
-        }, 3000)
-    },
+    created(){},
     methods: {}
 }
 </script>

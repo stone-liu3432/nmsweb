@@ -2,6 +2,13 @@
     <div>
         <port-nav @port-change="portChange">
             <template slot="title">{{ langMap['loid_mgmt'] }}</template>
+            <template slot="action">
+                <dbc-button
+                    style="margin-left: 20px;"
+                    :interval="500"
+                    @click="getData(port_id)"
+                >{{ langMap['refresh'] }}</dbc-button>
+            </template>
         </port-nav>
         <el-table :data="loidlist" border stripe>
             <el-table-column prop="loid" :label="langMap['loid']"></el-table-column>
@@ -29,7 +36,7 @@
                     <el-input v-model="addForm.password"></el-input>
                 </el-form-item>
             </el-form>
-            <span slot="footer" class="dialog-footer">
+            <span slot="footer">
                 <el-button @click="dialogVisible = false">{{ langMap['cancel'] }}</el-button>
                 <el-button
                     type="primary"
@@ -141,20 +148,24 @@ export default {
                             loid: this.addForm.loid,
                             password: this.addForm.password
                         }
-                    }).then(res =>{
-                        if(res.data.code === 1){
-                            this.$message.success(this.langMap['add_success']);
-                            this.getData(this.port_id);
-                        }else{
-                            this.$message.error(res.data.message);
-                        }
-                        this.dialogVisible = false;
-                    }).catch(err =>{})
+                    })
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap["add_success"]
+                                );
+                                this.getData(this.port_id);
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                            this.dialogVisible = false;
+                        })
+                        .catch(err => {});
                 }
             });
         },
         dialogClose() {
-            this.$refs['add-deny-form'].resetFields();
+            this.$refs["add-deny-form"].resetFields();
         },
         validLoid(rule, value, callback) {
             var reg = /^\w{1,24}$/;

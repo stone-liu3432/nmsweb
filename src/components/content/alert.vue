@@ -52,7 +52,9 @@ import { ALARM_TYPE, ALARM_LEVEL } from "@/utils/common-data";
 import { formatDate } from "@/utils/common";
 export default {
     name: "alert",
-    computed: mapState(["langMap"]),
+    computed: {
+        ...mapState(["langMap"])
+    },
     data() {
         return {
             alert: [],
@@ -79,7 +81,10 @@ export default {
             if (start + this.pageSize > this.alert.length) {
                 this.alertTable = this.alert.slice(start);
             } else {
-                this.alertTable = this.alert.slice(start, start + this.pageSize);
+                this.alertTable = this.alert.slice(
+                    start,
+                    start + this.pageSize
+                );
             }
         },
         getData() {

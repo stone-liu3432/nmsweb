@@ -2,13 +2,13 @@
     <div>
         <h3>
             {{ langMap['alarm'] }}
-            <t-button
+            <dbc-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="getData"
                 :interval="1000"
-            >{{ langMap['refresh'] }}</t-button>
+            >{{ langMap['refresh'] }}</dbc-button>
         </h3>
         <ul>
             <li v-for="(item,index) in alarm" :key="index" style="padding: 6px 0;">{{ item }}</li>

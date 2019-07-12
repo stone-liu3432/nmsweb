@@ -766,6 +766,9 @@ export default {
     show_type: '显示类型',
     authfail: '认证失败',
     authlimit : '限制认证',
+    authenticate: '认证',
+    unauthenticate: '解除认证',
+
 
     composeRange(min, max){
         return `${min} - ${max}位字符`;
