@@ -608,7 +608,7 @@ export default {
     topo: "TOPO",
     device: "Device",
     device_discover: "Device Discover",
-    alert: "Aert",
+    alert: "Alert",
     performance: "Performance",
     task: "Task",
     cpu: "CPU",
