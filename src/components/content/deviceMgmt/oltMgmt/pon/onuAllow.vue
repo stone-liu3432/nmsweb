@@ -13,11 +13,15 @@
                     >{{ scope.row.status }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column
-                prop="auth_state"
-                :formatter="formatAuth"
-                :label="langMap['auth_state']"
-            ></el-table-column>
+            <el-table-column prop="auth_state" :label="langMap['auth_state']">
+                <template slot-scope="scope">
+                    <span>{{ scope.row.auth_state ? 'true' : 'false' }}</span>
+                    <i
+                        :class="[ scope.row.auth_state ? 'unauthenticate' : 'authenticate' ]"
+                        @click="changeAuthState(scope.row)"
+                    ></i>
+                </template>
+            </el-table-column>
             <el-table-column prop="register_time" :label="langMap['register_time']"></el-table-column>
             <el-table-column>
                 <template slot="header" slot-scope="scope">
@@ -187,9 +191,6 @@ export default {
                 }`
             );
         },
-        formatAuth(row, col) {
-            return row[col.property] ? "true" : "false";
-        },
         delOnu(node) {
             this.$confirm(this.langMap["del_onu"], this.langMap["tips"], {
                 type: "warning"
@@ -260,7 +261,7 @@ export default {
                     this.$devProxy({
                         devicelist: [this.dev_ip],
                         url: this.$qs({
-                            url: "/onu_allow_list",
+                            url: "/onumgmt",
                             params: { form: "config" }
                         }),
                         method: "set",
@@ -327,6 +328,46 @@ export default {
         },
         closeDialog() {
             this.$refs["onu-allow-add-form"].resetFields();
+        },
+        changeAuthState(row) {
+            this.$confirm(
+                row.auth_state
+                    ? this.langMap["tips_unauth_state"]
+                    : this.langMap["tips_auth_state"],
+                this.langMap["tips"],
+                {
+                    type: "warning"
+                }
+            )
+                .then(_ => {
+                    this.$devProxy({
+                        devicelist: [this.dev_ip],
+                        url: this.$qs({
+                            url: "/onu_allow_list"
+                        }),
+                        method: "set",
+                        param: {
+                            port_id: row.port_id,
+                            onu_id: row.onu_id,
+                            macaddr: row.macaddr,
+                            auth_state: Number(!row.auth_state),
+                            onu_type: '',
+                            onu_desc: ''
+                        }
+                    })
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap["set_success"]
+                                );
+                                this.getData(this.port_id);
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        })
+                        .catch(err => {});
+                })
+                .catch(_ => {});
         }
     }
 };
@@ -338,6 +379,23 @@ i {
 }
 i + i {
     margin-left: 12px;
+}
+i.unauthenticate {
+    margin-left: 10px;
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background: url("../../../../../../static/unauthstatus-normal.png")
+        no-repeat 0 -2px;
+    vertical-align: middle;
+}
+i.authenticate {
+    margin-left: 10px;
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background: url("../../../../../../static/authstatus-hover.png") no-repeat 0 -2px;
+    vertical-align: middle;
 }
 </style>
 
