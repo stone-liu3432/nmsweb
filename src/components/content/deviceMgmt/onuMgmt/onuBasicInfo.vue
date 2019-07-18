@@ -199,6 +199,8 @@ export default {
         },
         openDialog() {
             this.dialogVisible = true;
+            this.onuSetForm.onu_name = this.baseInfo.onu_name || '';
+            this.onuSetForm.onu_desc = this.baseInfo.onu_desc || '';
         },
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
