@@ -475,6 +475,7 @@ export default {
                                     this.langMap[data.method + "_success"]
                                 );
                                 if (
+                                    this.modalType === 'modifyPass' &&
                                     this.form.username ===
                                     sessionStorage.getItem("user")
                                 ) {

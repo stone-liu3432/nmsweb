@@ -262,7 +262,7 @@ export default {
                             devicelist: [this.dev_ip],
                             url: this.$qs({
                                 url: "/system",
-                                params: { from: "inbound" }
+                                params: { form: "inbound" }
                             }),
                             method: "add",
                             param: {
