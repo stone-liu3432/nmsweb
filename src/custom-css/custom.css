@@ -42,21 +42,14 @@ div.el-tree--highlight-current
     width: 100%;
 }
 /* table row 告警级别背景色 */
-.el-table .critical-row {
-    background: #e94a1a;
-    color: #fff;
-}
-.el-table .critical-row:hover{
-    color: #606266;
-}
 .el-table .major-row {
-    background: #e69122;
+    color: #CD661D;
 }
 .el-table .minor-row {
-    background: #f0af65;
+    color: #FF7F50;
 }
 .el-table .warning-row {
-    background: #e2b076;
+    color: red;
 }
 
 .is-fullscreen .el-dialog__header {
