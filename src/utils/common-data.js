@@ -40,7 +40,7 @@ export const ALARM_TYPE = [
     "tca"
 ];
 //  告警级别
-export const ALARM_LEVEL = ["critical", "major", "minor", "waring"];
+export const ALARM_LEVEL = ["critical", "major", "minor", "warning"];
 
 export const MCLASS = {
     1: "EPON",
