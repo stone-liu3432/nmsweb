@@ -59,8 +59,10 @@
                 </el-card>
             </el-col>
         </el-row>
-        <el-dialog :visible.sync="dialogVisible" append-to-body>
-            <span slot="title">add</span>
+        <el-dialog :visible.sync="dialogVisible" append-to-body @close="resetForm">
+            <span slot="title">
+                {{ dialogFlag === 'basic' ? langMap['sw_port_cfg'] : dialogFlag === 'storm' ? langMap['stormctrl'] : langMap['mirror'] }}
+            </span>
             <port-cfg-form :info="info" :flag="dialogFlag" ref="port-config-dialog"></port-cfg-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">{{ langMap['cancel'] }}</el-button>
@@ -238,8 +240,8 @@ export default {
                             duplex: formData.duplex,
                             flow_ctrl: formData.flow_ctrl,
                             mtu: formData.mtu,
-                            erate: formData.erate,
-                            irate: formData.irate,
+                            erate: formData.erate || 0,
+                            irate: formData.irate || 0,
                             pvid: formData.pvid
                         }
                     };
@@ -263,9 +265,9 @@ export default {
                         param: {
                             port_id: this.port_id,
                             flags,
-                            broadcast: formData.broadcast,
-                            multicast: formData.multicast,
-                            unicast: formData.unicast
+                            broadcast: formData.broadcast || 0,
+                            multicast: formData.multicast || 0,
+                            unicast: formData.unicast || 0
                         }
                     };
                 }
@@ -300,6 +302,9 @@ export default {
                     this.dialogVisible = false;
                 }).catch(err =>{})
             }
+        },
+        resetForm(){
+            this.$refs['port-config-dialog'].resetForm();
         }
     }
 };

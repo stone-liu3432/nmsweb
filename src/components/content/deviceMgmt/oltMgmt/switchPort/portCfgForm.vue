@@ -173,7 +173,7 @@ export default {
             callback();
         },
         validRate(rule, value, callback) {
-            if (this.flag !== "basic") {
+            if (this.flag !== "basic" || !value) {
                 return callback();
             }
             if (value < 64 || value > 1024000 || isNaN(value)) {
@@ -182,13 +182,16 @@ export default {
             callback();
         },
         validStorm(rule, value, callback) {
-            if (this.flag !== "storm") {
+            if (this.flag !== "storm" || !value) {
                 return callback();
             }
             if (value < 1 || value > 1488100 || isNaN(value)) {
                 return callback(new Error("Range: 1 - 1488100 pps"));
             }
             callback();
+        },
+        resetForm(){
+            this.$refs['port-config-form'].resetFields();
         }
     },
     watch: {
