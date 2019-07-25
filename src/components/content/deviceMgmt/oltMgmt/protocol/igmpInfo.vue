@@ -16,7 +16,7 @@
         <template v-for="(item, key) in info" v-if="key !== 'mode'">
             <el-row
                 style="margin: 10px 0 10px 10px;"
-                v-if="(info.mode && (key === 'fast_leave' || key === 'protocol_policy')) || (info.mode !== 2 && key === 'group_aging_time')"
+                v-if="(info.mode && (key === 'fast_leave' || key === 'protocol_policy')) || (info.mode === 1 && key === 'group_aging_time')"
             >
                 <el-col :span="5">{{ langMap[key] }}</el-col>
                 <el-col :span="5">{{ formatData(item, key) }}</el-col>
@@ -139,6 +139,7 @@ export default {
                                 this.info.mode
                             ) {
                                 this.dialogVisible = false;
+                                this.getData();
                                 return this.$message.success(
                                     this.langMap["set_success"]
                                 );

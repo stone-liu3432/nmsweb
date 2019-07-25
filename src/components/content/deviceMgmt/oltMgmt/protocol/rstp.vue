@@ -247,6 +247,7 @@ export default {
                         } else {
                             this.$message.error(res.data.message);
                         }
+                        this.dialogVisible = false;
                     })
                     .catch(err => {});
             }
