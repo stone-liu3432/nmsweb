@@ -63,6 +63,7 @@
                             :value="index"
                             :label="item"
                             v-for="(item,index) in user_level"
+                            v-if="index > 2"
                             :key="index"
                         ></el-option>
                     </el-select>
@@ -138,7 +139,7 @@ export default {
             },
             addRules: {
                 username: [
-                    { validator: validatorName, trigger: ["change", "blur"] }
+                    { validator: this.validUser, trigger: ["change", "blur"] }
                 ],
                 pwd1: [
                     {
@@ -251,8 +252,8 @@ export default {
             this.dialogFlag = "";
         },
         submitUserForm(formName) {
-            this.$refs[formName].validate(valid =>{
-                if(valid){
+            this.$refs[formName].validate(valid => {
+                if (valid) {
                     var data;
                     if (this.dialogFlag === "add") {
                         data = {
@@ -264,10 +265,15 @@ export default {
                             method: "add",
                             param: {
                                 name: this.userForm.username,
-                                key: md5(`${this.userForm.username}:${this.userForm.pwd1}`),
+                                key: md5(
+                                    `${this.userForm.username}:${this.userForm.pwd1}`
+                                ),
                                 level: this.userForm.level,
                                 reenter: this.userForm.reenter,
-                                info: this.userForm.info.length > 33 ? this.userForm.info.substring(0, 33) : this.userForm.info
+                                info:
+                                    this.userForm.info.length > 33
+                                        ? this.userForm.info.substring(0, 33)
+                                        : this.userForm.info
                             }
                         };
                     }
@@ -281,22 +287,30 @@ export default {
                             method: "set",
                             param: {
                                 name: this.userForm.username,
-                                key: md5(`${this.userForm.username}:${this.userForm.o_pwd}`), // 原密码  md5("uName:password")
-                                key1: md5(`${this.userForm.username}:${this.userForm.pwd1}`)  // 新密码
+                                key: md5(
+                                    `${this.userForm.username}:${this.userForm.o_pwd}`
+                                ), // 原密码  md5("uName:password")
+                                key1: md5(
+                                    `${this.userForm.username}:${this.userForm.pwd1}`
+                                ) // 新密码
                             }
                         };
                     }
-                    this.$devProxy(data).then(res =>{
-                        if(res.data.code === 1){
-                            this.$message.success(this.langMap[this.dialogFlag + '_success']);
-                            this.getData();
-                        }else{
-                            this.$message.error(res.data.message);
-                        }
-                    }).catch(err =>{})
+                    this.$devProxy(data)
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap[this.dialogFlag + "_success"]
+                                );
+                                this.getData();
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        })
+                        .catch(err => {});
                     this.dialogVisible = false;
                 }
-            })
+            });
         },
         validPass(rule, value, callback) {
             var reg = /^.{4,33}$/;
@@ -313,6 +327,14 @@ export default {
                 return callback(new Error(" 1 - 4 "));
             }
             callback();
+        },
+        //  添加一组特殊用户名排除
+        validUser(rule, value, cb) {
+            const exclude = ["manu", "devol", "root", "diag"];
+            if(exclude.includes(value.toLowerCase())){
+                return cb(new Error(this.langMap['illegal_username']));
+            }
+            return validatorName(rule, value, cb);
         }
     }
 };
