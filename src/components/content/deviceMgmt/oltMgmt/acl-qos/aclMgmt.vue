@@ -142,7 +142,7 @@ import aclForm from "./aclForm";
 export default {
     name: "aclMgmt",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"]),
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"]),
         dialogTitle() {
             if (this.dialogFlag === "add-acl") {
                 return `${this.langMap["add"]}ACL`;
@@ -578,6 +578,11 @@ export default {
                     start + this.pageSize
                 );
             }
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getData();
         }
     }
 };

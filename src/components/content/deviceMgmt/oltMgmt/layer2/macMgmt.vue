@@ -221,7 +221,7 @@ import { validatorVlan, validatorMac } from "@/utils/validator";
 export default {
     name: "macMgmt",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"])
     },
     data() {
         const validMacAge = (rule, value, cb) => {
@@ -393,7 +393,7 @@ export default {
             }
         },
         formatPort(row, col) {
-            return row.port_id ? this.port_name[row.port_id] : 'CPU';
+            return row.port_id ? this.port_name[row.port_id] : "CPU";
         },
         formatMacType(row, col) {
             return this.macTypes[row.mac_type];
@@ -583,6 +583,10 @@ export default {
     watch: {
         "query.flag"() {
             this.$refs["mac-mgmt-query-form"].resetFields();
+        },
+        timestamp() {
+            this.getData();
+            this.getAge();
         }
     }
 };

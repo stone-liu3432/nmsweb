@@ -37,10 +37,18 @@
             <el-popover placement="top" width="160" v-model="visible" trigger="manual">
                 <p>{{ `${langMap['if_sure']}${ port_isolat ? langMap['off'] : langMap['on'] }` }}</p>
                 <div style="text-align: right; margin: 0">
-                    <el-button size="mini" type="text" @click="visible = false">{{ langMap['cancel'] }}</el-button>
-                    <el-button type="primary" size="mini" @click="submitIsolat">{{ langMap['apply'] }}</el-button>
+                    <el-button
+                        size="mini"
+                        type="text"
+                        @click="visible = false"
+                    >{{ langMap['cancel'] }}</el-button>
+                    <el-button
+                        type="primary"
+                        size="mini"
+                        @click="submitIsolat"
+                    >{{ langMap['apply'] }}</el-button>
                 </div>
-                <el-switch 
+                <el-switch
                     ref="isolat-status"
                     slot="reference"
                     active-color="#13ce66"
@@ -89,7 +97,7 @@ import { mapState, mapMutations } from "Vuex";
 export default {
     name: "ponSetting",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"])
     },
     data() {
         return {
@@ -242,10 +250,10 @@ export default {
                 })
                 .catch(_ => {});
         },
-        changeIsolat(val){
+        changeIsolat(val) {
             this.visible = true;
         },
-        submitIsolat(){
+        submitIsolat() {
             this.$devProxy({
                 devicelist: [this.dev_ip],
                 url: this.$qs({
@@ -254,17 +262,26 @@ export default {
                 }),
                 method: "set",
                 param: {
-                    isolat_status: Number(!this.$refs['isolat-status'].value)
+                    isolat_status: Number(!this.$refs["isolat-status"].value)
                 }
-            }).then(res =>{
-                if(res.data.code === 1){
-                    this.$message.success(this.langMap['set_success']);
-                    this.getIsolat();
-                }else{
-                    this.$message.error(res.data.message);
-                }
-            }).catch(err =>{})
+            })
+                .then(res => {
+                    if (res.data.code === 1) {
+                        this.$message.success(this.langMap["set_success"]);
+                        this.getIsolat();
+                    } else {
+                        this.$message.error(res.data.message);
+                    }
+                })
+                .catch(err => {});
             this.visible = false;
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getAuth();
+            this.getP2P();
+            this.getIsolat();
         }
     }
 };

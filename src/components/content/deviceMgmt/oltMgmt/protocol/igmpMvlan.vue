@@ -112,7 +112,13 @@ export default {
     name: "igmpMvlan",
     components: { igmpMvlanForm },
     computed: {
-        ...mapState(["langMap", "port_name", "basicInfo", "dev_ip"])
+        ...mapState([
+            "langMap",
+            "port_name",
+            "basicInfo",
+            "dev_ip",
+            "timestamp"
+        ])
     },
     data() {
         return {
@@ -146,7 +152,7 @@ export default {
                             this.multi_vlan = res.data.data;
                             if (!this.mvlan) {
                                 this.mvlan = this.multi_vlan[0].mvlan;
-                                return
+                                return;
                             }
                             //  删除mvlan时调用
                             var flag = true;
@@ -159,7 +165,7 @@ export default {
                             if (flag) {
                                 this.mvlan = this.multi_vlan[0].mvlan;
                             }
-                        }else{
+                        } else {
                             this.mv_info = {};
                             this.mc_unknown = {};
                             this.program = [];
@@ -426,6 +432,9 @@ export default {
                 this.getMcUnknown(this.mvlan);
                 this.getProgram(this.mvlan);
             }
+        },
+        timestamp() {
+            this.getMvlan();
         }
     }
 };

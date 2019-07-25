@@ -158,7 +158,7 @@ import { validatorName } from "@/utils/validator";
 export default {
     name: "timerange",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"])
     },
     data() {
         return {
@@ -392,6 +392,11 @@ export default {
                         .catch(err => {});
                 })
                 .catch(_ => {});
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getData();
         }
     }
 };

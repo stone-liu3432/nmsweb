@@ -90,7 +90,13 @@ export default {
     name: "vlanMgmt",
     components: { vlanForm },
     computed: {
-        ...mapState(["langMap", "port_name", "basicInfo", "dev_ip"])
+        ...mapState([
+            "langMap",
+            "port_name",
+            "basicInfo",
+            "dev_ip",
+            "timestamp"
+        ])
     },
     data() {
         return {
@@ -373,6 +379,11 @@ export default {
             setTimeout(_ => {
                 this.loading = false;
             }, 1000);
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getData();
         }
     }
 };

@@ -79,7 +79,7 @@ export default {
     name: "portConfig",
     components: { portCfgForm },
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", 'timestamp'])
     },
     data() {
         return {
@@ -305,6 +305,13 @@ export default {
         },
         resetForm(){
             this.$refs['port-config-dialog'].resetForm();
+        }
+    },
+    watch: {
+        timestamp(){
+            this.getBasicInfo(this.port_id);
+            this.getStormInfo(this.port_id);
+            this.getMirror(this.port_id);
         }
     }
 };

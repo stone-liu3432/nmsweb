@@ -1,6 +1,10 @@
 <template>
     <div>
-        <port-nav @port-change="portChange" :onu="activeName === 'pon-optical'" @onu-change="onuChange">
+        <port-nav
+            @port-change="portChange"
+            :onu="activeName === 'pon-optical'"
+            @onu-change="onuChange"
+        >
             <template slot="title">{{ langMap['pon_optical'] }}</template>
         </port-nav>
         <el-tabs type="card" v-model="activeName">
@@ -34,7 +38,7 @@ import { mapState, mapMutations } from "Vuex";
 export default {
     name: "ponOptical",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"])
     },
     data() {
         return {
@@ -99,12 +103,22 @@ export default {
                 })
                 .catch(err => {});
         },
-        formatName(row, column){
-            return row.onu_name ? row.onu_name : `ONU${row.port_id}/${row.onu_id < 10 ? '0' + row.onu_id : row.onu_id}`;
+        formatName(row, column) {
+            return row.onu_name
+                ? row.onu_name
+                : `ONU${row.port_id}/${
+                      row.onu_id < 10 ? "0" + row.onu_id : row.onu_id
+                  }`;
         }
     },
     watch: {
         activeName() {
+            this.activeName === "pon-optical" &&
+                this.getOnuOptical(this.port_id, this.onu_id);
+            this.activeName === "onu-optical" &&
+                this.getPonOptical(this.port_id);
+        },
+        timestamp() {
             this.activeName === "pon-optical" &&
                 this.getOnuOptical(this.port_id, this.onu_id);
             this.activeName === "onu-optical" &&

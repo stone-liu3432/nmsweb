@@ -99,7 +99,7 @@ import { validatorMac, validatorDesc } from "@/utils/validator";
 export default {
     name: "onuAllow",
     computed: {
-        ...mapState(["langMap", "dev_ip"])
+        ...mapState(["langMap", "dev_ip", "timestamp"])
     },
     data() {
         return {
@@ -351,8 +351,8 @@ export default {
                             onu_id: row.onu_id,
                             macaddr: row.macaddr,
                             auth_state: Number(!row.auth_state),
-                            onu_type: '',
-                            onu_desc: ''
+                            onu_type: "",
+                            onu_desc: ""
                         }
                     })
                         .then(res => {
@@ -368,6 +368,11 @@ export default {
                         .catch(err => {});
                 })
                 .catch(_ => {});
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getData(this.port_id);
         }
     }
 };

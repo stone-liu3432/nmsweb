@@ -35,7 +35,7 @@ import { mapState, mapMutations } from "Vuex";
 export default {
     name: "portInfo",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", 'timestamp'])
     },
     data() {
         return {
@@ -80,6 +80,11 @@ export default {
         },
         formatDuplex(row, column) {
             return column.property ? "full" : "half";
+        }
+    },
+    watch: {
+        timestamp(){
+            this.getData();
         }
     }
 };

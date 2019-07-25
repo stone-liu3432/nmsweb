@@ -2,13 +2,13 @@
     <div>
         <h3>
             {{ langMap['alarm'] }}
-            <dbc-button
+            <!-- <dbc-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="getData"
                 :interval="1000"
-            >{{ langMap['refresh'] }}</dbc-button>
+            >{{ langMap['refresh'] }}</dbc-button> -->
         </h3>
         <ul>
             <li v-for="(item,index) in alarmTable" :key="index" style="padding: 6px 0;">{{ item }}</li>
@@ -30,7 +30,7 @@ import { mapState } from "Vuex";
 export default {
     name: "oltAlarm",
     computed: {
-        ...mapState(["langMap", "dev_ip"]),
+        ...mapState(["langMap", "dev_ip", 'timestamp']),
         alarmTable() {
             let data;
             let start = this.pageSize * (this.currentPage - 1);
@@ -79,6 +79,11 @@ export default {
         },
         handleCurrentChange(val) {
             this.currentPage = val;
+        }
+    },
+    watch: {
+        timestamp(){
+            this.getData();
         }
     }
 };

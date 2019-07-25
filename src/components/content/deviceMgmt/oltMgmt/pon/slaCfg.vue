@@ -111,7 +111,7 @@ import { mapState, mapMutations } from "Vuex";
 export default {
     name: "slaCfg",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"])
     },
     data() {
         return {
@@ -271,6 +271,11 @@ export default {
                     this.dialogVisible = false;
                 }
             });
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getData(this.port_id);
         }
     }
 };

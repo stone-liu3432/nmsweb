@@ -106,7 +106,7 @@ import { mapState, mapMutations } from "Vuex";
 export default {
     name: "qosMgmt",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"]),
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"]),
         wrrs() {
             return [
                 this.formData.cos0,
@@ -236,12 +236,10 @@ export default {
                         };
                     }
                     if (this.dialogFlag === "weight") {
-                        var weight = this.wrrs.reduce(
-                            (initVal, item) => {
-                                !item && (item = 0);
-                                return initVal + item
-                            }, 0
-                        );
+                        var weight = this.wrrs.reduce((initVal, item) => {
+                            !item && (item = 0);
+                            return initVal + item;
+                        }, 0);
                         if (this.formData.mode === 2 && weight > 100) {
                             this.$message.error(
                                 this.langMap["qos_weight_tips"]
@@ -287,13 +285,18 @@ export default {
             });
         },
         validWeight(rule, value, cb) {
-            if(value === ''){
+            if (value === "") {
                 value = 0;
             }
             if (value > 100 || isNaN(value)) {
                 return cb(new Error("Range: 0 - 100"));
             }
             cb();
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getData();
         }
     }
 };

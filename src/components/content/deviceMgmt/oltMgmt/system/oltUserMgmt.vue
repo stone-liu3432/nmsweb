@@ -120,7 +120,7 @@ import md5 from "md5";
 export default {
     name: "oltNameMgmt",
     computed: {
-        ...mapState(["langMap", "dev_ip"])
+        ...mapState(["langMap", "dev_ip", 'timestamp'])
     },
     data() {
         return {
@@ -335,6 +335,11 @@ export default {
                 return cb(new Error(this.langMap['illegal_username']));
             }
             return validatorName(rule, value, cb);
+        }
+    },
+    watch: {
+        timestamp(){
+            this.getData();
         }
     }
 };

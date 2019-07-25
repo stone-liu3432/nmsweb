@@ -83,7 +83,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"])
     },
     data() {
         return {
@@ -225,7 +225,11 @@ export default {
         },
         //  cvlan 和 cvlan range不能共存，单个或者是范围二选一
         validCvlanRange(rule, value, callback) {
-            if(!this.qinqForm.cvlan && !this.qinqForm.cvlan_s && !this.qinqForm.cvlan_e){
+            if (
+                !this.qinqForm.cvlan &&
+                !this.qinqForm.cvlan_s &&
+                !this.qinqForm.cvlan_e
+            ) {
                 return validatorVlan(rule, value, callback);
             }
             if (this.qinqForm.cvlan) {
@@ -237,7 +241,11 @@ export default {
             return validatorVlan(rule, value, callback);
         },
         validCvlan(rule, value, callback) {
-            if(!this.qinqForm.cvlan && !this.qinqForm.cvlan_s && !this.qinqForm.cvlan_e){
+            if (
+                !this.qinqForm.cvlan &&
+                !this.qinqForm.cvlan_s &&
+                !this.qinqForm.cvlan_e
+            ) {
                 return validatorVlan(rule, value, callback);
             }
             if (this.qinqForm.cvlan_s || this.qinqForm.cvlan_e) {
@@ -251,6 +259,9 @@ export default {
     },
     watch: {
         port_id() {
+            this.getQinQ(this.port_id);
+        },
+        timestamp() {
             this.getQinQ(this.port_id);
         }
     }

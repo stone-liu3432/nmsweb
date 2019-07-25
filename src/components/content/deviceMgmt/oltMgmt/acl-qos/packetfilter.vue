@@ -73,7 +73,7 @@ import { analysisPortList, generatorPortName } from "@/utils/common";
 export default {
     name: "packetFilter",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"])
     },
     data() {
         return {
@@ -214,6 +214,11 @@ export default {
                 }
                 cb();
             };
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getData();
         }
     }
 };

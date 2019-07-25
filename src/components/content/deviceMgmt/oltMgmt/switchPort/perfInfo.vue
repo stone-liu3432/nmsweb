@@ -47,7 +47,7 @@ import { removeUnderline } from "@/utils/common";
 export default {
     name: "perfInfo",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", 'timestamp'])
     },
     data() {
         return {
@@ -102,6 +102,11 @@ export default {
                 }
                 this.loading = false;
             }).catch(err =>{})
+        }
+    },
+    watch: {
+        timestamp(){
+            this.getData(this.port_id);
         }
     }
 };

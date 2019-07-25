@@ -75,7 +75,7 @@ export default {
     name: "rstp",
     components: { rstpGlobalCfg, rstpPortCfg },
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"])
     },
     data() {
         return {
@@ -251,6 +251,12 @@ export default {
                     })
                     .catch(err => {});
             }
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getData();
+            this.getPortData();
         }
     }
 };

@@ -50,7 +50,13 @@ export default {
     name: "igmpInfo",
     components: { igmpInfoForm },
     computed: {
-        ...mapState(["langMap", "port_name", "basicInfo", "dev_ip"])
+        ...mapState([
+            "langMap",
+            "port_name",
+            "basicInfo",
+            "dev_ip",
+            "timestamp"
+        ])
     },
     data() {
         return {
@@ -169,17 +175,19 @@ export default {
                                 sp_response_time: form.sp_response_time,
                                 sp_query_number: form.sp_query_number
                             }
-                        }).then(res => {
-                            if (res.data.code === 1) {
-                                this.$message.success(
-                                    this.langMap["set_success"]
-                                );
-                                this.getData();
-                            } else {
-                                this.$message.error(res.data.message);
-                            }
-                            this.dialogVisible = false;
-                        }).catch(err =>{});
+                        })
+                            .then(res => {
+                                if (res.data.code === 1) {
+                                    this.$message.success(
+                                        this.langMap["set_success"]
+                                    );
+                                    this.getData();
+                                } else {
+                                    this.$message.error(res.data.message);
+                                }
+                                this.dialogVisible = false;
+                            })
+                            .catch(err => {});
                     }
                 })
                 .catch(_ => {});
@@ -210,6 +218,11 @@ export default {
                     })
                     .catch(err => {});
             });
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getData();
         }
     }
 };

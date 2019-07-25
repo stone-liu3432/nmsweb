@@ -45,7 +45,9 @@
             </el-col>
         </el-row>
         <el-dialog :visible.sync="dialogVisible" append-to-body>
-            <span slot="title">{{ (dialogFlag === 'add' || dialogFlag === 'delete') ? langMap[dialogFlag] : langMap['config'] }}</span>
+            <span
+                slot="title"
+            >{{ (dialogFlag === 'add' || dialogFlag === 'delete') ? langMap[dialogFlag] : langMap['config'] }}</span>
             <el-form :model="formData" :rules="pvRules" label-width="140px" ref="pv-config-form">
                 <el-form-item :label="langMap['port_id']">
                     <span style="margin-left: 16px;">{{ port_name[port_id] }}</span>
@@ -93,7 +95,10 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item :label="langMap['vlan_mode']" key="port-vlan-mode">
-                        <el-select v-model.number="formData.vlan_mode" :disabled="pvSet.port_type === 2">
+                        <el-select
+                            v-model.number="formData.vlan_mode"
+                            :disabled="pvSet.port_type === 2"
+                        >
                             <el-option :value="1" :label="langMap['tagged']"></el-option>
                             <el-option :value="2" :label="langMap['untagged']"></el-option>
                         </el-select>
@@ -123,7 +128,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"])
     },
     data() {
         return {
@@ -271,6 +276,9 @@ export default {
     },
     watch: {
         port_id() {
+            this.getPv(this.port_id);
+        },
+        timestamp() {
             this.getPv(this.port_id);
         }
     }

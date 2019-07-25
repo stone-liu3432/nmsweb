@@ -58,7 +58,7 @@
 
 <script>
 import { mapState, mapMutations } from "Vuex";
-import { validatorVlan } from '@/utils/validator';
+import { validatorVlan } from "@/utils/validator";
 export default {
     name: "vlanTranslate",
     props: {
@@ -68,7 +68,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"])
     },
     data() {
         return {
@@ -83,10 +83,10 @@ export default {
             },
             translateRules: {
                 old_vlan: [
-                    { validator: validatorVlan, trigger: ['change', 'blur'] }
+                    { validator: validatorVlan, trigger: ["change", "blur"] }
                 ],
                 new_vlan: [
-                    { validator: validatorVlan, trigger: ['change', 'blur'] }
+                    { validator: validatorVlan, trigger: ["change", "blur"] }
                 ]
             }
         };
@@ -118,10 +118,10 @@ export default {
             this.dialogVisible = true;
             this.cacheData = data;
             this.dialogFlag = flag;
-            if(flag === 'config'){
-                Object.keys(this.translateForm).forEach(item =>{
+            if (flag === "config") {
+                Object.keys(this.translateForm).forEach(item => {
                     this.translateForm[item] = data[item];
-                })
+                });
             }
         },
         delTranslate(data) {
@@ -142,13 +142,15 @@ export default {
                             action: 0
                         }
                     }).then(res => {
-                        if(res.data.code === 1){
-                            this.$message.success(this.langMap['delete_success']);
+                        if (res.data.code === 1) {
+                            this.$message.success(
+                                this.langMap["delete_success"]
+                            );
                             this.getTranslate(this.port_id);
-                        }else{
+                        } else {
                             this.$message.error(res.data.message);
                         }
-                    })
+                    });
                 })
                 .catch(_ => {});
         },
@@ -190,24 +192,29 @@ export default {
                             }
                         };
                     }
-                    this.$devProxy(data).then(res =>{
-                        if(res.data.code === 1){
-                            this.$message.success(data.method + '_success');
-                            this.getTranslate(this.port_id);
-                        }else{
-                            this.$message.error(res.data.message);
-                        }
-                        this.dialogVisible = false;
-                    }).catch(err =>{})
+                    this.$devProxy(data)
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(data.method + "_success");
+                                this.getTranslate(this.port_id);
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                            this.dialogVisible = false;
+                        })
+                        .catch(err => {});
                 }
             });
         },
-        closeDialog(){
-            this.$refs['port-vlan-translate-form'].resetFields();
+        closeDialog() {
+            this.$refs["port-vlan-translate-form"].resetFields();
         }
     },
     watch: {
         port_id() {
+            this.getTranslate(this.port_id);
+        },
+        timestamp() {
             this.getTranslate(this.port_id);
         }
     }

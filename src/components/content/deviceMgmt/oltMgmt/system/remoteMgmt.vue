@@ -92,7 +92,7 @@ import validator from "@/utils/validator";
 export default {
     name: "remoteMgmt",
     computed: {
-        ...mapState(["langMap", "dev_ip", "language"])
+        ...mapState(["langMap", "dev_ip", "language", 'timestamp'])
     },
     data() {
         return {
@@ -289,6 +289,12 @@ export default {
                         .catch(err => {});
                 }
             });
+        }
+    },
+    watch: {
+        timestamp(){
+            this.getOutbound();
+            this.getInbound();
         }
     }
 };

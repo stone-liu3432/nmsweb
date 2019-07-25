@@ -92,7 +92,7 @@ export default {
     name: "runningStatus",
     components: { pieCharts },
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip", "basicInfo"])
+        ...mapState(["langMap", "port_name", "dev_ip", "basicInfo", 'timestamp'])
     },
     data() {
         return {
@@ -230,6 +230,13 @@ export default {
                     );
                 }
             }
+        }
+    },
+    watch: {
+        timestamp(){
+            this.getCpu();
+            this.getPon();
+            this.getPort();
         }
     }
 };

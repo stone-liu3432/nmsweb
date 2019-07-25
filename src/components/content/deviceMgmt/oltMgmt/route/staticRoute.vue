@@ -101,7 +101,7 @@ import { validatorIpAddr } from "@/utils/validator";
 export default {
     name: "staticRoute",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"])
     },
     data() {
         return {
@@ -242,7 +242,7 @@ export default {
                         }),
                         method: "delete",
                         param: {
-                            gateway: '0.0.0.0'
+                            gateway: "0.0.0.0"
                         }
                     })
                         .then(res => {
@@ -372,6 +372,12 @@ export default {
         },
         closeDialog() {
             this.$refs["static-route-add-form"].resetFields();
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getDefRoute();
+            this.getStatus();
         }
     }
 };

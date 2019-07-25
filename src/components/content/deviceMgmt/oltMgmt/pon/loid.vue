@@ -52,7 +52,7 @@ import { mapState, mapMutations } from "Vuex";
 export default {
     name: "loidMgmt",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"])
     },
     data() {
         return {
@@ -180,6 +180,11 @@ export default {
                 return callback(new Error("Range: 0-12 characters"));
             }
             callback();
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getData(this.port_id);
         }
     }
 };

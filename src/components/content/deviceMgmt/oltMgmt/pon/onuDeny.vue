@@ -9,7 +9,11 @@
             <el-table-column prop="retry" :label="langMap['retry']"></el-table-column>
             <el-table-column fixed="right" width="100">
                 <template slot="header" slot-scope="scope">
-                    <el-button type="text" size="small" @click="dialogVisible = true;">{{ langMap['add'] }}</el-button>
+                    <el-button
+                        type="text"
+                        size="small"
+                        @click="dialogVisible = true;"
+                    >{{ langMap['add'] }}</el-button>
                 </template>
                 <template slot-scope="scope">
                     <el-button
@@ -41,7 +45,10 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">{{ langMap['cancel'] }}</el-button>
-                <el-button type="primary" @click="submitForm('add-deny-form')">{{ langMap['apply'] }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="submitForm('add-deny-form')"
+                >{{ langMap['apply'] }}</el-button>
             </span>
         </el-dialog>
     </div>
@@ -53,7 +60,7 @@ import { validatorMac, validatorDesc } from "@/utils/validator";
 export default {
     name: "onuDeny",
     computed: {
-        ...mapState(["langMap", "port_name", "dev_ip"])
+        ...mapState(["langMap", "port_name", "dev_ip", "timestamp"])
     },
     data() {
         return {
@@ -69,10 +76,10 @@ export default {
             },
             addRules: {
                 macaddr: [
-                    { validator: validatorMac, trigger: ['change', 'blur'] }
+                    { validator: validatorMac, trigger: ["change", "blur"] }
                 ],
                 description: [
-                    { validator: validatorDesc, trigger: ['change', 'blur'] }
+                    { validator: validatorDesc, trigger: ["change", "blur"] }
                 ]
             }
         };
@@ -158,11 +165,11 @@ export default {
                 .catch(_ => {});
         },
         dialogClose() {
-            this.$refs['add-deny-form'].resetFields();
+            this.$refs["add-deny-form"].resetFields();
         },
-        submitForm(formName){
-            this.$refs[formName].validate(valid =>{
-                if(valid){
+        submitForm(formName) {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
                     this.$devProxy({
                         devicelist: [this.dev_ip],
                         url: this.$qs({
@@ -174,17 +181,26 @@ export default {
                             macaddr: this.addForm.macaddr,
                             onu_desc: this.addForm.description
                         }
-                    }).then(res =>{
-                        if(res.data.code === 1){
-                            this.$message.success(this.langMap['add_success']);
-                            this.getData(this.port_id);
-                            this.dialogVisible = false;
-                        }else{
-                            this.$message.error(res.data.message);
-                        }
-                    }).catch(err =>{})
+                    })
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap["add_success"]
+                                );
+                                this.getData(this.port_id);
+                                this.dialogVisible = false;
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        })
+                        .catch(err => {});
                 }
-            })
+            });
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getData(this.port_id);
         }
     }
 };
