@@ -17,7 +17,7 @@
                 <template slot-scope="scope">
                     <span>{{ scope.row.auth_state ? 'true' : 'false' }}</span>
                     <i
-                        :class="[ scope.row.auth_state ? 'unauthenticate' : 'authenticate' ]"
+                        :class="[ scope.row.auth_state ? 'authenticate' : 'unauthenticate' ]"
                         @click="changeAuthState(scope.row)"
                     ></i>
                 </template>
