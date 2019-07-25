@@ -509,6 +509,7 @@ export default {
                                 this.$message.success(
                                     this.langMap[data.method + "_success"]
                                 );
+                                this.getData();
                             } else {
                                 this.$message.error(res.data.message);
                             }

@@ -32,7 +32,6 @@
                 :formatter="formatPortList"
                 prop="tagged_portlist"
                 :label="langMap['tagged_portlist']"
-                width="180"
             ></el-table-column>
             <el-table-column
                 :formatter="formatPortList"
@@ -44,7 +43,7 @@
                 prop="default_vlan_portlist"
                 :label="langMap['default_vlan_portlist']"
             ></el-table-column>
-            <el-table-column>
+            <el-table-column width="120px">
                 <template slot="header" slot-scope="scope">{{ langMap['config'] }}</template>
                 <template slot-scope="scope">
                     <el-button
