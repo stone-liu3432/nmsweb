@@ -30,6 +30,9 @@ const mutations = {
     },
     updateBasicInfo(state, data){
         state.basicInfo = data;
+    },
+    updateTimestamp(state, data){
+        state.timestamp = data;
     }
 }
 

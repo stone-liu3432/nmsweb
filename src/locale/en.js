@@ -790,6 +790,7 @@ export default {
     authlimit : 'Authentication limit',
     authenticate: 'Authentication',
     unauthenticate: 'Unauthentication',
+    illegal_username: "Illegal username",
 
     composeRange(min, max) {
         return `${min} - ${max} characters`;

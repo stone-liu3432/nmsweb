@@ -768,7 +768,7 @@ export default {
     authlimit : '限制认证',
     authenticate: '认证',
     unauthenticate: '解除认证',
-
+    illegal_username: "非法用户名",
 
     composeRange(min, max){
         return `${min} - ${max}位字符`;

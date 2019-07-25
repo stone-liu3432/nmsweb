@@ -15,7 +15,9 @@ let state = {
     //  olt 配置时，缓存olt端口名称和id的映射
     port_name: {},
     dev_ip: '',
-    basicInfo: {}
+    basicInfo: {},
+    //  以时间戳来标记，时间戳更新时，刷新当前页面数据
+    timestamp: 0
 }
 
 export default state
