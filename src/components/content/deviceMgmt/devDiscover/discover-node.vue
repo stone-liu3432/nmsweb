@@ -89,7 +89,7 @@ export default {
                 groupname: "",
                 name: "",
                 port: 80,
-                protocol: 'http'
+                protocol: "http"
             },
             rules: {
                 name: [
@@ -112,7 +112,7 @@ export default {
                 ],
                 model: [
                     {
-                        validator: validator.validatorModel,
+                        validator: this.validModel,
                         trigger: ["blur", "change"]
                     }
                 ],
@@ -123,10 +123,10 @@ export default {
                     }
                 ],
                 port: [
-                    { validator: this.validRange, trigger: ['change', 'blur'] }
+                    { validator: this.validRange, trigger: ["change", "blur"] }
                 ]
             },
-            groups: [],
+            groups: []
             //devList: []  暂未支持
         };
     },
@@ -153,11 +153,13 @@ export default {
                     this.$http
                         .post("/api/device/olt", data)
                         .then(res => {
-                            if(res.data.code === 1){
-                                this.$message.success(this.langMap[data.method + '_success']);
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap[data.method + "_success"]
+                                );
                                 this.$refs[formName].resetFields();
                                 this.addData.groupname = this.groups[0];
-                            }else{
+                            } else {
                                 this.$message.error(res.data.message);
                             }
                         })
@@ -186,11 +188,18 @@ export default {
                 })
                 .catch(err => {});
         },
-        validRange(rule, value, cb){
-            if(value < 80 || value > 50000 || isNaN(value)){
-                return cb(new Error('Range: 80 - 50000'));
+        validRange(rule, value, cb) {
+            if (value < 80 || value > 50000 || isNaN(value)) {
+                return cb(new Error("Range: 80 - 50000"));
             }
             cb();
+        },
+        //  设备型号可以为空
+        validModel(rule, value, cb) {
+            if (value === "") {
+                return cb();
+            }
+            return validator.validatorModel(rule, value, cb);
         }
     }
 };
