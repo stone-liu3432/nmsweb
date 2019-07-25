@@ -55,7 +55,9 @@
                                     >
                                         <el-col :span="8" style="height: 32px; line-height: 32px;">
                                             <span>{{ langMap[_key] }}:</span>
-                                            <span>{{ _item }}</span>
+                                            <span v-if="_key !== 'action'">{{ _item }}</span>
+                                            <span v-else>{{ _item === 1 ? 'deny' : 'permit' }}</span>
+                                            <!-- deny—1, permit—2 -->
                                         </el-col>
                                     </template>
                                 </el-row>
@@ -81,7 +83,7 @@
             <el-table-column>
                 <template slot-scope="scope">
                     <span>{{ langMap['rule_count'] }}:</span>
-                    {{ scope.row.rule.length }}
+                    {{ scope.row.rule ? scope.row.rule.length : 0 }}
                 </template>
             </el-table-column>
             <el-table-column :label="langMap['config']" width="350px">
@@ -89,12 +91,13 @@
                     <el-button
                         size="small"
                         @click.stop="openDialog(Object.assign({}, scope.row), 'config')"
+                        v-if="scope.row.rule"
                     >{{ langMap['config'] }}</el-button>
                     <el-button
                         size="small"
                         @click.stop="openDialog(Object.assign({}, scope.row), 'add-rule')"
                     >{{ langMap['add'] }} Rule</el-button>
-                    <template v-if="scope.row.acl_id === acl_id">
+                    <template v-if="scope.row.acl_id === acl_id && scope.row.rule">
                         <el-button
                             size="small"
                             v-if="editRulePri"
