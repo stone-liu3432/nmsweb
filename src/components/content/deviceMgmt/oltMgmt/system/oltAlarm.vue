@@ -11,7 +11,7 @@
             >{{ langMap['refresh'] }}</dbc-button>
         </h3>
         <ul>
-            <li v-for="(item,index) in alarm" :key="index" style="padding: 6px 0;">{{ item }}</li>
+            <li v-for="(item,index) in alarmTable" :key="index" style="padding: 6px 0;">{{ item }}</li>
         </ul>
         <el-pagination
             style="float: right;"
@@ -30,12 +30,21 @@ import { mapState } from "Vuex";
 export default {
     name: "oltAlarm",
     computed: {
-        ...mapState(["langMap", "dev_ip"])
+        ...mapState(["langMap", "dev_ip"]),
+        alarmTable() {
+            let data;
+            let start = this.pageSize * (this.currentPage - 1);
+            if (start + this.pageSize > this.alarm.length) {
+                data = this.alarm.slice(start);
+            } else {
+                data = this.alarm.slice(start, start + this.pageSize);
+            }
+            return data;
+        }
     },
     data() {
         return {
-            alarm: "",
-            alarmTable: [],
+            alarm: [],
             currentPage: 1,
             pageSize: 50
         };
@@ -51,19 +60,18 @@ export default {
                 method: "get"
             })
                 .then(res => {
-                    this.alarm = "";
-                    this.currentPage = 1;
+                    this.alarm = [];
                     if (res.data.code === 1) {
                         if (res.data.data && res.data.data.length) {
-                            this.alarm = res.data.data;
-                            if (this.alarm.length > this.pageSize) {
-                                this.alarmTable = this.alarm.slice(
-                                    0,
-                                    this.pageSize
+                            if (
+                                this.currentPage >
+                                Math.ceil(res.data.data.length / this.pageSize)
+                            ) {
+                                this.currentPage = Math.ceil(
+                                    res.data.data.length / this.pageSize
                                 );
-                            } else {
-                                this.alarmTable = this.alarm;
                             }
+                            this.alarm = res.data.data;
                         }
                     }
                 })
@@ -71,15 +79,6 @@ export default {
         },
         handleCurrentChange(val) {
             this.currentPage = val;
-            var start = this.pageSize * (val - 1);
-            if (start + this.pageSize > this.alarm.length) {
-                this.alarmTable = this.alarm.slice(start);
-            } else {
-                this.alarmTable = this.alarm.slice(
-                    start,
-                    start + this.pageSize
-                );
-            }
         }
     }
 };
