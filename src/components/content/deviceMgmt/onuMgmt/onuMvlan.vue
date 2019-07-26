@@ -95,7 +95,7 @@ export default {
     name: "onuMvlan",
     components: { onuMvlanForm },
     computed: {
-        ...mapState(["langMap"]),
+        ...mapState(["langMap", "timestamp"]),
         dialogTitle() {
             if (
                 this.dialogFlag === "add-mvlan" ||
@@ -482,6 +482,10 @@ export default {
             if (this.tag_mode === 2) {
                 this.getMvTranslate(this.op_id);
             }
+        },
+        timestamp() {
+            this.getMcConfig();
+            this.getMvList();
         }
     }
 };

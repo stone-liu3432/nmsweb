@@ -115,7 +115,7 @@ import { mapState } from "Vuex";
 export default {
     name: "onuPerfInfo",
     computed: {
-        ...mapState(["langMap"])
+        ...mapState(["langMap", "timestamp"])
     },
     inject: ["dev_ip", "port_id", "onu_id"],
     data() {
@@ -336,14 +336,18 @@ export default {
                             status: this.statusForm.status,
                             period: this.statusForm.period
                         }
-                    }).then(res => {
-                        if(res.data.code === 1){
-                            this.$message.success(this.langMap['clear_success']);
-                            this.getPerf(this.op_id);
-                        }else{
-                            this.$message.error(res.data.message);
-                        }
-                    }).catch(err =>{})
+                    })
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap["clear_success"]
+                                );
+                                this.getPerf(this.op_id);
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        })
+                        .catch(err => {});
                 })
                 .catch(_ => {});
         }
@@ -355,6 +359,10 @@ export default {
         },
         pageFlag() {
             this.getPerf(this.op_id);
+        },
+        timestamp() {
+            this.getPerf(this.op_id);
+            this.getPerfStatus(this.op_id);
         }
     }
 };

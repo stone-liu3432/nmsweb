@@ -29,7 +29,10 @@
                 </template>
                 <el-row style="padding: 8px 0; border-bottom: 1px solid #ddd;">
                     <el-col :span="8" style="padding-left: 10px;">fec mode</el-col>
-                    <el-col :span="16" style="padding: 0 6px;">{{ fec_mode ? langMap['enable'] : langMap['disable'] }}</el-col>
+                    <el-col
+                        :span="16"
+                        style="padding: 0 6px;"
+                    >{{ fec_mode ? langMap['enable'] : langMap['disable'] }}</el-col>
                 </el-row>
             </el-col>
             <el-col :span="12">
@@ -91,7 +94,7 @@ import { validatorName, validatorDesc } from "@/utils/validator";
 export default {
     name: "onuBasicInfo",
     computed: {
-        ...mapState(["langMap", "port_name"])
+        ...mapState(["langMap", "port_name", "timestamp"])
     },
     data() {
         return {
@@ -199,8 +202,8 @@ export default {
         },
         openDialog() {
             this.dialogVisible = true;
-            this.onuSetForm.onu_name = this.baseInfo.onu_name || '';
-            this.onuSetForm.onu_desc = this.baseInfo.onu_desc || '';
+            this.onuSetForm.onu_name = this.baseInfo.onu_name || "";
+            this.onuSetForm.onu_desc = this.baseInfo.onu_desc || "";
         },
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
@@ -356,8 +359,15 @@ export default {
                 this.loading = false;
             }, 1000);
         },
-        closeDialog(){
-            this.$refs['onu-config-form'].resetFields();
+        closeDialog() {
+            this.$refs["onu-config-form"].resetFields();
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getData();
+            this.getFecMode();
+            this.getOptical();
         }
     }
 };

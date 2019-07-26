@@ -40,11 +40,11 @@
 
 <script>
 import { mapState } from "Vuex";
-import onuMvlan from './onuMvlan';
+import onuMvlan from "./onuMvlan";
 export default {
     name: "onuMulticast",
     computed: {
-        ...mapState(["langMap"])
+        ...mapState(["langMap", "timestamp"])
     },
     components: { onuMvlan },
     inject: ["dev_ip", "onuInfo", "port_id", "onu_id"],
@@ -214,8 +214,13 @@ export default {
         }
     },
     watch: {
-        activeName(){
-            if(this.activeName === 'onu-multicast'){
+        activeName() {
+            if (this.activeName === "onu-multicast") {
+                this.getData();
+            }
+        },
+        timestamp() {
+            if (this.activeName === "onu-multicast") {
                 this.getData();
             }
         }

@@ -155,7 +155,7 @@ import onuSetPortVlan from "./onuSetPortVlan";
 export default {
     name: "onuPortCfg",
     computed: {
-        ...mapState(["langMap", "port_name"])
+        ...mapState(["langMap", "port_name", "timestamp"])
     },
     components: {
         onuBasicInfoForm,
@@ -255,9 +255,9 @@ export default {
                             this.$message.success(
                                 this.langMap[data.method + "_success"]
                             );
-                            if(this.dialogFlag === 'basic-info'){
+                            if (this.dialogFlag === "basic-info") {
                                 this.getPortCfg();
-                            }else{
+                            } else {
                                 this.getPortVlan();
                             }
                         } else {
@@ -440,6 +440,12 @@ export default {
                 this.$refs["onu-set-port-vlan"].resetForm();
             }
             this.dialogFlag = "";
+        }
+    },
+    watch: {
+        timestamp() {
+            this.getPortCfg();
+            this.getPortVlan();
         }
     }
 };
