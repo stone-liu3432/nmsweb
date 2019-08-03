@@ -122,7 +122,7 @@ export default {
         uploadConfig(item) {
             var formData = new FormData();
             formData.append("file", item.file);
-            formData.append('devicelist', this.dev_ip);
+            formData.append("devicelist", this.dev_ip);
             formData.append("method", "post");
             formData.append("url", "/system_restore");
             this.$http
@@ -155,23 +155,7 @@ export default {
                 }
             )
                 .then(_ => {
-                    this.$devProxy({
-                        devicelist: [this.dev_ip],
-                        url: this.$qs({
-                            url: "/system_reboot"
-                        }),
-                        method: "get"
-                    })
-                        .then(res => {
-                            if (res.data.code === 1) {
-                                this.$message.success(
-                                    this.langMap["st_success"]
-                                );
-                            } else {
-                                this.$message.error(res.data.message);
-                            }
-                        })
-                        .catch(err => {});
+                    this.reboot();
                 })
                 .catch(_ => {});
         },
@@ -218,9 +202,17 @@ export default {
                     })
                         .then(res => {
                             if (res.data.code === 1) {
-                                this.$message.success(
-                                    this.langMap["def_cfg_succ"]
-                                );
+                                this.$confirm(
+                                    this.langMap["def_cfg_succ"],
+                                    this.langMap["tips"],
+                                    {
+                                        type: "warning"
+                                    }
+                                )
+                                    .then(_ => {
+                                        this.reboot();
+                                    })
+                                    .catch(_ => {});
                             } else {
                                 this.$message.error(
                                     this.langMap["default_config_fail"]
@@ -304,6 +296,23 @@ export default {
                         .catch(err => {});
                 })
                 .catch(_ => {});
+        },
+        reboot() {
+            this.$devProxy({
+                devicelist: [this.dev_ip],
+                url: this.$qs({
+                    url: "/system_reboot"
+                }),
+                method: "get"
+            })
+                .then(res => {
+                    if (res.data.code === 1) {
+                        this.$message.success(this.langMap["st_success"]);
+                    } else {
+                        this.$message.error(res.data.message);
+                    }
+                })
+                .catch(err => {});
         }
     }
 };
