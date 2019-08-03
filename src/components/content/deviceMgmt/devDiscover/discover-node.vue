@@ -201,6 +201,15 @@ export default {
             }
             return validator.validatorModel(rule, value, cb);
         }
+    },
+    watch: {
+        'addData.protocol'(){
+            if(this.addData.protocol === 'http'){
+                this.addData.port = 80;
+            }else{
+                this.addData.port = 443;
+            }
+        }
     }
 };
 </script>
