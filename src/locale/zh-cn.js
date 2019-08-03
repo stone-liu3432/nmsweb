@@ -265,7 +265,7 @@ export default {
     file_not_select: "当前未选择任何文件",
     file_click: "点击选择文件",
     default_config_fail: "恢复出厂设置失败",
-    def_cfg_succ: "恢复出厂设置成功，即将重启设备",
+    def_cfg_succ: "恢复出厂设置成功，是否立即重启设备?",
     reboot_olt_hit: "是否确认重启设备?",
     def_cfg_hit: "恢复出厂设置后，设备将会重启",
     def_cfg_info:

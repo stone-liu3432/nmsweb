@@ -273,7 +273,7 @@ export default {
     file_click: " Click to select file",
     default_config_fail: " Default the OLT configuration failed",
     def_cfg_succ:
-        " Default the OLT configuration sucess, the system is reboot now...",
+        "Restore factory settings successfully, restart the device immediately ?",
     reboot_olt_hit: " Please assure to reboot OLT",
     def_cfg_hit:
         " Defualt the OLT configuration, the system will discard the configuration and auto reboot",
