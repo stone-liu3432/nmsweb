@@ -33,6 +33,12 @@ const mutations = {
     },
     updateTimestamp(state, data){
         state.timestamp = data;
+    },
+    updateDevList(state, data){
+        state.oltList = data;
+    },
+    updateOnuList(state, data){
+        state.onuList = data;
     }
 }
 

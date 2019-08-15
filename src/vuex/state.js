@@ -17,7 +17,10 @@ let state = {
     dev_ip: '',
     basicInfo: {},
     //  以时间戳来标记，时间戳更新时，刷新当前页面数据
-    timestamp: 0
+    timestamp: 0,
+    //  设备列表，olt & onu
+    oltList: [],
+    onuList: []
 }
 
 export default state
