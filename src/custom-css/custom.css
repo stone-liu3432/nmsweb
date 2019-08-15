@@ -43,10 +43,10 @@ div.el-tree--highlight-current
 }
 /* table row 告警级别背景色 */
 .el-table .major-row {
-    color: #CD661D;
+    color: #cd661d;
 }
 .el-table .minor-row {
-    color: #FF7F50;
+    color: #ff7f50;
 }
 .el-table .warning-row {
     color: red;
@@ -93,11 +93,26 @@ div.el-tree--highlight-current
     visibility: hidden;
 }
 
- /* onu性能管理页，流式布局 */
-.op-perf-item{
+/* onu性能管理页，流式布局 */
+.op-perf-item {
     height: 32px;
     line-height: 32px;
     padding-left: 8px;
     border-left: 1px solid #ddd;
     border-top: 1px solid #ddd;
+}
+
+/* transfer 宽度调整 */
+.el-transfer-panel {
+    width: 400px;
+}
+
+/* tree文本溢出时显示滚动条 */
+.el-tree > .el-tree-node {
+    min-width: 100%;
+    display: inline-block;
+}
+
+.el-tree-node__content{
+    padding-right: 14px;
 }
