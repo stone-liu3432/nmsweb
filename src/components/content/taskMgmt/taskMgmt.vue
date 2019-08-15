@@ -34,6 +34,8 @@
                     </el-row>
                     <el-form-item :label="langMap['devicelist']" prop="devicelist">
                         <el-transfer
+                            filterable
+                            :filter-method="filterMethod"
                             v-model="addTask.devicelist"
                             :data="devlist"
                             style="border: 1px solid #ddd;"
@@ -207,7 +209,7 @@ export default {
                 description: [
                     { validator: validatorDesc, trigger: ["blur", "change"] }
                 ],
-                devicelist: [{ validator: validDevList, trigger: "blur" }],
+                //devicelist: [{ validator: validDevList, trigger: "blur" }],
                 stime: [{ validator: validsTime, trigger: ["change", "blur"] }],
                 etime: [{ validator: valideTime, trigger: ["change", "blur"] }],
                 template: [
@@ -277,6 +279,9 @@ export default {
         },
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
+                if(this.addTask.devicelist && !this.addTask.devicelist.length){
+                    return this.$message.error(this.langMap['no_devlist_tips']);
+                }
                 if (valid) {
                     var stime = new Date(this.addTask.stime).getTime(),
                         etime = new Date(this.addTask.etime).getTime();
@@ -369,6 +374,9 @@ export default {
                     }
                 })
                 .catch(err => {});
+        },
+        filterMethod(query, item){
+            return item.name.indexOf(query) > -1;
         }
     }
 };
