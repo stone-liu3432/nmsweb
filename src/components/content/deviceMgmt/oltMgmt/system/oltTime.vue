@@ -13,8 +13,18 @@
             </el-col>
         </el-row>
         <el-row class="time-set-padding" v-if="!!set_time_type">
+            <el-col :span="4" style="height: 32px; line-height: 32px;">{{ langMap['select_timezone'] }}</el-col>
+            <el-col :span="20">
+                <el-select v-model="time_zone" size="small" style="width: 300px;">
+                    <template v-for="(item, index) in timezone">
+                        <el-option :value="index" :label="item.tag"></el-option>
+                    </template>
+                </el-select>
+            </el-col>
+        </el-row>
+        <el-row class="time-set-padding" v-if="!!set_time_type">
             <el-col :span="4" style="height: 32px; line-height: 32px;">{{ langMap['time_set'] }}</el-col>
-            <el-col :span="6">
+            <el-col :span="20">
                 <el-date-picker size="small" v-model="set_time" type="datetime"></el-date-picker>
             </el-col>
         </el-row>
@@ -63,6 +73,7 @@
 <script>
 import { formatDate } from "@/utils/common";
 import { mapState } from "Vuex";
+import timezone from '@/utils/timezone';
 export default {
     name: "oltTimeSet",
     computed: {
@@ -81,7 +92,9 @@ export default {
             ntpInfo: {},
             preferred_ipaddr: "",
             alternate_ipaddr: "",
-            poll_interval_time: 0
+            poll_interval_time: 0,
+            time_zone: 0,
+            timezone
         };
     },
     created() {
@@ -157,7 +170,7 @@ export default {
                             this.set_time.getMinutes(),
                             this.set_time.getSeconds()
                         ],
-                        time_zone: 1
+                        time_zone: this.time_zone
                     }
                 };
             } else {
