@@ -143,6 +143,6 @@ export default {
 
 <style lang="less" scoped>
 .nms-main {
-    margin: 0 0 30px 0;
+    height: 100%;
 }
 </style>

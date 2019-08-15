@@ -20,6 +20,8 @@ export default {
 <style lang="less" scoped>
 main{
     width: 100%;
+    height: calc(100% - 61px);
+    padding-bottom: 30px;
 }
 .custom-breadcrumb{
     margin: 8px 0 20px 10px;
