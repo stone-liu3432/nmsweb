@@ -137,6 +137,7 @@ export default {
                     if (res.data.code === 1) {
                         if (res.data.data) {
                             this.timeInfo = res.data.data;
+                            this.time_zone = res.data.data.timezone;
                             var data = this.timeInfo.time_now;
                             data[1] -= 1;
                             this.current_time = new Date(...data).getTime();
