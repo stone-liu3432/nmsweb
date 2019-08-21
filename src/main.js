@@ -16,6 +16,8 @@ import Message from "@/components/common/message";
 import debounceButton from '@/components/common/debounceButton';
 import portNav from '@/components/common/portNav';
 import axios, { _qs, devProxy, } from './config/httpConfig';
+import contextMenu from '@/components/common/context-menu';
+import contextMenuItem from '@/components/common/context-menu/context-menu-item';
 
 Vue.use(VueI18n);
 const i18n = new VueI18n({
@@ -30,6 +32,8 @@ locale.i18n((key, value) => i18n.t(key, value));
 Vue.use(Vuex);
 Vue.use(ElementUI);
 Vue.use(portNav);
+Vue.use(contextMenu);
+Vue.use(contextMenuItem);
 //  MessageBox 添加默认显示close按钮
 Vue.prototype.$message = Message;
 
