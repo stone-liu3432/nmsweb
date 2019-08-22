@@ -1,19 +1,6 @@
 import { Button } from "element-ui";
-// 节流函数
-function throttle(func, delay, context, event) {
-    if (func.timer) {
-        clearTimeout(func.timer);
-        func.timer = setTimeout(_ => {
-            func.apply(context, event);
-            func.timer = null;
-        }, delay);
-    } else {
-        func.timer = setTimeout(_ => {
-            func.apply(context, event);
-            func.timer = null;
-        }, delay);
-    }
-}
+import { debounce } from '@/utils/common';
+
 // element-ui 中click方法拷贝
 function _handleClick(event) {
     this.$emit("click", event);
@@ -40,7 +27,7 @@ export default {
     },
     methods: {
         handleClick(event) {
-            throttle(_handleClick, this.interval, this, event);
+            debounce(_handleClick, this.interval, this, event);
         }
     }
 };
