@@ -142,11 +142,53 @@ export function generatorPortName(arr, baseObj) {
     return result.replace(/,$/, "");
 }
 
-//  移除数组中的某一项，返回被修改后的原数组  arr -> 原数组   item -> 要移除的项
-//  item 不存在于 arr 中时，返回原数组
-export function removeArrayItem(arr, item){
+/*
+*  @method removeArrayItem
+*  @param {Array} arr 要移除项的数组
+*  @param {any} item 要移除的项
+*  @returns 无返回，直接修改原数组，数组中不存在项时，不做任何修改
+*/
+export function removeArrayItem(arr, item) {
     var index = arr.indexOf(item);
-    if(index > -1){
+    if (index > -1) {
         arr.splice(index, 1);
+    }
+}
+
+/* 
+*  @method 防抖函数
+*  @param {Fucntion} func 需要执行防抖的回调
+*  @param {Number} delay 执行延迟时间 
+*  @param {Object} context 回调函数的this指向
+*  @param {Event} event 回调的参数，event对象
+*/
+export function debounce(func, delay, context, event) {
+    if (func.timer) {
+        clearTimeout(func.timer);
+        func.timer = setTimeout(_ => {
+            func.apply(context, event);
+            func.timer = null;
+        }, delay);
+    } else {
+        func.timer = setTimeout(_ => {
+            func.apply(context, event);
+            func.timer = null;
+        }, delay);
+    }
+}
+
+/*
+*  @method throttle 节流函数 
+*  @param {Function} func 要执行节流的函数
+*  @params {Number} wait 回调执行的间隔
+*/
+export function throttle(func, wait = 300){
+    let last = 0;
+    return function(){
+        let current = +new Date();
+        if(current - last > wait){
+            func.apply(null, arguments);
+            last = current;
+        }
     }
 }
