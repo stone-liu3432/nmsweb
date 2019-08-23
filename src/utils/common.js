@@ -180,15 +180,21 @@ export function debounce(func, delay, context, event) {
 /*
 *  @method throttle 节流函数 
 *  @param {Function} func 要执行节流的函数
-*  @params {Number} wait 回调执行的间隔
+*  @param {Number} wait 回调执行的间隔
 */
 export function throttle(func, wait = 300){
-    let last = 0;
+    let last = 0, timer = null;
     return function(){
         let current = +new Date();
+        clearTimeout(timer);
         if(current - last > wait){
-            func.apply(null, arguments);
+            func.apply(this, arguments);
             last = current;
+        }else{
+            timer = setTimeout(_ => {
+                func.apply(this, arguments);
+                last = current;
+            }, wait)
         }
     }
 }
