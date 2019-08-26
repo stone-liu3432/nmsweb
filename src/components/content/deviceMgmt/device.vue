@@ -16,7 +16,19 @@
                     highlight-current
                     :props="defaultProps"
                     @node-click="nodeClick"
-                ></el-tree>
+                >
+                    <span slot-scope="{ node, data }">
+                        <el-tooltip
+                            :content="data.data && data.data.ipaddr ? `${data.label} [${data.data.ipaddr}]` : data.label"
+                            placement="top-start"
+                            :enterable="false"
+                        >
+                            <span
+                                style="font-size: 14px;"
+                            >{{ data.data && data.data.ipaddr ? `${data.label} [${data.data.ipaddr}]` : data.label }}</span>
+                        </el-tooltip>
+                    </span>
+                </el-tree>
             </el-col>
             <el-col :span="20">
                 <!-- 功能按钮，数据过滤 -->
@@ -66,6 +78,10 @@
                             <el-input v-model="dataFilter.custom"></el-input>
                         </el-form-item>
                     </template>
+                    <dbc-button
+                        style="float: right; margin-right: 10px;"
+                        @click="getData"
+                    >{{ langMap['refresh'] }}</dbc-button>
                 </el-form>
                 <template v-if="showFlag === 'olt'">
                     <!-- v-if 渲染时，相同元素会被复用，数据项不同时，需给控制的元素加上唯一的key，避免渲染空模板报错 -->
@@ -116,16 +132,25 @@
                                             :command="composeData('olt', 'delete', scope.row)"
                                         >{{ langMap['delete'] }}</el-dropdown-item>
                                         <el-dropdown-item
+                                            :command="composeData('olt', 'reboot', scope.row)"
+                                            :disabled="!scope.row.status"
+                                        >{{ langMap['reboot'] }}</el-dropdown-item>
+                                        <el-dropdown-item
                                             :command="composeData('olt', 'sync', scope.row)"
                                         >{{ langMap['dev_sync'] }}</el-dropdown-item>
                                         <el-dropdown-item
                                             :command="composeData('olt', 'onu_sync', scope.row)"
+                                            :disabled="!scope.row.status"
                                         >{{ langMap['onu_sync'] }}</el-dropdown-item>
                                         <el-dropdown-item
                                             :command="composeData('olt', 'info', scope.row)"
                                             :disabled="!scope.row.status"
                                             divided
                                         >{{ langMap['dev_detail'] }}</el-dropdown-item>
+                                        <el-dropdown-item
+                                            :command="composeData('olt', 'save', scope.row)"
+                                            :disabled="!scope.row.status"
+                                        >{{ langMap['save_config'] }}</el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
                             </template>
@@ -153,9 +178,9 @@
                     >
                         <el-table-column prop="devid" label="ID"></el-table-column>
                         <el-table-column :label="`${langMap['port_id']}/${'onu_id'}`">
-                            <template slot-scope="scope">
-                                {{ `${scope.row.port_id} / ${scope.row.onu_id}` }}
-                            </template>
+                            <template
+                                slot-scope="scope"
+                            >{{ `${scope.row.port_id} / ${scope.row.onu_id}` }}</template>
                         </el-table-column>
                         <el-table-column prop="name" :label="langMap['name']"></el-table-column>
                         <el-table-column prop="macaddr" label="MAC"></el-table-column>
@@ -253,6 +278,11 @@
                     <el-divider direction="vertical"></el-divider>
                 </template>
                 <span>{{ langMap['macaddr'] }} : {{ devMgmtTitle.macaddr }}</span>
+                <dbc-button
+                    :interval="500"
+                    style="margin-left: 50px;"
+                    @click="refreshCurrentPage"
+                >{{ langMap['refresh'] }}</dbc-button>
             </div>
             <olt-detail
                 :dev="devFlag"
@@ -383,7 +413,8 @@ export default {
     },
     methods: {
         ...mapMutations({
-            updateLoading: "changeLoadingState"
+            updateLoading: "changeLoadingState",
+            updateTimestamp: "updateTimestamp"
         }),
         getGroups() {
             this.$http
@@ -402,6 +433,7 @@ export default {
         },
         nodeClick(item) {
             this.cacheTree = this.$refs["tree"].getCurrentKey();
+            sessionStorage.setItem("tree_id", this.cacheTree);
             this.currentTreeData = Object.assign({}, item);
             this.dataFilter.type = 0;
             if (!item.children) {
@@ -473,13 +505,13 @@ export default {
                 var children = [];
                 obj[item].forEach(_item => {
                     children.push({
-                        id: id++,
+                        id: _item.devid,
                         label: _item.name,
                         data: _item
                     });
                 });
                 result.push({
-                    id: id++,
+                    id: String(item),
                     label: item,
                     data: obj[item],
                     children
@@ -507,31 +539,64 @@ export default {
                             } else {
                                 this.devTable = this.areaData[0].data;
                             }
-                            if (this.cacheTree !== "") {
+                            this.cacheTree = sessionStorage.getItem("tree_id");
+                            if (
+                                this.cacheTree !== "" &&
+                                this.cacheTree !== null
+                            ) {
                                 this.$nextTick(_ => {
+                                    //  olt 被删除时
+                                    let flag = false;
                                     this.$refs["tree"].setCurrentKey(
                                         this.cacheTree
                                     );
                                     this.areaData.forEach(item => {
                                         if (item.id === this.cacheTree) {
                                             this.nodeClick(item);
+                                            flag = true;
+                                        }
+                                        if (
+                                            item.children &&
+                                            item.children.length
+                                        ) {
+                                            item.children.forEach(_item => {
+                                                if (
+                                                    String(_item.id) ===
+                                                    this.cacheTree
+                                                ) {
+                                                    this.nodeClick(_item);
+                                                    flag = true;
+                                                }
+                                            });
                                         }
                                     });
-                                });
-                            } else {
-                                this.$nextTick(_ => {
-                                    if (this.$refs["tree"]) {
+                                    //  当前olt被删除， flag === true 或是首次进入当前页面时
+                                    if (!this.cacheTree || !flag) {
                                         this.$refs["tree"].setCurrentKey(
                                             this.areaData[0].id
                                         );
-                                        this.cacheTree = this.$refs[
-                                            "tree"
-                                        ].getCurrentKey();
-                                        this.currentTreeData = Object.assign(
-                                            {},
-                                            this.areaData[0]
-                                        );
+                                        this.nodeClick(this.areaData[0]);
                                     }
+                                });
+                            } else {
+                                this.$nextTick(_ => {
+                                    // if (this.$refs["tree"]) {
+                                    //     this.cacheTree = this.$refs[
+                                    //         "tree"
+                                    //     ].getCurrentKey();
+                                    //     sessionStorage.setItem(
+                                    //         "tree_id",
+                                    //         this.cacheTree
+                                    //     );
+                                    //     this.currentTreeData = Object.assign(
+                                    //         {},
+                                    //         this.areaData[0]
+                                    //     );
+                                    // }
+                                    this.$refs["tree"].setCurrentKey(
+                                        this.areaData[0].id
+                                    );
+                                    this.nodeClick(this.areaData[0]);
                                 });
                             }
                         }
@@ -616,9 +681,6 @@ export default {
             //  设置
             if (flag === "config") {
                 this.showConfigDialog = true;
-                // this.$nextTick(_ => {
-                //     this.$refs["oltSetInfo"].getData();
-                // });
             }
             //  删除设备
             if (flag === "delete") {
@@ -725,6 +787,38 @@ export default {
                 this.showMgmtDialog = true;
                 this.updateLoading(true);
             }
+            if (flag === "save") {
+                this.$confirm(
+                    this.langMap["save_cfg_confirm"],
+                    this.langMap["tips"],
+                    {
+                        type: "warning"
+                    }
+                )
+                    .then(_ => {
+                        this.$devProxy({
+                            devicelist: [node.ipaddr],
+                            url: this.$qs({
+                                url: "/system_save"
+                            }),
+                            method: "get"
+                        })
+                            .then(res => {
+                                if (res.data.code === 1) {
+                                    this.$message.success(
+                                        this.langMap["set_success"]
+                                    );
+                                } else {
+                                    this.$message.error(res.data.message);
+                                }
+                            })
+                            .catch(err => {});
+                    })
+                    .catch(_ => {});
+            }
+            if (flag === "reboot") {
+                this.rebootOlt(node);
+            }
         },
         composeData(dev, flag, row) {
             return { dev, flag, row };
@@ -812,50 +906,89 @@ export default {
             this.handleFlag = "";
         },
         isSavedCfg(done) {
-            if (this.devFlag === "olt") {
-                this.$confirm(
-                    this.langMap["save_cfg_confirm"],
-                    this.langMap["tips"],
-                    {
-                        type: "warning"
-                    }
-                )
-                    .then(_ => {
-                        this.$devProxy({
-                            devicelist: [this.dev_ip],
-                            url: this.$qs({
-                                url: "/system_save"
-                            }),
-                            method: "get"
-                        })
-                            .then(res => {
-                                if (res.data.code === 1) {
-                                    this.$message.success(
-                                        this.langMap["save_succ"]
-                                    );
-                                } else {
-                                    this.$message.error(res.data.message);
-                                }
-                            })
-                            .catch(err => {});
-                        done();
+            // if (this.devFlag === "olt") {
+            //     this.$confirm(
+            //         this.langMap["save_cfg_confirm"],
+            //         this.langMap["tips"],
+            //         {
+            //             type: "warning"
+            //         }
+            //     )
+            //         .then(_ => {
+            //             this.$devProxy({
+            //                 devicelist: [this.dev_ip],
+            //                 url: this.$qs({
+            //                     url: "/system_save"
+            //                 }),
+            //                 method: "get"
+            //             })
+            //                 .then(res => {
+            //                     if (res.data.code === 1) {
+            //                         this.$message.success(
+            //                             this.langMap["save_succ"]
+            //                         );
+            //                     } else {
+            //                         this.$message.error(res.data.message);
+            //                     }
+            //                 })
+            //                 .catch(err => {});
+            //             done();
+            //         })
+            //         .catch(_ => {
+            //             done();
+            //         });
+            // } else {
+            //     done();
+            // }
+            done();
+        },
+        //  更新vuex保存的时间戳
+        refreshCurrentPage() {
+            this.updateTimestamp(new Date().getTime());
+        },
+        rebootOlt(data) {
+            this.$confirm(
+                this.langMap["reboot_olt_hit"],
+                this.langMap["tips"],
+                {
+                    type: "warning"
+                }
+            )
+                .then(_ => {
+                    this.$devProxy({
+                        devicelist: [data.ipaddr],
+                        url: this.$qs({
+                            url: "/system_reboot"
+                        }),
+                        method: "get"
                     })
-                    .catch(_ => {
-                        done();
-                    });
-            } else {
-                done();
-            }
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.langMap["st_success"]
+                                );
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        })
+                        .catch(err => {});
+                })
+                .catch(_ => {});
         }
     },
     watch: {
-        "dataFilter.type"() {
-            if (this.onuCurrentPage !== 1) {
-                this.onuCurrentPage = 1;
-            }
+        dataFilter: {
+            handler() {
+                if (this.onuCurrentPage !== 1) {
+                    this.onuCurrentPage = 1;
+                }
+            },
+            deep: true
         }
     },
-    beforeDestroy() {},
+    beforeDestroy() {
+        sessionStorage.removeItem("tree_id");
+    },
     //  配置OLT ，模拟点击行为
     mounted() {
         // this.dropdownClick({
