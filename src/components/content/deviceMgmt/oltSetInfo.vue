@@ -353,6 +353,13 @@ export default {
             if (this.updateData) {
                 this.getData();
             }
+        },
+        'devInfo.protocol'(){
+            if(this.devInfo.protocol === 'http'){
+                this.devInfo.httpport = 80;
+            }else{
+                this.devInfo.httpport = 443;
+            }
         }
     }
 };
