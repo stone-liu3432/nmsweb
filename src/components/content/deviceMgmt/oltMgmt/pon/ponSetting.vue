@@ -35,7 +35,7 @@
         <h3 style="margin-top: 30px;">
             <span style="margin-right: 30px;">{{ langMap['port_isolation'] }}</span>
             <el-popover placement="top" width="160" v-model="visible" trigger="manual">
-                <p>{{ `${langMap['if_sure']}${ port_isolat ? langMap['off'] : langMap['on'] }` }}</p>
+                <p>{{ `${langMap['if_sure']}${ port_isolate ? langMap['off'] : langMap['on'] }` }}</p>
                 <div style="text-align: right; margin: 0">
                     <el-button
                         size="mini"
@@ -49,11 +49,11 @@
                     >{{ langMap['apply'] }}</el-button>
                 </div>
                 <el-switch
-                    ref="isolat-status"
+                    ref="isolate-status"
                     slot="reference"
                     active-color="#13ce66"
                     @change="changeIsolat"
-                    :value="port_isolat"
+                    :value="port_isolate"
                     :active-text="langMap['enable']"
                     :inactive-text="langMap['disable']"
                 ></el-switch>
@@ -112,7 +112,7 @@ export default {
                 auth_mode: 0
             },
             p2p: [],
-            port_isolat: 0,
+            port_isolate: 0,
             visible: false
         };
     },
@@ -171,9 +171,9 @@ export default {
             })
                 .then(res => {
                     if (res.data.code === 1) {
-                        this.port_isolat = 0;
+                        this.port_isolate = 0;
                         if (res.data.data) {
-                            this.port_isolat = !!res.data.data.isolate_status;
+                            this.port_isolate = !!res.data.data.isolate_status;
                         }
                     }
                 })
@@ -262,7 +262,7 @@ export default {
                 }),
                 method: "set",
                 param: {
-                    isolat_status: Number(!this.$refs["isolat-status"].value)
+                    isolate_status: Number(!this.$refs["isolate-status"].value)
                 }
             })
                 .then(res => {
