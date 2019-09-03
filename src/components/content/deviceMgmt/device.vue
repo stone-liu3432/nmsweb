@@ -306,7 +306,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "Vuex";
+import { mapState, mapMutations, mapActions } from "Vuex";
 import { pageSizes, MCLASS, ONU_STATUS } from "@/utils/common-data";
 import { removeUnderline } from "@/utils/common";
 const devSetInfo = () =>
@@ -319,7 +319,7 @@ export default {
     name: "deviceMgmt",
     components: { devSetInfo, oltDetail, onuDetail },
     computed: {
-        ...mapState(["langMap", "loading", "dev_ip"]),
+        ...mapState(["langMap", "loading", "dev_ip", "groups"]),
         onuData() {
             let data = this.onuList.slice(0);
             if (this.dataFilter.type) {
@@ -386,7 +386,6 @@ export default {
             devFlag: "",
             handleFlag: "",
             cacheData: {},
-            groups: [],
             cacheTree: "",
             currentTreeData: {},
             showMgmtDialog: false,
@@ -416,21 +415,9 @@ export default {
             updateLoading: "changeLoadingState",
             updateTimestamp: "updateTimestamp"
         }),
-        getGroups() {
-            this.$http
-                .get("/api/device/group")
-                .then(res => {
-                    this.groups = [];
-                    if (res.data.code === 1) {
-                        if (res.data.data && res.data.data.length) {
-                            res.data.data.forEach(item => {
-                                this.groups.push(item.groupname);
-                            });
-                        }
-                    }
-                })
-                .catch(err => {});
-        },
+        ...mapActions({
+            getGroups: "getGroups"
+        }),
         nodeClick(item) {
             this.cacheTree = this.$refs["tree"].getCurrentKey();
             sessionStorage.setItem("tree_id", this.cacheTree);

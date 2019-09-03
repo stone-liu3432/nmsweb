@@ -20,7 +20,9 @@ let state = {
     timestamp: 0,
     //  设备列表，olt & onu
     oltList: [],
-    onuList: []
+    onuList: [],
+    //  设备分组
+    groups: []
 }
 
 export default state

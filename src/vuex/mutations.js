@@ -39,6 +39,9 @@ const mutations = {
     },
     updateOnuList(state, data){
         state.onuList = data;
+    },
+    updateGroups(state, data){
+        state.groups = data;
     }
 }
 
