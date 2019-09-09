@@ -167,7 +167,7 @@ export default {
                     if (res.data.code === 1) {
                         if (res.data.data) {
                             this.result = res.data.data.result;
-                            if (res.data.data.finished === 0) {
+                            if (res.data.data.finish === 0) {
                                 setTimeout(_ =>{
                                     this.getResult();
                                 }, 1000)
