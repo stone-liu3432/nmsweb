@@ -769,6 +769,8 @@ export default {
     authenticate: '认证',
     unauthenticate: '解除认证',
     illegal_username: "非法用户名",
+    save_location: "保存位置",
+    unsaved_content_tips: '页面有未保存的内容，是否在离开页面前保存修改？',
 
     composeRange(min, max){
         return `${min} - ${max}位字符`;

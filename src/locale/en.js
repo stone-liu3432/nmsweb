@@ -791,6 +791,8 @@ export default {
     authenticate: 'Authentication',
     unauthenticate: 'Unauthentication',
     illegal_username: "Illegal Username",
+    save_location: "Save Location",
+    unsaved_content_tips: 'The page has unsaved content. Do you save the changes before leaving the page?',
 
     composeRange(min, max) {
         return `${min} - ${max} characters`;
