@@ -29,4 +29,13 @@ main{
     color: #233;
     text-align-last: left;
 }
+//  firefox 在有滚动条的情况下，padding-bottom将会失效
+//  -moz-document 只有firefox浏览器能识别
+@-moz-document url-prefix() {
+    main {
+        margin-bottom: 30px !important;
+        padding-bottom: 0 !important;
+        height: calc(100% - 91px) !important;
+    }
+}
 </style>
