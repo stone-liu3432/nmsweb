@@ -14,10 +14,11 @@ import commonFooter from "../main/footer";
 export default {
     name: "nmsMain",
     components: { navHeader, contentArea, commonFooter },
-    computed: mapState(['wsState']),
+    computed: mapState(["wsState"]),
     data() {
         return {
-            ws: null
+            ws: null,
+            ws_limit: 0
         };
     },
     created() {
@@ -59,9 +60,7 @@ export default {
         );
     },
     mounted() {
-        let hidden,
-            visibilityChange,
-            _this = this;
+        let hidden, visibilityChange;
         if (typeof document.hidden !== "undefined") {
             hidden = "hidden";
             visibilityChange = "visibilitychange";
@@ -77,65 +76,88 @@ export default {
         }
         //  添加监听器
         //  IE9不支持此事件  IE9下页面最小化时JS不会暂停，无需停止socket
-        document.addEventListener(
-            visibilityChange,
-            function(e) {
-                document[hidden] && console.log("当前页面被隐藏");
-                if(_this.wsState){
-                    if (document[hidden]) {
-                        if (_this.ws) {
-                            _this.ws.close();
-                        }
-                    } else {
-                        _this.initSocket();
-                    }
+        const fn = e => {
+            document[hidden] && console.log("当前页面被隐藏");
+            if (this.wsState) {
+                if (document[hidden]) {
+                    this.closeWs();
+                } else {
+                    this.initSocket();
                 }
-            },
-            false
-        );
+            }
+        };
+        document.addEventListener(visibilityChange, fn, false);
         this.initSocket();
+        this.$on("hook:beforeDestroy", _ => {
+            document.removeEventListener(visibilityChange, fn);
+            this.wsState && this.closeWs();
+        });
     },
     methods: {
-        initSocket(){
-            var _this = this;
+        initSocket() {
+            let status = "";
             if ("WebSocket" in window) {
                 let ws = new WebSocket(`ws://${window.location.host}/ws`);
-                ws.onopen = function() {
-                    console.log("ws open success");
+                ws.onopen = () => {
+                    if (ws.readyState === 1) {
+                        status = "open";
+                    }
                 };
-                ws.onmessage = function(evt) {
+                ws.onmessage = evt => {
                     var message = evt.data;
-                    _this.$notify({
+                    this.$notify({
                         message,
                         position: "bottom-right",
                         customClass: "custom-shadow"
                     });
                 };
-                ws.onclose = function(e) {
-                    console.log("ws close");
+                ws.onclose = e => {
+                    //  网络连接中断 或 非正常断开连接
+                    if (e.code === 1006 || !e.wasClean) {
+                        status = "error";
+                        this.closeHandle(status);
+                    } else {
+                        status = "close";
+                        this.closeHandle(status);
+                    }
                 };
-                ws.onerror = function(e) {
-                    console.log("ws error");
+                ws.onerror = e => {
+                    status = "error";
+                    this.closeWs();
                 };
-                _this.ws = ws;
+                this.ws = ws;
+            }
+        },
+        closeHandle(status) {
+            this.closeWs();
+            if (status !== "close") {
+                if (this.wsState) {
+                    if (this.ws_limit < 5) {
+                        this.initSocket();
+                        this.ws_limit++;
+                    } else {
+                        this.ws_limit = 0;
+                    }
+                }else{
+                    this.ws_limit = 0;
+                }
+            } else {
+                this.ws_limit = 0;
+            }
+        },
+        closeWs() {
+            if (this.ws) {
+                this.ws.close();
             }
         }
     },
     watch: {
-        wsState(){
-            if(this.ws && (typeof this.ws.close === 'function')){
-                this.ws.close();
-                this.ws = null;
-            }
-            if(this.wsState){
+        wsState() {
+            if (this.wsState) {
                 this.initSocket();
+            } else {
+                this.closeWs();
             }
-        }
-    },
-    beforeDestroy() {
-        if (this.ws) {
-            this.ws.close();
-            this.ws = null;
         }
     }
 };
