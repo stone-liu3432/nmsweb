@@ -14,19 +14,25 @@ const lang = {
 };
 export default {
     name: "nms",
-    computed: mapState(["language", "langMap"]),
+    computed: {
+        ...mapState(["language", "langMap"]),
+        title(){
+            var path = this.$route.path.slice(this.$route.path.lastIndexOf('/') + 1);
+            (path === 'main') && (path = 'home');
+            (path === '') && (path = 'login');
+            return this.langMap[path] || 'nmsweb';
+        }
+    },
     created() {
         this.$i18n.locale = sessionStorage.getItem('lang') || 'en';
         this.changeLangMap(lang[sessionStorage.getItem('lang') || 'en']);
         this.changeLang(this.$i18n.locale);
     },
-    components: {},
     data() {
         return {
             
         };
     },
-    mounted() {},
     methods: {
         ...mapMutations({
             changeLang: "changeLang",
@@ -37,12 +43,10 @@ export default {
         language() {
             this.changeLangMap(lang[this.language]);
             this.$i18n.locale = this.language;
+            document.title = this.title;
         },
         '$route'(){
-            var path = this.$route.path.slice(this.$route.path.lastIndexOf('/') + 1);
-            (path === 'main') && (path = 'home');
-            (path === '') && (path = 'login');
-            document.title = this.langMap[path] || 'nmsweb';
+            document.title = this.title;
         }
     }
 };
