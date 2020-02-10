@@ -156,7 +156,7 @@ export function removeArrayItem(arr, item) {
 }
 
 /* 
-*  @method 防抖函数
+*  @method 防抖函数 间隔时间内点击，只执行一次
 *  @param {Fucntion} func 需要执行防抖的回调
 *  @param {Number} delay 执行延迟时间 
 *  @param {Object} context 回调函数的this指向
@@ -178,7 +178,7 @@ export function debounce(func, delay, context, event) {
 }
 
 /*
-*  @method throttle 节流函数 
+*  @method throttle 节流函数 每隔固定时间执行一次
 *  @param {Function} func 要执行节流的函数
 *  @param {Number} wait 回调执行的间隔
 */
