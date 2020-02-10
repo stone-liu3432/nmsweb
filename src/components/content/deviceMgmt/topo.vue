@@ -1,6 +1,6 @@
 <template>
     <div class="topo-container">
-        <canvas :width="cvsWidth" :height="cvsHeight" id="topo"></canvas>
+        <canvas :width="cvsWidth" :height="cvsHeight" ref="topo"></canvas>
         <dbc-button
             style="position: absolute;right: 30px; top: 30px;"
             :loading="saveLoading"
@@ -157,7 +157,7 @@ export default {
         this.getGroups();
     },
     mounted() {
-        let canvas = document.getElementById("topo");
+        let canvas = this.$refs["topo"];
         this.stage = new JTopo.Stage(canvas);
         //this.stage.wheelZoom = 0.9;
         this.stage.mousedown(e => {
@@ -180,9 +180,10 @@ export default {
                     this.devFlag === "onu" && this.getOnu(this.cacheData.devid);
                 })
                 .catch(msg => {
-                    if(msg === POSITION_NOT_CHANGE){
+                    if (msg === POSITION_NOT_CHANGE) {
                         this.devFlag === "olt" && this.getOlt();
-                        this.devFlag === "onu" && this.getOnu(this.cacheData.devid);
+                        this.devFlag === "onu" &&
+                            this.getOnu(this.cacheData.devid);
                     }
                 });
         }, 5000);
@@ -217,13 +218,13 @@ export default {
                 const { translateX, translateY } = this.scene;
                 this.sceneLocation.translateX = translateX;
                 this.sceneLocation.translateY = translateY;
-            }
+            };
 
-            this.scene.mousedrag(throttle(dragFn), 300);
+            this.scene.mousedrag(throttle(dragFn, 300));
         },
         draw({ title = "nms", data = [], devType = "olt" }) {
             this.initStage();
-            
+
             const ROW_STEP = 100;
             const BASE_OFFSET = 60;
             let row = 1;
@@ -251,7 +252,7 @@ export default {
                     this.sceneLocation = {
                         translateX: 0,
                         translateY: 0
-                    }
+                    };
                 };
                 nodeFrom.dbclick(cb);
             }
@@ -260,11 +261,7 @@ export default {
             row++;
 
             data.forEach((item, index) => {
-                if (
-                    index % row_count === 0 &&
-                    index !== 0 &&
-                    row_idx >= row_count
-                ) {
+                if (row_idx >= row_count) {
                     row++;
                     col = 1;
                     row_idx = 0;
@@ -368,7 +365,7 @@ export default {
                 this.sceneLocation = {
                     translateX: 0,
                     translateY: 0
-                }
+                };
             };
             c.dbclick(fn);
             //  右键菜单
