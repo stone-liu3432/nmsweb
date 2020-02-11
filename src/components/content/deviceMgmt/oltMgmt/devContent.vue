@@ -28,63 +28,60 @@
         <arp-table v-if="showContent === 'ARP'"></arp-table>
         <diagonose v-if="showContent === 'diagonose'"></diagonose>
         <dev-mgmt v-if="showContent === 'dev_mgmt'"></dev-mgmt>
+        <dhcp v-if="showContent === 'dhcp'"></dhcp>
     </div>
 </template>
 
 <script>
 const runningStatus = () =>
-    import(/* webpackChunkName: 'olt-system' */ "./system/running-status");
+    import(/* webpackChunkName: 'system' */ "./system/running-status");
 const remoteMgmt = () =>
-    import(/* webpackChunkName: 'olt-system' */ "./system/remoteMgmt");
+    import(/* webpackChunkName: 'system' */ "./system/remoteMgmt");
 const serviceSsh = () =>
-    import(/* webpackChunkName: 'olt-system' */ "./system/service");
+    import(/* webpackChunkName: 'system' */ "./system/service");
 const oltAlarm = () =>
-    import(/* webpackChunkName: 'olt-system' */ "./system/oltAlarm");
+    import(/* webpackChunkName: 'system' */ "./system/oltAlarm");
 const oltUserMgmt = () =>
-    import(/* webpackChunkName: 'olt-system'  */ "./system/oltUserMgmt");
+    import(/* webpackChunkName: 'system'  */ "./system/oltUserMgmt");
 const oltTimeSet = () =>
-    import(/* webpackChunkName: 'olt-system' */ "./system/oltTime");
-const onuDeny = () => import(/* webpackChunkName: 'olt-pon' */ "./pon/onuDeny");
-const slaCfg = () => import(/* webpackChunkName: 'olt-pon' */ "./pon/slaCfg");
+    import(/* webpackChunkName: 'system' */ "./system/oltTime");
+const onuDeny = () => import(/* webpackChunkName: 'pon' */ "./pon/onuDeny");
+const slaCfg = () => import(/* webpackChunkName: 'pon' */ "./pon/slaCfg");
 const ponSetting = () =>
-    import(/* webpackChunkName: 'olt-pon' */ "./pon/ponSetting");
-const loidMgmt = () => import(/* webpackChunkName: 'olt-pon' */ "./pon/loid");
+    import(/* webpackChunkName: 'pon' */ "./pon/ponSetting");
+const loidMgmt = () => import(/* webpackChunkName: 'pon' */ "./pon/loid");
 const ponOptical = () =>
-    import(/* webpackChunkName: 'olt-pon' */ "./pon/ponOptical");
+    import(/* webpackChunkName: 'pon' */ "./pon/ponOptical");
 const portInfo = () =>
-    import(/* webpackChunkName: 'olt-port' */ "./switchPort/portInfo");
+    import(/* webpackChunkName: 'port-mgmt' */ "./switchPort/portInfo");
 const perfInfo = () =>
-    import(/* webpackChunkName: 'olt-port' */ "./switchPort/perfInfo");
+    import(/* webpackChunkName: 'port-mgmt' */ "./switchPort/perfInfo");
 const portConfig = () =>
-    import(/* webpackChunkName: 'olt-port' */ "./switchPort/portCfg");
+    import(/* webpackChunkName: 'port-mgmt' */ "./switchPort/portCfg");
 const portVlan = () =>
-    import(/* webpackChunkName: 'olt-port' */ "./switchPort/portVlan");
+    import(/* webpackChunkName: 'port-mgmt' */ "./switchPort/portVlan");
 const macMgmt = () =>
-    import(/* webpackChunkName: 'olt-port' */ "./layer2/macMgmt");
+    import(/* webpackChunkName: 'port-mgmt' */ "./layer2/macMgmt");
 const vlanMgmt = () =>
-    import(/* webpackChunkName: 'olt-port' */ "./layer2/vlanMgmt");
-const rstp = () =>
-    import(/* webpackChunkName: 'olt-protocol' */ "./protocol/rstp");
-const igmp = () =>
-    import(/* webpackChunkName: 'olt-protocol' */ "./protocol/igmp");
+    import(/* webpackChunkName: 'port-mgmt' */ "./layer2/vlanMgmt");
+const rstp = () => import(/* webpackChunkName: 'protocol' */ "./protocol/rstp");
+const igmp = () => import(/* webpackChunkName: 'protocol' */ "./protocol/igmp");
 const timeRange = () =>
-    import(/* webpackChunkName: 'olt-acl-qos' */ "./acl-qos/timerange");
+    import(/* webpackChunkName: 'acl-qos' */ "./acl-qos/timerange");
 const aclMgmt = () =>
-    import(/* webpackChunkName: 'olt-acl-qos' */ "./acl-qos/aclMgmt");
+    import(/* webpackChunkName: 'acl-qos' */ "./acl-qos/aclMgmt");
 const packetFilter = () =>
-    import(/* webpackChunkName: 'olt-acl-qos' */ "./acl-qos/packetfilter");
-const qosMgmt = () =>
-    import(/* webpackChunkName: 'olt-acl-qos' */ "./acl-qos/qos");
+    import(/* webpackChunkName: 'acl-qos' */ "./acl-qos/packetfilter");
+const qosMgmt = () => import(/* webpackChunkName: 'acl-qos' */ "./acl-qos/qos");
 const staticRoute = () =>
-    import(/* webpackChunkName: 'olt-route' */ "./route/staticRoute");
-const arpTable = () =>
-    import(/* webpackChunkName: 'olt-route' */ "./route/arp");
+    import(/* webpackChunkName: 'route' */ "./route/staticRoute");
+const arpTable = () => import(/* webpackChunkName: 'route' */ "./route/arp");
 const diagonose = () =>
-    import(/* webpackChunkName: 'olt-system' */ "./system/diagonose");
+    import(/* webpackChunkName: 'system' */ "./system/diagonose");
 const devMgmt = () =>
-    import(/* webpackChunkName: 'olt-system' */ "./system/devMgmt");
-const onuAllow = () =>
-    import(/* webpackChunkName: 'olt-pon' */ "./pon/onuAllow");
+    import(/* webpackChunkName: 'system' */ "./system/devMgmt");
+const onuAllow = () => import(/* webpackChunkName: 'pon' */ "./pon/onuAllow");
+const dhcp = () => import(/* webpackChunkName: 'protocol' */ "./protocol/dhcp");
 export default {
     name: "devContent",
     props: ["showContent"],
@@ -116,7 +113,8 @@ export default {
         staticRoute,
         arpTable,
         diagonose,
-        devMgmt
+        devMgmt,
+        dhcp
     },
     data() {
         return {};
