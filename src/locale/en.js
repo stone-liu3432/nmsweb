@@ -821,6 +821,7 @@ export default {
         "DHCP Relay need layer3 support, Do you want to disable it ?",
     open: " open ",
     close: " close ",
+    clear: " Clear ",
     composeRange(min, max) {
         return `${min} - ${max} characters`;
     }

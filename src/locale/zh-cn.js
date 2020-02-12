@@ -797,6 +797,7 @@ export default {
     route_close_tips: "DHCP Relay 需要三层支持，是否关闭DHCP Relay ?",
     open: "打开",
     close: "关闭",
+    clear: "清除",
     composeRange(min, max) {
         return `${min} - ${max}位字符`;
     }
