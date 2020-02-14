@@ -822,6 +822,17 @@ export default {
     open: " open ",
     close: " close ",
     clear: " Clear ",
+    uplink: "Uplink",
+    sn: "SN",
+    ipaddress_s: "Starting IP Address",
+    ipaddress_e: "End IP Address",
+    open: " open ",
+    close: " close ",
+    none_inbound_tips: "No interface available, go to create?",
+    server_admin: "Server Status",
+    reqdns: "Request DNS",
+    pridns: "Priamry DNS Server",
+    secdns: "Secondary DNS Server",
     composeRange(min, max) {
         return `${min} - ${max} characters`;
     }

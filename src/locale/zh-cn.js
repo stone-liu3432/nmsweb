@@ -798,6 +798,17 @@ export default {
     open: "打开",
     close: "关闭",
     clear: "清除",
+    uplink: "上联",
+    sn: "SN",
+    ipaddress_s: "起始IP地址",
+    ipaddress_e: "结束IP地址",
+    open: "打开",
+    close: "关闭",
+    none_inbound_tips: "没有可用的interface，是否前往创建？",
+    server_admin: "Server状态",
+    reqdns: "手动配置DNS",
+    pridns: "首选DNS服务器",
+    secdns: "备用DNS服务器",
     composeRange(min, max) {
         return `${min} - ${max}位字符`;
     }
