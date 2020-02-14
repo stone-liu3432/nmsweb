@@ -27,10 +27,18 @@
                     ></dhcp-option82>
                 </el-tab-pane>
                 <el-tab-pane label="DHCP Snooping" name="snooping">
-                    <dhcp-snooping :data="dhcpData" v-if="activeName === 'snooping'"></dhcp-snooping>
+                    <dhcp-snooping
+                        :data="dhcpData"
+                        v-if="activeName === 'snooping'"
+                        @refreshData="getData"
+                    ></dhcp-snooping>
                 </el-tab-pane>
                 <el-tab-pane label="DHCP Server" name="server">
-                    <dhcp-server :data="dhcpData" v-if="activeName === 'server'"></dhcp-server>
+                    <dhcp-server
+                        :data="dhcpData"
+                        v-if="activeName === 'server'"
+                        @refreshData="getData"
+                    ></dhcp-server>
                 </el-tab-pane>
             </el-tabs>
         </template>
