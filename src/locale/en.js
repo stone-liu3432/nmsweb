@@ -833,6 +833,12 @@ export default {
     reqdns: "Request DNS",
     pridns: "Priamry DNS Server",
     secdns: "Secondary DNS Server",
+    link_aggregation: "Link Aggregation",
+    psc: "Port Selection Criteria",
+    member_portlist: " Port Members",
+    link_aggregation_tips:
+        "Link aggregation group member ports will take effect after configuration",
+    trunk_id: " Trunk ID ",
     composeRange(min, max) {
         return `${min} - ${max} characters`;
     }

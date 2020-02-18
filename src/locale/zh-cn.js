@@ -809,6 +809,11 @@ export default {
     reqdns: "手动配置DNS",
     pridns: "首选DNS服务器",
     secdns: "备用DNS服务器",
+    link_aggregation: "链路聚合",
+    psc: "负载均衡选路算法",
+    member_portlist: "汇聚组成员",
+    link_aggregation_tips: "配置后该汇聚组端口成员将同时生效",
+    trunk_id: "汇聚组号",
     composeRange(min, max) {
         return `${min} - ${max}位字符`;
     }
